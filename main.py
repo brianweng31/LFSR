@@ -21,6 +21,7 @@ if torch.cuda.is_available():
     device = "cuda:0" 
 else:  
     device = "cpu"
+print(f"device: {device}")
 
 if __name__=="__main__":
     if model == "FilterBankMethod":
