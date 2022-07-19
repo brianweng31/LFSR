@@ -27,7 +27,7 @@ if __name__=="__main__":
     if model == "FilterBankMethod":
         methods = [FilterBankMethod(device, 3, 3, in_channels=9, out_channels=9, kernel_size=(1, 7, 7), stride=(1, 3, 3), model_idx=model_idx)]
         methods_name = ['Filterbank']
-    elif:
+    elif model == "BaselineMethod":
         methods = [BaselineMethod(3,3)]
         methods_name = ['BaselineMethod']
 
