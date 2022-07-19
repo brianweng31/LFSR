@@ -113,7 +113,7 @@ class EarlyStopping():
         self.early_stop = False
 
     def __call__(self, test_loss, last_loss):
-        print(last_loss,',',test_loss)
+        #print(last_loss,',',test_loss)
         if (last_loss-test_loss)/last_loss < self.min_percent:
             self.counter +=1
             if self.counter >= self.tolerance:  

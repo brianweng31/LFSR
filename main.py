@@ -26,7 +26,23 @@ print(f"device: {device}")
 if __name__=="__main__":
     if model == "FilterBankMethod":
         methods = [FilterBankMethod(device, 3, 3, in_channels=9, out_channels=9, kernel_size=(1, 7, 7), stride=(1, 3, 3), model_idx=model_idx)]
-        methods_name = ['filterbank']
+        methods_name = ['Filterbank']
+    elif:
+        methods = [BaselineMethod(3,3)]
+        methods_name = ['BaselineMethod']
+
+        train_dataloader, test_dataloader = get_dataloaders(dataset_name, batch_size=batch_size, downsample_rate=1)
+
+        for method_idx in range(len(methods)):
+            losses, metrics = testing(test_dataloader, methods[method_idx])
+            #plotting_dataloader(test_dataloader, methods[method_idx])
+            log_str = methods[method_idx].name + ": "
+        for optimizd_losses_idx in range(len(optimizd_losses)):
+            log_str += "Loss %d: %2f " % (optimizd_losses_idx, losses[optimizd_losses_idx])
+        for refocused_img_metrics_idx in range(len(refocused_img_metrics)):
+            log_str += "Metric %s: %2f " % (refocused_img_metrics_name[refocused_img_metrics_idx], metrics[refocused_img_metrics_idx])
+        print(log_str)
+        break
 
     downsample_rate_idx = 0
     while downsample_rate_idx < len(training_light_field_downsample_rate):

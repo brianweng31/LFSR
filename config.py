@@ -34,5 +34,5 @@ assert len(training_light_field_downsample_rate)==len(training_light_field_epoch
 #tolerance = 400
 #min_percent = 0.001
 
-tolerance = 30
+tolerance = 10
 min_percent = 1

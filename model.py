@@ -115,7 +115,6 @@ class FilterBankMethod(Method):
     def load_model(self, weight_path):
         self.net.load_state_dict(torch.load(weight_path))
     def save_model(self, weight_path):
-        print("saving")
         torch.save(self.net.state_dict(), weight_path) 
     def train_mode(self):
         self.net.train()  
