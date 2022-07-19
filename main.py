@@ -41,6 +41,8 @@ if __name__=="__main__":
                 optimizers.append(optimizer(methods[method_idx].net.parameters(), lr = lr))
                 #methods[method_idx].clear_history()
                 methods[method_idx].train_mode()
+                if downsample_rate_idx > 0:
+                    methods[method_idx].clear_history()
 
             last_loss = float('inf')
             early_stopped = [False for _ in range(len(methods))]
