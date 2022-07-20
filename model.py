@@ -100,7 +100,7 @@ class FilterBankKernel(nn.Module):
 
 class FilterBankMethod(Method):
     def __init__(self, device, s=3, t=3, in_channels=9, out_channels=9, kernel_size=(1, 7, 7), stride=(1, 3, 3), model_idx=0):
-        super().__init__(self.__class__.__name__+f"{model_idx}")
+        super().__init__(self.__class__.__name__+f"_{model_idx}")
         self.net = FilterBankKernel(in_channels=in_channels, out_channels=out_channels, kernel_size=kernel_size, stride=stride).to(device)  
         self.s = 3
         self.t = 3
@@ -194,7 +194,7 @@ class LinearFilterKernel(nn.Module):
 
 class LinearFilter(Method):
     def __init__(self, h, w, s=3, t=3, model_idx=0):
-        super().__init__(self.__class__.__name__+f"{model_idx}")
+        super().__init__(self.__class__.__name__+f"_{model_idx}")
         self.s = s
         self.t = t
         self.h = h
