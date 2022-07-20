@@ -7,20 +7,22 @@ import torch.nn as nn
 import os
 
 class Record:
-    def __init__(self, name = None) -> None:
-        self.tb_writer = SummaryWriter(os.path.join('model',name))
+    def __init__(self, name = None, event_idx=0) -> None:
+        self.tb_writer = SummaryWriter(os.path.join('model',name,f"{event_idx}"))
         self.loss_history = []
         self.metric_history = []
         self.best_loss = sys.float_info.max
 
 class Method(metaclass=abc.ABCMeta):
     def __init__(self, name):
-        self.record = Record(name)
+        self.event_idx = 0
+        self.record = Record(name,self.event_idx)
         self.name = name
 
     def clear_history(self):
         print('clearing')
-        self.record = Record(self.name)
+        self.event_idx += 1
+        self.record = Record(self.name,self.event_idx)
 
     @abc.abstractmethod
     def downsampling(self, hr_lf):
@@ -98,7 +100,7 @@ class FilterBankKernel(nn.Module):
 
 class FilterBankMethod(Method):
     def __init__(self, device, s=3, t=3, in_channels=9, out_channels=9, kernel_size=(1, 7, 7), stride=(1, 3, 3), model_idx=0):
-        super().__init__(self.__class__.__name__+ f"_{model_idx}")
+        super().__init__(self.__class__.__name__+f"{model_idx}")
         self.net = FilterBankKernel(in_channels=in_channels, out_channels=out_channels, kernel_size=kernel_size, stride=stride).to(device)  
         self.s = 3
         self.t = 3
@@ -192,7 +194,7 @@ class LinearFilterKernel(nn.Module):
 
 class LinearFilter(Method):
     def __init__(self, h, w, s=3, t=3, model_idx=0):
-        super().__init__(self.__class__.__name__+ f"_{model_idx}")
+        super().__init__(self.__class__.__name__+f"{model_idx}")
         self.s = s
         self.t = t
         self.h = h

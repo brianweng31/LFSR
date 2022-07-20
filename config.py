@@ -8,7 +8,7 @@ lr = 0.0001
 
 ### model selection
 model = "FilterBankMethod" #FilterBankMethod, BaselineMethod
-model_idx = 1
+model_idx = "F1"
 post_fix = ""
 pre_fix = ""
 
