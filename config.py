@@ -7,7 +7,7 @@ optimizer = torch.optim.Adam
 lr = 0.0001
 
 ### model selection
-model = "FilterBankMethod"
+model = "FilterBankMethod" #FilterBankMethod, BaselineMethod
 model_idx = 1
 post_fix = ""
 pre_fix = ""
@@ -15,7 +15,7 @@ pre_fix = ""
 ## loss
 optimized_losses = [nn.L1Loss()]
 loss_weights = [1.0]
-estimate_clear_region = False
+estimate_clear_region = True
 assert len(optimized_losses) == len(loss_weights)
 
 ## loss_metrics
@@ -34,5 +34,5 @@ assert len(training_light_field_downsample_rate)==len(training_light_field_epoch
 #tolerance = 400
 #min_percent = 0.001
 
-tolerance = 10
+tolerance = 20
 min_percent = 1
