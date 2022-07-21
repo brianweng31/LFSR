@@ -16,7 +16,7 @@ pre_fix = ""
 #optimized_losses = [nn.L1Loss()]
 optimized_losses = [nn.MSELoss()]
 loss_weights = [1.0]
-estimate_clear_region = True
+estimate_clear_region = False
 assert len(optimized_losses) == len(loss_weights)
 
 ## loss_metrics

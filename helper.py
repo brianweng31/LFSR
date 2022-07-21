@@ -119,4 +119,5 @@ class EarlyStopping():
             if self.counter >= self.tolerance:  
                 self.early_stop = True
         else:
-            self.counter = 0
+            self.counter -= 1
+            self.counter = max(0,self.counter)
