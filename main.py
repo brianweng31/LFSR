@@ -63,7 +63,6 @@ if __name__=="__main__":
                     if downsample_rate_idx > 0:
                         methods[method_idx].clear_history()
 
-                last_loss = float('inf')
                 early_stopped = [False for _ in range(len(methods))]
                 early_stopping = EarlyStopping(tolerance=tolerance/10, min_percent=min_percent)
 
@@ -102,13 +101,12 @@ if __name__=="__main__":
 
                                     print(log_str)
                                     test_loss = losses[0]
-                                    early_stopping(test_loss, last_loss)
+                                    early_stopping(test_loss)
                                     if early_stopping.early_stop:
                                         print("Early stopped at epoch: ", epoch)
                                         methods[method_idx].record.tb_writer.close()
                                         early_stopped[method_idx] = True
                                         break
-                                    last_loss = test_loss
 
 
         
