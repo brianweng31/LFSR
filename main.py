@@ -1,6 +1,7 @@
 import torch, gc
 import numpy as np
 import os
+import time
 from config import optimizer, lr
 from config import model, model_idx
 from config import dataset_name, training_light_field_downsample_rate, training_light_field_epoch, batch_size
@@ -48,8 +49,11 @@ if __name__=="__main__":
         TRAIN = False
 
     if TRAIN:
+        training_time = []
+        
         downsample_rate_idx = 0
         while downsample_rate_idx < len(training_light_field_downsample_rate):
+            start = time.time()
             epochs = training_light_field_epoch[downsample_rate_idx]
             downsample_rate = training_light_field_downsample_rate[downsample_rate_idx]
             try:
@@ -114,6 +118,11 @@ if __name__=="__main__":
         
                 downsample_rate_idx += 1
 
+                end = time.time()
+                time_in_min = (end-start)//60
+                training_time.append(time_in_min)
+
+
             except RuntimeError:
                 batch_size //= 2
                 print("Batchsize too large. Use batchsize = %d"% batch_size)
@@ -124,3 +133,6 @@ if __name__=="__main__":
                 if batch_size<1:
                     print("Batchsize is zero!")
                     break
+
+        for i in range(len(training_time)):
+            print('{:02d}:Time: {:02d}:{:02d}'.format(i, time_in_min//60, time_in_min%60))

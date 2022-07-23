@@ -7,16 +7,16 @@ optimizer = torch.optim.Adam
 lr = 0.0001
 
 ### model selection
-model = "BaselineMethod" #FilterBankMethod, BaselineMethod
-model_idx = "F1"
+model = "FilterBankMethod" #FilterBankMethod, BaselineMethod
+model_idx = "T1"
 post_fix = ""
 pre_fix = ""
 
 ## loss
-#optimized_losses = [nn.L1Loss()]
-optimized_losses = [nn.MSELoss()]
+optimized_losses = [nn.L1Loss()]
+#optimized_losses = [nn.MSELoss()]
 loss_weights = [1.0]
-estimate_clear_region = False
+estimate_clear_region = True
 assert len(optimized_losses) == len(loss_weights)
 
 ## loss_metrics
@@ -32,8 +32,8 @@ batch_size = 16
 assert len(training_light_field_downsample_rate)==len(training_light_field_epoch)
 
 ## early stopping
-tolerance = 400
-min_percent = 0.001
+#tolerance = 400
+#min_percent = 0.001
 
-#tolerance = 20
-#min_percent = 1
+tolerance = 20
+min_percent = 1
