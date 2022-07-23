@@ -120,7 +120,7 @@ if __name__=="__main__":
 
                 end = time.time()
                 time_in_min = (end-start)//60
-                training_time.append(time_in_min)
+                training_time.append(int(time_in_min))
 
 
             except RuntimeError:
@@ -135,4 +135,4 @@ if __name__=="__main__":
                     break
 
         for i in range(len(training_time)):
-            print('{:02d}:Time: {:02f}:{:02f}'.format(i, training_time[i]//60, training_time[i]%60))
+            print('{:02d}:Time: {:02d}:{:02d}'.format(i, training_time[i]//60, training_time[i]%60))
