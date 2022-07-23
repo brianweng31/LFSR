@@ -134,5 +134,6 @@ if __name__=="__main__":
                     print("Batchsize is zero!")
                     break
 
+        print(training_time)
         for i in range(len(training_time)):
             print('{:02d}:Time: {:02d}:{:02d}'.format(i, training_time[i]//60, training_time[i]%60))

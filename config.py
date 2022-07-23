@@ -32,8 +32,8 @@ batch_size = 16
 assert len(training_light_field_downsample_rate)==len(training_light_field_epoch)
 
 ## early stopping
-#tolerance = 400
-#min_percent = 0.001
+tolerance = 400
+min_percent = 0.001
 
-tolerance = 20
-min_percent = 1
+#tolerance = 20
+#min_percent = 1
