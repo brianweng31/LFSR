@@ -39,8 +39,8 @@ if __name__=="__main__":
             losses, metrics = testing(test_dataloader, device, methods[method_idx])
             #plotting_dataloader(test_dataloader, methods[method_idx])
             log_str = methods[method_idx].name + ": "
-        for optimizd_losses_idx in range(len(optimizd_losses)):
-            log_str += "Loss %d: %2f " % (optimizd_losses_idx, losses[optimizd_losses_idx])
+        for optimized_losses_idx in range(len(optimized_losses)):
+            log_str += "Loss %d: %2f " % (optimized_losses_idx, losses[optimized_losses_idx])
         for refocused_img_metrics_idx in range(len(refocused_img_metrics)):
             log_str += "Metric %s: %2f " % (refocused_img_metrics_name[refocused_img_metrics_idx], metrics[refocused_img_metrics_idx])
         
