@@ -36,7 +36,7 @@ if __name__=="__main__":
 
         for method_idx in range(len(methods)):
             #losses, metrics = testing(test_dataloader, methods[method_idx])
-            losses, metrics = testing(test_dataloader, device, methods[method_idx], epoch, estimate_clear_region)
+            losses, metrics = testing(test_dataloader, device, methods[method_idx])
             #plotting_dataloader(test_dataloader, methods[method_idx])
             log_str = methods[method_idx].name + ": "
         for optimizd_losses_idx in range(len(optimizd_losses)):
