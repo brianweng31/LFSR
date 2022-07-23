@@ -35,7 +35,8 @@ if __name__=="__main__":
         train_dataloader, test_dataloader = get_dataloaders(dataset_name, batch_size=batch_size, downsample_rate=1)
 
         for method_idx in range(len(methods)):
-            losses, metrics = testing(test_dataloader, methods[method_idx])
+            #losses, metrics = testing(test_dataloader, methods[method_idx])
+            losses, metrics = testing(test_dataloader, device, methods[method_idx], epoch, estimate_clear_region)
             #plotting_dataloader(test_dataloader, methods[method_idx])
             log_str = methods[method_idx].name + ": "
         for optimizd_losses_idx in range(len(optimizd_losses)):
