@@ -135,4 +135,4 @@ if __name__=="__main__":
                     break
 
         for i in range(len(training_time)):
-            print('{:02d}:Time: {:02d}:{:02d}'.format(i, time_in_min//60, time_in_min%60))
+            print('{:02d}:Time: {:02f}:{:02f}'.format(i, training_time[i]//60, training_time[i]%60))
