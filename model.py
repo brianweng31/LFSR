@@ -175,7 +175,7 @@ class LinearFilterKernel(nn.Module):
         down_img = out[0]     
         return down_img
 
-    def forward(self, lf):
+    def forward(self, lf, device):
         """
         Args:
             lf: (N, s*t, 3, H, W) tensor
@@ -201,6 +201,7 @@ class LinearFilter(Method):
         self.h = h
         self.w = w
         self.name = self.__class__.__name__ + f"_{model_idx}"
+        self.device = device
 
         # output_size to be determined
         self.net = LinearFilterKernel(in_channels=3, out_channels=3, kernel_size=(7, 7), stride=(3, 3), output_size=(int(self.h/self.t),int(self.w/self.s)), st=(self.s,self.t)).to(device)
@@ -208,7 +209,7 @@ class LinearFilter(Method):
     def downsampling(self, hr_lf):
         #b,st,c,h,w = hr_lf.shape
         #lr_lf = self.net(hr_lf.to(device))
-        return self.net(hr_lf)
+        return self.net(hr_lf,device)
     def enhance_LR_lightfield(self, lr_lf):
         modified_lf = torch.repeat_interleave(torch.repeat_interleave(lr_lf, 3, dim=-2), 3, dim=-1)
         for i in range(self.s):
