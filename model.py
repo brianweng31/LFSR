@@ -209,7 +209,7 @@ class LinearFilter(Method):
     def downsampling(self, hr_lf):
         #b,st,c,h,w = hr_lf.shape
         #lr_lf = self.net(hr_lf.to(device))
-        return self.net(hr_lf,device)
+        return self.net(hr_lf,self.device)
     def enhance_LR_lightfield(self, lr_lf):
         modified_lf = torch.repeat_interleave(torch.repeat_interleave(lr_lf, 3, dim=-2), 3, dim=-1)
         for i in range(self.s):
