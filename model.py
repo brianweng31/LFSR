@@ -193,7 +193,7 @@ class LinearFilterKernel(nn.Module):
 
 
 class LinearFilter(Method):
-    def __init__(self, h, w, s=3, t=3, model_idx=0):
+    def __init__(self, device, h, w, s=3, t=3, model_idx=0):
         super().__init__(self.__class__.__name__+f"_{model_idx}")
         self.s = s
         self.t = t

@@ -7,16 +7,16 @@ optimizer = torch.optim.Adam
 lr = 0.0001
 
 ### model selection
-model = "FilterBankMethod" #FilterBankMethod, BaselineMethod
-model_idx = "T1"
+model = "LinearFilter" #FilterBankMethod, LinearFilter, BaselineMethod
+model_idx = "F1"
 post_fix = ""
 pre_fix = ""
 
 ## loss
-optimized_losses = [nn.L1Loss()]
-#optimized_losses = [nn.MSELoss()]
+#optimized_losses = [nn.L1Loss()]
+optimized_losses = [nn.MSELoss()]
 loss_weights = [1.0]
-estimate_clear_region = True
+estimate_clear_region = False
 assert len(optimized_losses) == len(loss_weights)
 
 ## loss_metrics
@@ -26,8 +26,10 @@ assert len(refocused_img_metrics) == len(refocused_img_metrics_name)
 
 ## training
 dataset_name = "HCI"
-training_light_field_downsample_rate = [4,2,1]
-training_light_field_epoch = [40000,20000,20000]
+#training_light_field_downsample_rate = [4,2,1]
+training_light_field_downsample_rate = [1]
+#training_light_field_epoch = [40000,20000,20000]
+training_light_field_epoch = [100000]
 batch_size = 16
 assert len(training_light_field_downsample_rate)==len(training_light_field_epoch)
 

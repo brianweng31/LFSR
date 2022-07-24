@@ -29,6 +29,15 @@ if __name__=="__main__":
     if model == "FilterBankMethod":
         methods = [FilterBankMethod(device, 3, 3, in_channels=9, out_channels=9, kernel_size=(1, 7, 7), stride=(1, 3, 3), model_idx=model_idx)]
         methods_name = ['Filterbank']
+    elif model == "LinearFilter":
+        if dataset_name == "HCI":
+            h, w = 512, 512
+        if dataset_name == "INRIA_Lytro":
+            h, w = 379, 379
+
+        methods = [LinearFilter(device, h, w, s=3, t=3, model_idx=model_idx)]
+        methods_name = ['LinearFilter']
+
     elif model == "BaselineMethod":
         methods = [BaselineMethod(3,3)]
         methods_name = ['BaselineMethod']
