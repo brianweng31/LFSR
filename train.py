@@ -1,4 +1,5 @@
 import torch
+import torch.nn.functional as F
 from config import optimized_losses, loss_weights
 from helper import refocus_pixel_focal_stack_batch, remove_img_margin
 from model import BaselineMethod, FilterBankMethod, LinearFilter
