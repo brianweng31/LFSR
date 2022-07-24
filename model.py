@@ -5,6 +5,7 @@ from math import floor
 import torch
 import torch.nn as nn
 import os
+import torch.nn.functional as F
 
 class Record:
     def __init__(self, name = None, event_idx=0) -> None:
