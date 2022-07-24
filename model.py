@@ -208,17 +208,18 @@ class LinearFilter(Method):
         #b,st,c,h,w = hr_lf.shape
         #lr_lf = self.net(hr_lf.to(device))
         return self.net(hr_lf)
-
     def enhance_LR_lightfield(self, lr_lf):
         modified_lf = torch.repeat_interleave(torch.repeat_interleave(lr_lf, 3, dim=-2), 3, dim=-1)
         for i in range(self.s):
             for j in range(self.t):
                 modified_lf[:,i*self.t+j, :, :, :] = torch.roll(modified_lf[:,i*self.t+j, :, :, :], shifts=(i-1, j-1), dims=(-2,-1))
-    
+        
         return modified_lf
-
     def load_model(self, weight_path):
         self.net.load_state_dict(torch.load(weight_path))
-
     def save_model(self, weight_path):
         torch.save(self.net.state_dict(), weight_path) 
+    def train_mode(self):
+        self.net.train()  
+    def eval_mode(self):
+        self.net.eval()  
