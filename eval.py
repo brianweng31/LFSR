@@ -56,9 +56,11 @@ with torch.no_grad():
 
 print(light_field.shape)
 light_field = np.moveaxis(light_field, 2, -1)
+np.save('npy/light_field',light_field)
 print(light_field.shape)
-
+'''
 for i in range(light_field.shape[0]):
     print(light_field[i,5].shape)
     cv2.imshow(f"{i}",light_field[i,5])
     cv2.waitKey(0)
+'''
