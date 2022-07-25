@@ -1,5 +1,7 @@
 import os
 import torch
+import cv2
+import numpy as np
 from helper import remove_img_margin, refocus_pixel_focal_stack_batch
 from prepare_data import get_dataloaders
 from model import BaselineMethod, FilterBankMethod, LinearFilter
@@ -32,6 +34,7 @@ elif model_name == "BaselineMethod":
 model.load_model(os.path.join('model',model.name,'best_model'))
 model.eval_mode()
 
+
 with torch.no_grad():
     for i_batch, sample_batched in enumerate(test_dataloader):
         reshape_ = (sample_batched.shape[0], -1, sample_batched.shape[3], sample_batched.shape[4], sample_batched.shape[5])
@@ -46,4 +49,9 @@ with torch.no_grad():
         sr_refocused = refocus_pixel_focal_stack_batch(sr, test_dataloader.dataset.disparity_range, s, t)
         sr_refocused = remove_img_margin(sr_refocused)
 
-        print(sr_refocused.shape)
+        if i_batch == 0:
+            light_field = sr_refocused
+        else:
+            light_field = np.concatenate((light_field, sr_refocused), axis=0)
+
+print(light_field.shape)
