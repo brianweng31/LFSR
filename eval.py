@@ -64,7 +64,7 @@ down_lf = np.moveaxis(down_lf, 2, -1)
 if not os.path.isdir('npy'):
     os.mkdir('npy')
 np.save(f'npy/down_{model_name}_{model_idx}',down_lf)
-#np.save(f'npy/{model_name}_{model_idx}',light_field)
+np.save(f'npy/{model_name}_{model_idx}',light_field)
 #print(light_field.shape)
 print(down_lf.shape)
 '''
