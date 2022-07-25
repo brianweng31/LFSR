@@ -1,6 +1,6 @@
 import os
 import torch
-from helper import remove_img_margin, refocus_pixel_focal_stack
+from helper import remove_img_margin, refocus_pixel_focal_stack_batch
 from prepare_data import get_dataloaders
 from model import BaselineMethod, FilterBankMethod, LinearFilter
 
