@@ -33,7 +33,7 @@ model.load_model(os.path.join('model',model.name,'best_model'))
 model.eval_mode()
 
 with torch.no_grad():
-    for i_batch, sample_batched in enumerate(dataloader):
+    for i_batch, sample_batched in enumerate(test_dataloader):
         reshape_ = (sample_batched.shape[0], -1, sample_batched.shape[3], sample_batched.shape[4], sample_batched.shape[5])
         b, s, t, c, h, w = sample_batched.shape
         sample_batched_reshaped = torch.reshape(sample_batched, reshape_).permute(0,1,4,2,3).to(device)
