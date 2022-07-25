@@ -11,11 +11,6 @@ dataset_name = "HCI"
 batch_size = 16
 ######
 
-torch.set_default_dtype(torch.float32)
-gc.collect()
-with torch.no_grad():
-    torch.cuda.empty_cache()
-
 if torch.cuda.is_available():  
     device = "cuda:0" 
 else:  
