@@ -57,13 +57,14 @@ with torch.no_grad():
             down_lf = np.concatenate((down_lf, lr.detach().cpu()), 0)
             light_field = np.concatenate((light_field, sr_refocused.detach().cpu()), 0)
 
-print(light_field.shape)
+#print(light_field.shape)
+print(down_lf.shape)
 light_field = np.moveaxis(light_field, 2, -1)
 if not os.path.isdir('npy'):
     os.mkdir('npy')
-np.save(f'npy/down_{model_name}_{model_idx}',light_field)
+np.save(f'npy/down_{model_name}_{model_idx}',down_lf)
 #np.save(f'npy/{model_name}_{model_idx}',light_field)
-print(light_field.shape)
+#print(light_field.shape)
 '''
 for i in range(light_field.shape[0]):
     print(light_field[i,5].shape)
