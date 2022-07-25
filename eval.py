@@ -8,7 +8,7 @@ from model import BaselineMethod, FilterBankMethod, LinearFilter
 
 ######
 model_name = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "T1"
+model_idx = "F1"
 dataset_name = "HCI"
 batch_size = 16
 ######
