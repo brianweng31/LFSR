@@ -115,8 +115,8 @@ class FilterBankMethod(Method):
                 modified_lf[:,i*self.t+j, :, :, :] = torch.roll(modified_lf[:,i*self.t+j, :, :, :], shifts=(i-1, j-1), dims=(-2,-1))
     
         return modified_lf
-    def load_model(self, weight_path):
-        self.net.load_state_dict(torch.load(weight_path))
+    def load_model(self, weight_path, device):
+        self.net.load_state_dict(torch.load(weight_path),map_location=device)
     def save_model(self, weight_path):
         torch.save(self.net.state_dict(), weight_path) 
     def train_mode(self):
@@ -217,8 +217,8 @@ class LinearFilter(Method):
                 modified_lf[:,i*self.t+j, :, :, :] = torch.roll(modified_lf[:,i*self.t+j, :, :, :], shifts=(i-1, j-1), dims=(-2,-1))
         
         return modified_lf
-    def load_model(self, weight_path):
-        self.net.load_state_dict(torch.load(weight_path))
+    def load_model(self, weight_path, device):
+        self.net.load_state_dict(torch.load(weight_path),map_location=device)
     def save_model(self, weight_path):
         torch.save(self.net.state_dict(), weight_path) 
     def train_mode(self):
