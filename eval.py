@@ -38,12 +38,12 @@ with torch.no_grad():
         b, s, t, c, h, w = sample_batched.shape
         sample_batched_reshaped = torch.reshape(sample_batched, reshape_).permute(0,1,4,2,3).to(device)
         
-        hr_refocused = refocus_pixel_focal_stack_batch(sample_batched_reshaped, dataloader.dataset.disparity_range, s, t)
+        hr_refocused = refocus_pixel_focal_stack_batch(sample_batched_reshaped, test_dataloader.dataset.disparity_range, s, t)
         hr_refocused = remove_img_margin(hr_refocused)
 
         lr = model.downsampling(sample_batched_reshaped)
         sr = model.enhance_LR_lightfield(lr)
-        sr_refocused = refocus_pixel_focal_stack_batch(sr, dataloader.dataset.disparity_range, s, t)
+        sr_refocused = refocus_pixel_focal_stack_batch(sr, test_dataloader.dataset.disparity_range, s, t)
         sr_refocused = remove_img_margin(sr_refocused)
 
         print(sr_refocused.shape)
