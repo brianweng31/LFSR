@@ -8,7 +8,7 @@ from model import BaselineMethod, FilterBankMethod, LinearFilter
 
 ######
 model_name = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "F1"
+model_idx = "T1"
 dataset_name = "HCI"
 batch_size = 16
 ######
@@ -31,8 +31,9 @@ elif model_name == "LinearFilter":
 elif model_name == "BaselineMethod":
     model = BaselineMethod(3,3)
 
-model.load_model(os.path.join('model',model.name,'best_model'))
-model.eval_mode()
+if model != "BaselineMethod":
+    model.load_model(os.path.join('model',model.name,'best_model'))
+    model.eval_mode()
 
 
 with torch.no_grad():
@@ -58,7 +59,7 @@ print(light_field.shape)
 light_field = np.moveaxis(light_field, 2, -1)
 if not os.path.isdir('npy'):
     os.mkdir('npy')
-np.save('npy/light_field',light_field)
+np.save(f'npy/{model_name}_{model_idx}',light_field)
 print(light_field.shape)
 '''
 for i in range(light_field.shape[0]):
