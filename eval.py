@@ -7,7 +7,7 @@ from prepare_data import get_dataloaders
 from model import BaselineMethod, FilterBankMethod, LinearFilter
 
 ######
-model_name = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
+model_name = "BaselineMethod" #FilterBankMethod, LinearFilter, BaselineMethod
 model_idx = "T1"
 dataset_name = "HCI"
 batch_size = 16
