@@ -56,6 +56,8 @@ with torch.no_grad():
 
 print(light_field.shape)
 light_field = np.moveaxis(light_field, 2, -1)
+if not os.path.isdir('npy'):
+    os.mkdir('npy')
 np.save('npy/light_field',light_field)
 print(light_field.shape)
 '''
