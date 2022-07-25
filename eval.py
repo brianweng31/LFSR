@@ -50,10 +50,11 @@ with torch.no_grad():
         sr_refocused = remove_img_margin(sr_refocused)
 
         if i_batch == 0:
-            light_field = sr_refocused
+            light_field = sr_refocused.detach().cpu()
         else:
-            light_field = np.concatenate((light_field, sr_refocused), axis=0)
+            light_field = np.concatenate((light_field, sr_refocused.detach().cpu()), 0)
 
+print(light_field.shape)
 light_field = np.moveaxis(light_field, 2, -1)
 print(light_field.shape)
 
