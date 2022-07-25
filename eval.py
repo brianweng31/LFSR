@@ -54,7 +54,7 @@ with torch.no_grad():
         else:
             light_field = np.concatenate((light_field, sr_refocused), axis=0)
 
-light_field = np.moveaxis(light_field, [2, 3, 4], [4, 2, 3])
+light_field = np.moveaxis(light_field, 2, -1)
 print(light_field.shape)
 
 for i in range(light_field.shape[0]):
