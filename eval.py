@@ -50,7 +50,7 @@ with torch.no_grad():
         sr_refocused = remove_img_margin(sr_refocused)
 
         if i_batch == 0:
-            light_field = sr_refocused.detach().cpu()
+            light_field = np.array(sr_refocused.detach().cpu())
         else:
             light_field = np.concatenate((light_field, sr_refocused.detach().cpu()), 0)
 
