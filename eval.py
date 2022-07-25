@@ -51,15 +51,18 @@ with torch.no_grad():
         sr_refocused = remove_img_margin(sr_refocused)
 
         if i_batch == 0:
+            dwon_lf = np.array(lr.detach().cpu())
             light_field = np.array(sr_refocused.detach().cpu())
         else:
+            down_lf = np.concatenate((down_lf, lr.detach().cpu()), 0)
             light_field = np.concatenate((light_field, sr_refocused.detach().cpu()), 0)
 
 print(light_field.shape)
 light_field = np.moveaxis(light_field, 2, -1)
 if not os.path.isdir('npy'):
     os.mkdir('npy')
-np.save(f'npy/{model_name}_{model_idx}',light_field)
+np.save(f'npy/down_{model_name}_{model_idx}',light_field)
+#np.save(f'npy/{model_name}_{model_idx}',light_field)
 print(light_field.shape)
 '''
 for i in range(light_field.shape[0]):
