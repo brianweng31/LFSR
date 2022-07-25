@@ -59,5 +59,6 @@ light_field = np.moveaxis(light_field, 2, -1)
 print(light_field.shape)
 
 for i in range(light_field.shape[0]):
-    cv2.imshow(i,light_field[i,5])
+    print(light_field[i,5].shape)
+    cv2.imshow(f"{i}",light_field[i,5])
     cv2.waitKey(0)
