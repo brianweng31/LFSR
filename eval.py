@@ -29,7 +29,7 @@ elif model_name == "LinearFilter":
 elif model_name == "BaselineMethod":
     model = BaselineMethod(3,3)
 
-model.load_model(os.path.join('model',model.name,'best_model'), torch.device('cpu'))
+model.load_model(os.path.join('model',model.name,'best_model'))
 model.eval_mode()
 
 with torch.no_grad():
