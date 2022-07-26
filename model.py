@@ -148,7 +148,7 @@ class LinearFilterKernel(nn.Module):
             nn.Parameter(self.kernels[i]) for i in range(self.ang_y*self.ang_x))
         # torch.Size([b, st, 3, 170, 170])
         self.biases = nn.ParameterList(
-            nn.Parameter(self.bias[i] for i in range(self.ang_y*self.ang_x)))
+            nn.Parameter(self.bias[i]) for i in range(self.ang_y*self.ang_x))
 
         print(f"self.weights.shape = {self.weights.shape}")
         print(f"self.biases.shape = {self.biases.shape}")
