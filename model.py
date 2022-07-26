@@ -149,9 +149,6 @@ class LinearFilterKernel(nn.Module):
         # torch.Size([b, st, 3, 170, 170])
         self.biases = nn.ParameterList(
             nn.Parameter(self.bias[i]) for i in range(self.ang_y*self.ang_x))
-
-        print(f"self.weights.shape = {self.weights.shape}")
-        print(f"self.biases.shape = {self.biases.shape}")
     '''
     def linear_filter(self,img,y,x):
         # link: https://discuss.pytorch.org/t/locally-connected-layers/26979
