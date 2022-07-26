@@ -129,7 +129,7 @@ class FilterBankMethod(Method):
 ##############################
 ######## LinearFilter ########
 class LinearFilterKernel(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, stride, output_size, st):
+    def __init__(self, channels, kernel_size, stride, output_size, st):
         super().__init__()
         # Input: (N, Cin, H, W)
         # Output: (N, Cout, Hout, Wout)
@@ -139,18 +139,53 @@ class LinearFilterKernel(nn.Module):
         self.kernel_size = kernel_size[0]
         self.stride = stride
         self.output_size = output_size
-        self.kernels = torch.zeros((self.ang_y*self.ang_x,out_channels, in_channels, output_size[0], output_size[1], self.kernel_size**2))
-        for i in range(in_channels):
-            self.kernels[:,i,i,:,:,int(self.kernel_size**2/2)] = 1
+        #self.kernels = torch.zeros((self.ang_y*self.ang_x,out_channels, in_channels, output_size[0], output_size[1], self.kernel_size**2))
+        self.kernels = torch.zeros((self.ang_y*self.ang_x, output_size[0], output_size[1], self.kernel_size**2))
+        for i in range(channels):
+            self.kernels[:,i,:,:,int(self.kernel_size**2/2)] = 1
+        self.bias = torch.zeros((self.ang_y*self.ang_x, output_size[0], output_size[1]))
 
         self.weights = nn.ParameterList(
             nn.Parameter(self.kernels[i]) for i in range(self.ang_y*self.ang_x))
+        # torch.Size([b, st, 3, 170, 170])
         self.biases = nn.ParameterList(
-            nn.Parameter(torch.zeros(out_channels, output_size[0], output_size[1])) for i in range(self.ang_y*self.ang_x))
-    
+            nn.Parameter(self.bias[i] for i in range(self.ang_y*self.ang_x)))
+
+        print(f"self.weights.shape = {self.weights.shape}")
+        print(f"self.biases.shape = {self.biases.shape}")
+    '''
     def linear_filter(self,img,y,x):
         # link: https://discuss.pytorch.org/t/locally-connected-layers/26979
-        h, w = img.shape[2], img.shape[3]
+        b, c, h, w = img.size()
+
+        pad_x = (self.output_size[1]-1) * self.ang_x + (self.kernel_size-w)
+        pad_right = int(pad_x/2)
+        pad_left = pad_x - pad_right
+        pad_y = (self.output_size[0]-1) * self.ang_y + (self.kernel_size-h)
+        pad_bottom = int(pad_y/2)
+        pad_top = pad_y - pad_bottom
+        padding = (pad_left,pad_right,pad_top,pad_bottom)
+        #img = F.pad(img, (2,2,2,2), "constant", 0)
+        img = F.pad(img, padding, "constant", 0)
+        
+        kh, kw = self.kernel_size, self.kernel_size
+        dh, dw = self.stride
+
+        img = img.unfold(2, kh, dh).unfold(3, kw, dw)
+        # torch.Size([1, 3, 170, 170, 7, 7])
+        img = img.contiguous().view(*img.size()[:-2], -1)
+        # torch.Size([1, 3, 170, 170, 49])
+        out = (img.unsqueeze(1) * self.weights[y*self.ang_x+x]).sum([2, -1])
+        if self.biases[y*self.ang_x+x] is not None:
+            out += self.biases[y*self.ang_x+x]
+        out = torch.clamp(out,min=0,max=1)
+        down_img = out[0]
+
+        return down_img
+    '''
+    def linear_filter(self,lf):
+        b, st, c, h, w = .size()
+
         pad_x = (self.output_size[1]-1) * self.ang_x + (self.kernel_size-w)
         pad_right = int(pad_x/2)
         pad_left = pad_x - pad_right
@@ -160,20 +195,24 @@ class LinearFilterKernel(nn.Module):
         padding = (pad_left,pad_right,pad_top,pad_bottom)
         #print(f"padding = {padding}")
         #img = F.pad(img, (2,2,2,2), "constant", 0)
-        img = F.pad(img, padding, "constant", 0)
-        _, c, h, w = img.size()
+        lf = F.pad(lf, padding, "constant", 0)
+
         kh, kw = self.kernel_size, self.kernel_size
         dh, dw = self.stride
-        img = img.unfold(2, kh, dh).unfold(3, kw, dw)
-        # torch.Size([1, 3, 170, 170, 7, 7])
-        img = img.contiguous().view(*img.size()[:-2], -1)
-        # torch.Size([1, 3, 170, 170, 49])
-        out = (img.unsqueeze(1) * self.weights[y*self.ang_x+x]).sum([2, -1])
-        if self.biases[y*self.ang_x+x] is not None:
-            out += self.biases[y*self.ang_x+x]
-        out = torch.clamp(out,min=0,max=1)
-        down_img = out[0]     
-        return down_img
+
+        lf = lf.unfold(3, kh, dh).unfold(4, kw, dw)
+        print("lf_1.shape = ",lf.shape)
+        # torch.Size([b, st, 3, 170, 170, 7, 7])
+        lf = lf.contiguous().view(*lf.size()[:-2], -1)
+        print("lf_2.shape = ",lf.shape)
+        # torch.Size([b, st, 3, 170, 170, 49])
+        down_lf = (lf * self.weights.unsqueeze(0).unsqueeze(2)).sum(-1)
+
+        down_lf += self.biases.unsqueeze(0).unsqueeze(2)
+        down_lf = torch.clamp(out,min=0,max=1)
+        
+        return out
+
 
     def forward(self, lf, device):
         """
@@ -183,6 +222,11 @@ class LinearFilterKernel(nn.Module):
             lr_lf: (N, s*t, 3, H/3, W/3) tensor
         """
         b,st,c,h,w = lf.shape
+
+        ## modeified
+        lr_lf = self.linear_filter(lf)
+        ##
+        '''
         lr_lf = torch.zeros((b,st,c,int(h/self.ang_y),int(w/self.ang_x)))
         for y in range(self.ang_y):
             for x in range(self.ang_x):
@@ -190,6 +234,7 @@ class LinearFilterKernel(nn.Module):
                     img = lf[i,y*self.ang_x+x]
                     down_img = self.linear_filter(torch.unsqueeze(img,0),y,x)
                     lr_lf[i,y*self.ang_x+x] = down_img
+        '''
         return lr_lf.to(device)
 
 
@@ -204,7 +249,7 @@ class LinearFilter(Method):
         self.device = device
 
         # output_size to be determined
-        self.net = LinearFilterKernel(in_channels=3, out_channels=3, kernel_size=(7, 7), stride=(3, 3), output_size=(int(self.h/self.t),int(self.w/self.s)), st=(self.s,self.t)).to(device)
+        self.net = LinearFilterKernel(channels=3, kernel_size=(7, 7), stride=(3, 3), output_size=(int(self.h/self.t),int(self.w/self.s)), st=(self.s,self.t)).to(device)
     
     def downsampling(self, hr_lf):
         #b,st,c,h,w = hr_lf.shape
