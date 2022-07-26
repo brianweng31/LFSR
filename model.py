@@ -184,7 +184,7 @@ class LinearFilterKernel(nn.Module):
         return down_img
     '''
     def linear_filter(self,lf):
-        b, st, c, h, w = .size()
+        b, st, c, h, w = lf.size()
 
         pad_x = (self.output_size[1]-1) * self.ang_x + (self.kernel_size-w)
         pad_right = int(pad_x/2)
