@@ -211,9 +211,9 @@ class LinearFilterKernel(nn.Module):
         print("down_lf_1.shape = ",down_lf.shape)
 
         down_lf += self.biases.unsqueeze(0).unsqueeze(2)
-        down_lf = torch.clamp(out,min=0,max=1)
+        down_lf = torch.clamp(down_lf,min=0,max=1)
         
-        return out
+        return down_lf
 
 
     def forward(self, lf, device):
