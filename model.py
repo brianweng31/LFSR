@@ -140,9 +140,8 @@ class LinearFilterKernel(nn.Module):
         self.stride = stride
         self.output_size = output_size
         #self.kernels = torch.zeros((self.ang_y*self.ang_x,out_channels, in_channels, output_size[0], output_size[1], self.kernel_size**2))
-        self.kernels = torch.zeros((self.ang_y*self.ang_x, output_size[0], output_size[1], self.kernel_size**2))
-        for i in range(channels):
-            self.kernels[:,i,:,:,int(self.kernel_size**2/2)] = 1
+        self.kernels = torch.zeros((self.ang_y*self.ang_x, 1, output_size[0], output_size[1], self.kernel_size**2))
+        self.kernels[:,0,:,:,int(self.kernel_size**2/2)] = 1
         self.bias = torch.zeros((self.ang_y*self.ang_x, output_size[0], output_size[1]))
 
         self.weights = nn.ParameterList(
@@ -206,7 +205,8 @@ class LinearFilterKernel(nn.Module):
         lf = lf.contiguous().view(*lf.size()[:-2], -1)
         print("lf_2.shape = ",lf.shape)
         # torch.Size([b, st, 3, 170, 170, 49])
-        down_lf = (lf * self.weights.unsqueeze(0).unsqueeze(2)).sum(-1)
+        down_lf = (lf * self.weights.unsqueeze(0)).sum(-1)
+        print("down_lf_1.shape = ",down_lf.shape)
 
         down_lf += self.biases.unsqueeze(0).unsqueeze(2)
         down_lf = torch.clamp(out,min=0,max=1)
