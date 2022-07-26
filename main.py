@@ -38,7 +38,7 @@ if __name__=="__main__":
         methods = [LinearFilter(device, h, w, s=3, t=3, model_idx=model_idx)]
         methods_name = ['LinearFilter']
         ###
-        for param in methods[0].parameters():
+        for param in methods[0].net.parameters():
             print(type(param.data), param.size())
         ###
 
