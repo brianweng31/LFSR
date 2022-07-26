@@ -147,43 +147,7 @@ class LinearFilterKernel(nn.Module):
         self.weights =  nn.Parameter(self.kernels)
         # torch.Size([b, st, 3, 170, 170])
         self.biases = nn.Parameter(self.bias)
-        '''
-        self.weights = nn.ParameterList(
-            nn.Parameter(self.kernels[i]) for i in range(self.ang_y*self.ang_x))
-        # torch.Size([b, st, 3, 170, 170])
-        self.biases = nn.ParameterList(
-            nn.Parameter(self.bias[i]) for i in range(self.ang_y*self.ang_x))
-        '''
-    '''
-    def linear_filter(self,img,y,x):
-        # link: https://discuss.pytorch.org/t/locally-connected-layers/26979
-        b, c, h, w = img.size()
 
-        pad_x = (self.output_size[1]-1) * self.ang_x + (self.kernel_size-w)
-        pad_right = int(pad_x/2)
-        pad_left = pad_x - pad_right
-        pad_y = (self.output_size[0]-1) * self.ang_y + (self.kernel_size-h)
-        pad_bottom = int(pad_y/2)
-        pad_top = pad_y - pad_bottom
-        padding = (pad_left,pad_right,pad_top,pad_bottom)
-        #img = F.pad(img, (2,2,2,2), "constant", 0)
-        img = F.pad(img, padding, "constant", 0)
-        
-        kh, kw = self.kernel_size, self.kernel_size
-        dh, dw = self.stride
-
-        img = img.unfold(2, kh, dh).unfold(3, kw, dw)
-        # torch.Size([1, 3, 170, 170, 7, 7])
-        img = img.contiguous().view(*img.size()[:-2], -1)
-        # torch.Size([1, 3, 170, 170, 49])
-        out = (img.unsqueeze(1) * self.weights[y*self.ang_x+x]).sum([2, -1])
-        if self.biases[y*self.ang_x+x] is not None:
-            out += self.biases[y*self.ang_x+x]
-        out = torch.clamp(out,min=0,max=1)
-        down_img = out[0]
-
-        return down_img
-    '''
     def linear_filter(self,lf):
         b, st, c, h, w = lf.size()
 
@@ -202,13 +166,13 @@ class LinearFilterKernel(nn.Module):
         dh, dw = self.stride
 
         lf = lf.unfold(3, kh, dh).unfold(4, kw, dw)
-        print("lf_1.shape = ",lf.shape)
+        #print("lf_1.shape = ",lf.shape)
         # torch.Size([b, st, 3, 170, 170, 7, 7])
         lf = lf.contiguous().view(*lf.size()[:-2], -1)
-        print("lf_2.shape = ",lf.shape)
+        #print("lf_2.shape = ",lf.shape)
         # torch.Size([b, st, 3, 170, 170, 49])
         down_lf = (lf * self.weights.unsqueeze(0)).sum(-1)
-        print("down_lf_1.shape = ",down_lf.shape)
+        #print("down_lf_1.shape = ",down_lf.shape)
 
         down_lf += self.biases.unsqueeze(0).unsqueeze(2)
         down_lf = torch.clamp(down_lf,min=0,max=1)
@@ -224,19 +188,8 @@ class LinearFilterKernel(nn.Module):
             lr_lf: (N, s*t, 3, H/3, W/3) tensor
         """
         b,st,c,h,w = lf.shape
-
-        ## modeified
         lr_lf = self.linear_filter(lf)
-        ##
-        '''
-        lr_lf = torch.zeros((b,st,c,int(h/self.ang_y),int(w/self.ang_x)))
-        for y in range(self.ang_y):
-            for x in range(self.ang_x):
-                for i in range(b):
-                    img = lf[i,y*self.ang_x+x]
-                    down_img = self.linear_filter(torch.unsqueeze(img,0),y,x)
-                    lr_lf[i,y*self.ang_x+x] = down_img
-        '''
+        
         return lr_lf.to(device)
 
 
