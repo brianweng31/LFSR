@@ -85,7 +85,7 @@ if __name__=="__main__":
                         methods[method_idx].clear_history()
 
                 early_stopped = [False for _ in range(len(methods))]
-                early_stopping = EarlyStopping(tolerance=tolerance/10, min_percent=min_percent)
+                #early_stopping = EarlyStopping(tolerance=tolerance/10, min_percent=min_percent)
 
                 for epoch in range(0,epochs+1):
                     if early_stopped == [True for _ in range(len(methods))]:
@@ -121,6 +121,7 @@ if __name__=="__main__":
                                         methods[method_idx].save_model(os.path.join('model',methods[method_idx].name,'best_model'))
 
                                     print(log_str)
+                                    '''
                                     test_loss = losses[0]
                                     early_stopping(test_loss)
                                     print(f"Last_loss:{early_stopping.last_loss}, Counter:{early_stopping.counter}")
@@ -129,6 +130,7 @@ if __name__=="__main__":
                                         methods[method_idx].record.tb_writer.close()
                                         early_stopped[method_idx] = True
                                         break
+                                    '''
 
 
         
