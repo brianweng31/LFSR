@@ -106,6 +106,7 @@ class FilterBankMethod(Method):
         self.net = FilterBankKernel(in_channels=in_channels, out_channels=out_channels, kernel_size=kernel_size, stride=stride).to(device)  
         self.s = s
         self.t = t
+        assert self.s == self.t
         self.name = self.__class__.__name__ + f"_{model_idx}"
     def downsampling(self, hr_lf):
         return self.net(hr_lf)
