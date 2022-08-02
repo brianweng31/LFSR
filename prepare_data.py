@@ -5,6 +5,7 @@ import os
 from torch.utils.data import Dataset, DataLoader
 from torch.utils.data import ConcatDataset as ConcatDataset
 from torchvision import transforms
+from skimage import transform
 from math import floor
 
 torch.manual_seed(0)
