@@ -18,7 +18,7 @@ def generate_lf_from_img(img, disparity, ang_res=[2, 2], shape=None):
     margin = [(h-H)//2, (w-W)//2]
     s, t = ang_res[0], ang_res[1]
     
-    shift_vec = [];
+    shift_vec = []
     for s_idx in range(s):
         for t_idx in range(t):
             shift_vec.append((s_idx, t_idx))
@@ -32,7 +32,11 @@ def generate_lf_from_img(img, disparity, ang_res=[2, 2], shape=None):
         img_warps.append(transform.warp(img, tform, mode = 'constant'))
 
     lightfield = np.array(img_warps).reshape(s,t,h,w,c)
-    lightfield = lightfield[:,:,margin[0]:-margin[0]-1,margin[1]:-margin[1]-1,:]
+
+    if (h-H) % 2 == 1:
+        lightfield = lightfield[:,:,margin[0]:-margin[0]-1,margin[1]:-margin[1]-1,:]
+    else: #(h-H) % 2 == 0
+        lightfield = lightfield[:,:,margin[0]:-margin[0],margin[1]:-margin[1],:]
 
     return lightfield
 
