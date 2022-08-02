@@ -184,7 +184,7 @@ def get_dataloaders(dataset_name, batch_size=4, shuffle=True, num_workers=4, dow
 
     
     if dataset_name == "RandomTraining":
-        light_field_size = [2, 2, floor(512/downsample_rate)//2*2, floor(512/downsample_rate)//2*2, 3]
+        light_field_size = [3, 3, floor(512/downsample_rate)//2*2, floor(512/downsample_rate)//2*2, 3]
         disparity_range = np.arange(-3,4)/downsample_rate
 
         train_lfdataset = RandomLFDataset(
@@ -193,12 +193,12 @@ def get_dataloaders(dataset_name, batch_size=4, shuffle=True, num_workers=4, dow
             img_num = 10)
         test_lfdataset_1 = LFDataset(
             "../Datasets/4D_Light_Field_Benchmark/test", 
-            [[0,8],[72,80]],
+            [[0,4,8],[36,40,44],[72,76,80]],
             light_field_size = light_field_size,
             disparity_range = disparity_range)
         test_lfdataset_2 = LFDataset(
             "../Datasets/INRIADataset_Lytro1G/Testing", 
-            [[0,6],[42,48]],
+            [[0,3,6],[21,24,27],[42,45,48]],
             light_field_size = light_field_size,
             disparity_range = disparity_range)
         
