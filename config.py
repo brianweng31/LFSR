@@ -26,15 +26,15 @@ assert len(refocused_img_metrics) == len(refocused_img_metrics_name)
 
 ## training
 dataset_name = "RandomTraining" # HCI, RandomTraining
-#training_light_field_downsample_rate = [4,2,1]
-training_light_field_downsample_rate = [1]
-#training_light_field_epoch = [40000,20000,20000]
-training_light_field_epoch = [30000]
+training_light_field_downsample_rate = [4,2,1]
+#training_light_field_downsample_rate = [1]
+training_light_field_epoch = [40000,20000,20000]
+#training_light_field_epoch = [30000]
 batch_size = 8
 assert len(training_light_field_downsample_rate)==len(training_light_field_epoch)
 
 ## early stopping
-tolerance = 500
+tolerance = 2000
 min_percent = 0.001
 
 #tolerance = 20
