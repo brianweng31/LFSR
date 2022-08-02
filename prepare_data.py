@@ -184,7 +184,7 @@ def get_dataloaders(dataset_name, batch_size=4, shuffle=True, num_workers=4, dow
 
     
     if dataset_name == "RandomTraining":
-        light_field_size = [3, 3, floor(512/downsample_rate)//2*2, floor(512/downsample_rate)//2*2, 3]
+        light_field_size = [3, 3, floor(512/downsample_rate)//3*3, floor(512/downsample_rate)//3*3, 3]
         disparity_range = np.arange(-3,4)/downsample_rate
 
         train_lfdataset = RandomLFDataset(
