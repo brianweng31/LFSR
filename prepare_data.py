@@ -73,7 +73,7 @@ class LFDataset(Dataset):
         return (torch.tensor(light_field)/255).type(torch.float32)
 
 class RandomLFDataset(Dataset):
-    def __init__(self, light_field_dataset_path=None, used_index=None, light_field_size=[2,2,256,256,3], disparity_range=range(-5,6,1), img_num = 100):
+    def __init__(self, light_field_dataset_path=None, used_index=None, light_field_size=[3,3,512,512,3], disparity_range=range(-5,6,1), img_num = 100):
         np.random.seed(0)
         self.light_field_size = light_field_size
         self.disparity_range = disparity_range
@@ -93,7 +93,7 @@ class RandomLFDataset(Dataset):
 
     def __getitem__(self, idx):
         light_field = generate_lf_from_img(self.rand_imgs[idx], self.max_disparity, self.light_field_size[0:2], shape=self.light_field_size[2:4])
-
+        print(f'light_field.shape = {light_field.shape}')
         return (torch.tensor(light_field)).type(torch.float32)
 
 class CustomConcatDataset(ConcatDataset):
@@ -185,7 +185,7 @@ def get_dataloaders(dataset_name, batch_size=4, shuffle=True, num_workers=4, dow
     
     if dataset_name == "RandomTraining":
         light_field_size = [3, 3, floor(512/downsample_rate)//3*3, floor(512/downsample_rate)//3*3, 3]
-        disparity_range = np.arange(-3,4)/downsample_rate
+        disparity_range = np.arange(-5,6)/downsample_rate
 
         train_lfdataset = RandomLFDataset(
             light_field_size = light_field_size,
