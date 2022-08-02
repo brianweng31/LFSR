@@ -13,6 +13,8 @@ torch.manual_seed(0)
 def generate_lf_from_img(img, disparity, ang_res=[2, 2], shape=None):
     h, w, c = img.shape
     H, W = shape[0], shape[1]
+    print(f'h,w = {h},{w}')
+    print(f'H,W = {H},{W}')
     margin = [(h-H)//2, (w-W)//2]
     s, t = ang_res[0], ang_res[1]
     
