@@ -124,14 +124,15 @@ if __name__=="__main__":
 
                                     print(log_str)
                                     
-                                    test_loss = losses[0]
-                                    early_stopping(test_loss)
-                                    print(f"Last_loss:{early_stopping.last_loss}, Counter:{early_stopping.counter}")
-                                    if early_stopping.early_stop:
-                                        print("Early stopped at epoch: ", epoch)
-                                        methods[method_idx].record.tb_writer.close()
-                                        early_stopped[method_idx] = True
-                                        break
+                                    if epoch >= 500:
+                                        test_loss = losses[0]
+                                        early_stopping(test_loss)
+                                        print(f"Last_loss:{early_stopping.last_loss}, Counter:{early_stopping.counter}")
+                                        if early_stopping.early_stop:
+                                            print("Early stopped at epoch: ", epoch)
+                                            methods[method_idx].record.tb_writer.close()
+                                            early_stopped[method_idx] = True
+                                            break
                                     
 
 
