@@ -109,7 +109,7 @@ class FilterBankMethod(Method):
     def downsampling(self, hr_lf):
         return self.net(hr_lf)
     def enhance_LR_lightfield(self, lr_lf):
-        modified_lf = torch.repeat_interleave(torch.repeat_interleave(lr_lf, 2, dim=-2), 2, dim=-1)
+        modified_lf = torch.repeat_interleave(torch.repeat_interleave(lr_lf, self.s, dim=-2), self.s, dim=-1)
         #modified_lf = torch.repeat_interleave(torch.repeat_interleave(lr_lf, 3, dim=-2), 3, dim=-1)
         for i in range(self.s):
             for j in range(self.t):
