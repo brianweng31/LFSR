@@ -13,8 +13,8 @@ torch.manual_seed(0)
 def generate_lf_from_img(img, disparity, ang_res=[2, 2], shape=None):
     h, w, c = img.shape
     H, W = shape[0], shape[1]
-    print(f'h,w = {h},{w}')
-    print(f'H,W = {H},{W}')
+    #print(f'h,w = {h},{w}')
+    #print(f'H,W = {H},{W}')
     margin = [(h-H)//2, (w-W)//2]
     s, t = ang_res[0], ang_res[1]
     
@@ -98,9 +98,9 @@ class RandomLFDataset(Dataset):
         return len(self.rand_imgs)
 
     def __getitem__(self, idx):
-        print(f'self.light_field.shape = {self.light_field_size}')
+        #print(f'self.light_field.shape = {self.light_field_size}')
         light_field = generate_lf_from_img(self.rand_imgs[idx], self.max_disparity, self.light_field_size[0:2], shape=self.light_field_size[2:4])
-        print(f'light_field.shape = {light_field.shape}')
+        #print(f'light_field.shape = {light_field.shape}')
         return (torch.tensor(light_field)).type(torch.float32)
 
 class CustomConcatDataset(ConcatDataset):
