@@ -7,9 +7,44 @@ from torch.utils.data import ConcatDataset as ConcatDataset
 from torchvision import transforms
 from math import floor
 
-
 torch.manual_seed(0)
+
+def generate_lf_from_img(img, disparity, ang_res=[2, 2], shape=None):
+    h, w, c = img.shape
+    H, W = shape[0], shape[1]
+    margin = [(h-H)//2, (w-W)//2]
+    s, t = ang_res[0], ang_res[1]
     
+    shift_vec = [];
+    for s_idx in range(s):
+        for t_idx in range(t):
+            shift_vec.append((s_idx, t_idx))
+  
+    fixedPoints = np.array([[0, 0], [w/2, 0], [w, 0], [0, h/2], [w/2, h/2], [w, 0], [0, h], [w/2, h], [w, h]])
+    center_point = np.tile(np.array([w/2, h/2]), [9, 1])
+    img_warps = []
+    for img_idx in range(len(shift_vec)):
+        movingPoints = (center_point+disparity*np.tile(shift_vec[img_idx], [9, 1]))/(h/2)*(fixedPoints - center_point) + center_point
+        tform = transform.estimate_transform('polynomial', movingPoints[:,[-1,-2]], fixedPoints[:,[-1,-2]])
+        img_warps.append(transform.warp(img, tform, mode = 'constant'))
+
+    lightfield = np.array(img_warps).reshape(s,t,h,w,c)
+    lightfield = lightfield[:,:,margin[0]:-margin[0]-1,margin[1]:-margin[1]-1,:]
+
+    return lightfield
+
+def generate_random_pixel_imgs(height, width, img_num = 1):
+    R_value = list(range(0,256))
+    G_value = list(range(0,256))
+    B_value = list(range(0,256))
+
+    RGB_possibles = np.array(np.meshgrid(R_value, G_value, B_value)).T.reshape(-1,3)
+    RGB_possibles = RGB_possibles[np.random.permutation(RGB_possibles.shape[0]),:]
+    
+
+    img = RGB_possibles[:height*width,:]
+    return img.reshape(height, width, 3)/255
+
 class LFDataset(Dataset):
     def __init__(self, light_field_dataset_path, used_index, light_field_size = [3,3,510,510,3], disparity_range=range(-5,6,1)):
         self.using_index = used_index
@@ -33,6 +68,29 @@ class LFDataset(Dataset):
                 light_field[i,j,:,:,:] = self.transform(subview)
         return (torch.tensor(light_field)/255).type(torch.float32)
 
+class RandomLFDataset(Dataset):
+    def __init__(self, light_field_dataset_path=None, used_index=None, light_field_size=[2,2,256,256,3], disparity_range=range(-5,6,1), img_num = 100):
+        np.random.seed(0)
+        self.light_field_size = light_field_size
+        self.disparity_range = disparity_range
+        self.max_disparity = np.max(np.abs(self.disparity_range)).astype(int)
+
+        np.random.seed(0)
+        self.rand_seed = np.random.randint(img_num*img_num, size=img_num)
+        self.rand_imgs = []
+
+        for idx in range(len(self.rand_seed)):
+            print("Generating Random Image %d..." % idx)
+            np.random.seed(self.rand_seed[idx])
+            self.rand_imgs.append(generate_random_pixel_imgs(self.light_field_size[2]+self.max_disparity, self.light_field_size[3]+self.max_disparity))
+    
+    def __len__(self):
+        return len(self.rand_imgs)
+
+    def __getitem__(self, idx):
+        light_field = generate_lf_from_img(self.rand_imgs[idx], self.max_disparity, self.light_field_size[0:2], shape=self.light_field_size[2:4])
+
+        return (torch.tensor(light_field)).type(torch.float32)
 
 class CustomConcatDataset(ConcatDataset):
     def __init__(self, datasets) -> None:
@@ -121,23 +179,22 @@ def get_dataloaders(dataset_name, batch_size=4, shuffle=True, num_workers=4, dow
         test_dataloader = DataLoader(test_lfdataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 
     
-    if dataset_name == "SRFilterTraining":
-        light_field_size = [3, 3, floor(512/downsample_rate)//3*3, floor(512/downsample_rate)//3*3, 3]
+    if dataset_name == "RandomTraining":
+        light_field_size = [2, 2, floor(512/downsample_rate)//2*2, floor(512/downsample_rate)//2*2, 3]
         disparity_range = np.arange(-3,4)/downsample_rate
 
-        train_lfdataset = LFDataset(
-            "/content/gdrive/MyDrive/LF_Dataset/SRFilterTraining/Training", 
-            [[0,1,2],[3,4,5],[6,7,8]],
+        train_lfdataset = RandomLFDataset(
             light_field_size = light_field_size,
-            disparity_range = disparity_range)
+            disparity_range = disparity_range,
+            img_num = 10)
         test_lfdataset_1 = LFDataset(
-            "/content/gdrive/MyDrive/LF_Dataset/4D_Light_Field_Benchmark/test", 
-            [[0,4,8],[36,40,44],[72,76,80]],
+            "../Datasets/4D_Light_Field_Benchmark/test", 
+            [[0,8],[72,80]],
             light_field_size = light_field_size,
             disparity_range = disparity_range)
         test_lfdataset_2 = LFDataset(
-            "/content/gdrive/MyDrive/LF_Dataset/INRIADataset_Lytro1G/Testing", 
-            [[0,3,6],[21,24,27],[42,45,48]],
+            "../Datasets/INRIADataset_Lytro1G/Testing", 
+            [[0,6],[42,48]],
             light_field_size = light_field_size,
             disparity_range = disparity_range)
         
@@ -145,5 +202,5 @@ def get_dataloaders(dataset_name, batch_size=4, shuffle=True, num_workers=4, dow
         
         train_dataloader = DataLoader(train_lfdataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
         test_dataloader = DataLoader(test_lfdataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
-        
+
     return train_dataloader, test_dataloader

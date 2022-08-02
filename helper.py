@@ -41,8 +41,8 @@ def shift_images(imgs, x_shift, y_shift, alpha=1.0):
         See https://pytorch.org/docs/stable/nn.functional.html?highlight=grid_sample#torch.nn.functional.grid_sample
         Scale coordinates to [-1, 1]
     """
-    new_coords[:, :, :, 0] = 2 * (new_coords[:, :, :, 0] / h - 0.5)
-    new_coords[:, :, :, 1] = 2 * (new_coords[:, :, :, 1] / w - 0.5)
+    new_coords[:, :, :, 0] = 2 * (new_coords[:, :, :, 0] / w - 0.5)
+    new_coords[:, :, :, 1] = 2 * (new_coords[:, :, :, 1] / h - 0.5)
     shifted_img = F.grid_sample(
         imgs, new_coords, padding_mode="border", align_corners = False, mode='bicubic')
     return torch.clip(shifted_img, 0, 1)
