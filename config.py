@@ -25,7 +25,7 @@ refocused_img_metrics_name = ["PSNR", "SSIM", "GMSD", "LPIPS"]
 assert len(refocused_img_metrics) == len(refocused_img_metrics_name)
 
 ## training
-dataset_name = "HCI" # HCI, RandomTraining
+dataset_name = "RandomTraining" # HCI, RandomTraining
 training_light_field_downsample_rate = [2,1]
 #training_light_field_downsample_rate = [1]
 training_light_field_epoch = [20000,20000]
