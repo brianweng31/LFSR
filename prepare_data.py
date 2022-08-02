@@ -48,6 +48,9 @@ def generate_random_pixel_imgs(height, width, img_num = 1):
 
 class LFDataset(Dataset):
     def __init__(self, light_field_dataset_path, used_index, light_field_size = [3,3,510,510,3], disparity_range=range(-5,6,1)):
+        self.s = light_field_size[0]
+        self.t = light_field_size[1]
+        assert self.s == self.t
         self.using_index = used_index
         self.lfdata_folder_path = [x[0] for x in os.walk(light_field_dataset_path)]
         self.lfdata_folder_path.pop(0)
@@ -63,8 +66,8 @@ class LFDataset(Dataset):
 
     def __getitem__(self, idx):
         light_field = np.zeros(self.light_field_size)
-        for i in range(3):
-            for j in range(3):
+        for i in range(self.t):
+            for j in range(self.s):
                 subview = Image.open(os.path.join(self.lfdata_folder_path[idx], "input_Cam%03d.png" % self.using_index[i][j]))
                 light_field[i,j,:,:,:] = self.transform(subview)
         return (torch.tensor(light_field)/255).type(torch.float32)
