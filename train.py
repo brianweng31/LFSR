@@ -26,7 +26,7 @@ def training(dataloader,device,methods,optimizers,optimized_losses,estimate_clea
                 sr = methods[method_idx].enhance_LR_lightfield(lr)
                 sr_refocused = refocus_pixel_focal_stack_batch(sr, dataloader.dataset.disparity_range, s, t)
                 sr_refocused = remove_img_margin(sr_refocused)
-                
+
                 print(f'lr.shape = {lr.shape}')
                 print(f'sr_refocused.shape = {sr_refocused.shape}')
                 print(f'hr_refocused.shape = {hr_refocused.shape}')
