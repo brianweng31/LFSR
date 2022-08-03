@@ -68,6 +68,12 @@ if __name__=="__main__":
 
     if TRAIN:
         training_time = []
+
+        try:
+            for method_idx in range(len(methods)):
+                methods[method_idx].load_model(os.path.join('model',methods[method_idx].name,'best_model'))
+        except:
+            pass
         
         downsample_rate_idx = 0
         while downsample_rate_idx < len(training_light_field_downsample_rate):
@@ -124,7 +130,7 @@ if __name__=="__main__":
 
                                     print(log_str)
                                     
-                                    if epoch >= 500:
+                                    if epoch >= 100:
                                         test_loss = losses[0]
                                         early_stopping(test_loss)
                                         print(f"Last_loss:{early_stopping.last_loss}, Counter:{early_stopping.counter}")
