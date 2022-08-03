@@ -68,13 +68,13 @@ if __name__=="__main__":
 
     if TRAIN:
         training_time = []
-
+        
         try:
             for method_idx in range(len(methods)):
                 methods[method_idx].load_model(os.path.join('model',methods[method_idx].name,'best_model'))
         except:
             pass
-        
+
         downsample_rate_idx = 0
         while downsample_rate_idx < len(training_light_field_downsample_rate):
             start = time.time()
