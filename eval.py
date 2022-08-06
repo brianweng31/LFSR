@@ -2,6 +2,7 @@ import os
 import torch
 import cv2
 import numpy as np
+import torch.nn as nn
 from helper import remove_img_margin, refocus_pixel_focal_stack_batch
 from prepare_data import get_dataloaders
 from model import BaselineMethod, FilterBankMethod, LinearFilter
