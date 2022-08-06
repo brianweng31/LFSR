@@ -8,9 +8,9 @@ from model import BaselineMethod, FilterBankMethod, LinearFilter
 from test import testing
 
 ######
-model_name = "LinearFilter" #FilterBankMethod, LinearFilter, BaselineMethod
+model_name = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
 model_idx = "F0"
-dataset_name = "HCI" #HCI, RandomTraining
+dataset_name = "RandomTraining" #HCI, RandomTraining
 batch_size = 4
 
 optimized_losses = [nn.L1Loss()]
