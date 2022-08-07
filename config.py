@@ -7,7 +7,7 @@ optimizer = torch.optim.Adam
 lr = 0.0001
 
 ### model selection
-model = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
+model = "LinearFilter" #FilterBankMethod, LinearFilter, BaselineMethod
 model_idx = "F0"
 post_fix = ""
 pre_fix = ""
@@ -26,10 +26,10 @@ assert len(refocused_img_metrics) == len(refocused_img_metrics_name)
 
 ## training
 dataset_name = "RandomTraining" # HCI, RandomTraining
-training_light_field_downsample_rate = [4,2,1]
-#training_light_field_downsample_rate = [1]
-training_light_field_epoch = [40000,20000,20000]
-#training_light_field_epoch = [30000]
+#training_light_field_downsample_rate = [4,2,1]
+training_light_field_downsample_rate = [1]
+#training_light_field_epoch = [40000,20000,20000]
+training_light_field_epoch = [30000]
 batch_size = 4
 assert len(training_light_field_downsample_rate)==len(training_light_field_epoch)
 

@@ -16,7 +16,7 @@ class Record:
 
 class Method(metaclass=abc.ABCMeta):
     def __init__(self, name):
-        self.event_idx = 1
+        self.event_idx = 0
         self.record = Record(name,self.event_idx)
         self.name = name
 

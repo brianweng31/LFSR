@@ -40,6 +40,8 @@ if __name__=="__main__":
             h, w = 512, 512
         if dataset_name == "INRIA_Lytro":
             h, w = 379, 379
+        if dataset_name == "RandomTraining":
+            h, w = 512, 512
 
         methods = [LinearFilter(device, h, w, s=3, t=3, model_idx=model_idx)]
         methods_name = ['LinearFilter']
