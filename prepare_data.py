@@ -113,23 +113,6 @@ def get_dataloaders(dataset_name, batch_size=4, shuffle=True, num_workers=4, dow
         light_field_size = [3, 3, floor(512/downsample_rate)//3*3, floor(512/downsample_rate)//3*3, 3]
         disparity_range = np.arange(-5,6)/downsample_rate
 
-        '''
-        train_lfdataset_1 = LFDataset(
-            "/content/gdrive/MyDrive/LF_Dataset/4D_Light_Field_Benchmark/additional", 
-            [[0,4,8],[36,40,44],[72,76,80]],
-            light_field_size = light_field_size,
-            disparity_range = disparity_range)
-        train_lfdataset_2 = LFDataset(
-            "/content/gdrive/MyDrive/LF_Dataset/4D_Light_Field_Benchmark/training", 
-            [[0,4,8],[36,40,44],[72,76,80]],
-            light_field_size = light_field_size,
-            disparity_range = disparity_range)
-        test_lfdataset = LFDataset(
-            "/content/gdrive/MyDrive/LF_Dataset/4D_Light_Field_Benchmark/test", 
-            [[0,4,8],[36,40,44],[72,76,80]],
-            light_field_size = light_field_size,
-            disparity_range = disparity_range)
-        '''
         train_lfdataset_1 = LFDataset(
             "../Datasets/4D_Light_Field_Benchmark/additional", 
             [[0,4,8],[36,40,44],[72,76,80]],
@@ -154,15 +137,15 @@ def get_dataloaders(dataset_name, batch_size=4, shuffle=True, num_workers=4, dow
 
     if dataset_name == "INRIA_Lytro":
         light_field_size = [3, 3, floor(379/downsample_rate)//3*3, floor(379/downsample_rate)//3*3, 3]
-        disparity_range = np.arange(-3,4)/downsample_rate
+        disparity_range = np.arange(-5,6)/downsample_rate
 
         train_lfdataset = LFDataset(
-            "/content/gdrive/MyDrive/LF_Dataset/INRIADataset_Lytro1G/Training", 
+            "../Datasets/INRIADataset_Lytro1G/Training", 
             [[0,3,6],[21,24,27],[42,45,48]],
             light_field_size = light_field_size,
             disparity_range = disparity_range)
         test_lfdataset = LFDataset(
-            "/content/gdrive/MyDrive/LF_Dataset/INRIADataset_Lytro1G/Testing", 
+            "../Datasets/INRIADataset_Lytro1G/Testing", 
             [[0,3,6],[21,24,27],[42,45,48]],
             light_field_size = light_field_size,
             disparity_range = disparity_range)
