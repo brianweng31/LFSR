@@ -2,6 +2,7 @@ import torch, gc
 import numpy as np
 import os
 import time
+
 from config import optimizer, lr
 from config import model, model_idx
 from config import dataset_name, training_light_field_downsample_rate, training_light_field_epoch, batch_size
@@ -13,6 +14,8 @@ from model import BaselineMethod, FilterBankMethod, LinearFilter
 from train import training
 from test import testing
 
+# for LinearFilter
+load_FBmodel = True
 
 torch.set_default_dtype(torch.float32)
 gc.collect()
@@ -43,8 +46,17 @@ if __name__=="__main__":
         if dataset_name == "RandomTraining":
             h, w = 512, 512
 
-        methods = [LinearFilter(device, h, w, s=3, t=3, model_idx=model_idx)]
+        if load_FBmodel:
+            model = FilterBankMethod(device, 3, 3, in_channels=9, out_channels=9, kernel_size=(1, 7, 7), stride=(1, 3, 3), model_idx=model_idx)
+            model.load_model(os.path.join('model',f"FilterBankMethod_{model_idx}",'best_model'))
+            for params in model.net.parameters(): # only one iter for FB_kernels
+                FB_kernels = params
+            methods = [LinearFilter(device, h, w, s=3, t=3, model_idx=model_idx, FB_kernels=FB_kernels)]
+        else:
+            methods = [LinearFilter(device, h, w, s=3, t=3, model_idx=model_idx, FB_kernels=None)]
+        
         methods_name = ['LinearFilter']
+
 
         for params in methods[0].net.parameters():
             print(params.size())

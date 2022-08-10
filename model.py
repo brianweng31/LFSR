@@ -132,7 +132,7 @@ class FilterBankMethod(Method):
 ##############################
 ######## LinearFilter ########
 class LinearFilterKernel(nn.Module):
-    def __init__(self, channels, kernel_size, stride, output_size, st):
+    def __init__(self, channels, kernel_size, stride, output_size, st, FB_kernels):
         super().__init__()
         # Input: (N, Cin, H, W)
         # Output: (N, Cout, Hout, Wout)
@@ -144,10 +144,22 @@ class LinearFilterKernel(nn.Module):
         self.output_size = output_size
         #self.kernels = torch.zeros((self.ang_y*self.ang_x,out_channels, in_channels, output_size[0], output_size[1], self.kernel_size**2))
         self.kernels = torch.zeros(self.ang_y*self.ang_x, self.ang_y*self.ang_x, 1, output_size[0], output_size[1], self.kernel_size**2)
-        for i in range(self.ang_y*self.ang_x):
-            self.kernels[i,i,0,:,:,int(self.kernel_size**2/2)] = 1
-        self.bias = torch.zeros(self.ang_y*self.ang_x, output_size[0], output_size[1])
+        if FB_kernels == None:
+            for i in range(self.ang_y*self.ang_x):
+                self.kernels[i,i,0,:,:,int(self.kernel_size**2/2)] = 1
+        else:
+            # FB [9,9,1,7,7]
+            # LinearFilter [9,9,1,170,170,49]
+            FB_kernels = FB_kernels.contiguous().view(*FB_kernels.size()[:-2], -1)
+            # FB [9,9,1,49]
+            FB_kernels = FB_kernels.view(*FB_kernels.size()[:-1],1,1,-1)
+            # FB [9,9,1,1,1,49]
+            FB_kernels = torch.repeat_interleave(torch.repeat_interleave(FB_kernels,output_size[0],dim=3), output_size[1], dim=4)
+            # FB [9,9,1,170,170,49]
+            self.kernels = FB_kernels
 
+
+        self.bias = torch.zeros(self.ang_y*self.ang_x, output_size[0], output_size[1])
         self.weights =  nn.Parameter(self.kernels)
         # torch.Size([st, st, 1, 170, 170, 49])
         self.biases = nn.Parameter(self.bias)
@@ -200,7 +212,7 @@ class LinearFilterKernel(nn.Module):
 
 
 class LinearFilter(Method):
-    def __init__(self, device, h, w, s=3, t=3, model_idx=0):
+    def __init__(self, device, h, w, s=3, t=3, model_idx=0, FB_kernels=None):
         super().__init__(self.__class__.__name__+f"_{model_idx}")
         self.s = s
         self.t = t
@@ -210,7 +222,7 @@ class LinearFilter(Method):
         self.device = device
 
         # output_size to be determined
-        self.net = LinearFilterKernel(channels=3, kernel_size=(7, 7), stride=(3, 3), output_size=(int(self.h/self.t),int(self.w/self.s)), st=(self.s,self.t)).to(device)
+        self.net = LinearFilterKernel(channels=3, kernel_size=(7, 7), stride=(3, 3), output_size=(int(self.h/self.t),int(self.w/self.s)), st=(self.s,self.t),FB_kernels=FB_kernels).to(device)
     
     def downsampling(self, hr_lf):
         #b,st,c,h,w = hr_lf.shape
