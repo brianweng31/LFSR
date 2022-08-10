@@ -153,12 +153,16 @@ class LinearFilterKernel(nn.Module):
             FB_kernels = FB_kernels.contiguous().view(*FB_kernels.size()[:-2], -1)
             # FB [9,9,1,49]
             FB_kernels = FB_kernels.view(*FB_kernels.size()[:-1],1,1,-1)
+
+            # LF [out_channel, in_channel]
+            # FB [in_channel, out_channel]
+            FB_kernels = torch.moveaxis(FB_kernels, 0, 1)
             # FB [9,9,1,1,1,49]
             FB_kernels = torch.repeat_interleave(torch.repeat_interleave(FB_kernels,output_size[0],dim=3), output_size[1], dim=4)
             # FB [9,9,1,170,170,49]
             self.kernels = FB_kernels
             print(self.kernels[0,0,0,0,0])
-            print(self.kernels[1,0,0,0,0])
+            print(self.kernels[0,1,0,0,0])
 
 
         self.bias = torch.zeros(self.ang_y*self.ang_x, output_size[0], output_size[1])
@@ -191,8 +195,8 @@ class LinearFilterKernel(nn.Module):
         #print("lf_2.shape = ",lf.shape)
         # torch.Size([b, st, 3, 170, 170, 49])
         down_lf = (lf.unsqueeze(1) * self.weights.unsqueeze(0)).sum([2,-1])
-        # torch.Size([b, 1, st, 3, 170, 170, 49])
-        # torch.Size([1, st, st, 1, 170, 170, 49])
+        #      lf = torch.Size([b, 1, st, 3, 170, 170, 49])
+        # weights = torch.Size([1, st, st, 1, 170, 170, 49])
         #print("down_lf.shape = ",down_lf.shape)
 
         down_lf += self.biases.unsqueeze(0).unsqueeze(2)
