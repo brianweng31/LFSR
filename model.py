@@ -156,7 +156,7 @@ class LinearFilterKernel(nn.Module):
 
             # LF [out_channel, in_channel]
             # FB [in_channel, out_channel]
-            FB_kernels = torch.moveaxis(FB_kernels, 0, 1)
+            #FB_kernels = torch.moveaxis(FB_kernels, 0, 1)
             # FB [9,9,1,1,1,49]
             FB_kernels = torch.repeat_interleave(torch.repeat_interleave(FB_kernels,output_size[0],dim=3), output_size[1], dim=4)
             # FB [9,9,1,170,170,49]
