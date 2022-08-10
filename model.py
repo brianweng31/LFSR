@@ -165,7 +165,7 @@ class LinearFilterKernel(nn.Module):
         self.biases = nn.Parameter(self.bias)
 
     def linear_filter(self,lf):
-        print("lf.device() = ",lf.get_device())
+        #print("lf.device() = ",lf.get_device())
         b, st, c, h, w = lf.size()
 
         pad_x = (self.output_size[1]-1) * self.ang_x + (self.kernel_size-w)
@@ -195,7 +195,7 @@ class LinearFilterKernel(nn.Module):
 
         down_lf += self.biases.unsqueeze(0).unsqueeze(2)
         down_lf = torch.clamp(down_lf,min=0,max=1)
-        print("down_lf.device = ",down_lf.get_device())
+        #print("down_lf.device = ",down_lf.get_device())
 
         return down_lf
 
@@ -209,7 +209,7 @@ class LinearFilterKernel(nn.Module):
         """
         b,st,c,h,w = lf.shape
         lr_lf = self.linear_filter(lf)
-        
+        print('lr_lf.device = ',lr_lf.get_device())
         return lr_lf.to(device)
 
 
