@@ -85,7 +85,10 @@ if __name__=="__main__":
         
         try:
             for method_idx in range(len(methods)):
-                methods[method_idx].load_model(os.path.join('model',methods[method_idx].name,'best_model'))
+                #methods[method_idx].load_model(os.path.join('model',methods[method_idx].name,'best_model'))
+                # for FilterBank
+                methods[method_idx].load_model(os.path.join('model','FilterBankMethod_F1','best_model'))
+        
         except:
             pass
 
