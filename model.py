@@ -209,8 +209,8 @@ class LinearFilterKernel(nn.Module):
         """
         b,st,c,h,w = lf.shape
         lr_lf = self.linear_filter(lf)
-        print('lr_lf.device = ',lr_lf.get_device())
-        return lr_lf.to(device)
+        #print('lr_lf.device = ',lr_lf.get_device())
+        return lr_lf
 
 
 class LinearFilter(Method):
