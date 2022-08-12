@@ -161,7 +161,11 @@ class LinearFilterKernel(nn.Module):
             FB_kernels = torch.repeat_interleave(torch.repeat_interleave(FB_kernels,output_size[0],dim=3), output_size[1], dim=4)
             # FB [9,9,1,170,170,49]
             self.kernels = FB_kernels
+            print('same view')
             print(self.kernels[0,0,0,0,0])
+            print(self.kernels[0,0,0,1,0])
+            print(self.kernels[0,0,0,0,1])
+            print('different view')
             print(self.kernels[0,1,0,0,0])
 
 
@@ -180,9 +184,9 @@ class LinearFilterKernel(nn.Module):
         pad_y = (self.output_size[0]-1) * self.ang_y + (self.kernel_size-h)
         pad_bottom = int(pad_y/2)
         pad_top = pad_y - pad_bottom
-        padding = (pad_left,pad_right,pad_top,pad_bottom)
-        #print(f"padding = {padding}")
-        #img = F.pad(img, (2,2,2,2), "constant", 0)
+        #padding = (pad_left,pad_right,pad_top,pad_bottom)
+        # test
+        padding = (0,pad_x,0,pad_y)
         lf = F.pad(lf, padding, "constant", 0)
 
         kh, kw = self.kernel_size, self.kernel_size
