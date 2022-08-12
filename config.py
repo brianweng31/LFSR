@@ -7,7 +7,7 @@ optimizer = torch.optim.Adam
 lr = 0.0001
 
 ### model selection
-model = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
+model = "LinearFilter" #FilterBankMethod, LinearFilter, BaselineMethod
 model_idx = "test"
 post_fix = ""
 pre_fix = ""
