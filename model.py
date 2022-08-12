@@ -145,7 +145,7 @@ class LinearFilterKernel(nn.Module):
         #self.kernels = torch.zeros((self.ang_y*self.ang_x,out_channels, in_channels, output_size[0], output_size[1], self.kernel_size**2))
         self.kernels = torch.zeros(self.ang_y*self.ang_x, self.ang_y*self.ang_x, 1, output_size[0], output_size[1], self.kernel_size**2)
         if FB_kernels == None:
-            '''
+            
             for i in range(st[0]):
                 for j in range(st[1]):
                     self.kernels[i*st[1]+j,i*st[1]+j,0,:,:,self.kernel_size*(2+i)+2+j] = 1
@@ -153,7 +153,7 @@ class LinearFilterKernel(nn.Module):
             '''
             for i in range(self.ang_y*self.ang_x):
                 self.kernels[i,i,0,:,:,int(self.kernel_size**2/2)] = 1
-            
+            '''
         else:
             # FB [9,9,1,7,7]
             # LinearFilter [9,9,1,170,170,49]
