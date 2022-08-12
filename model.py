@@ -161,14 +161,14 @@ class LinearFilterKernel(nn.Module):
             FB_kernels = torch.repeat_interleave(torch.repeat_interleave(FB_kernels,output_size[0],dim=3), output_size[1], dim=4)
             # FB [9,9,1,170,170,49]
             self.kernels = FB_kernels
-            '''
+            
             print('same view')
             print(self.kernels[0,0,0,0,0])
-            print(self.kernels[0,0,0,1,0])
-            print(self.kernels[0,0,0,0,1])
+            print(self.kernels[0,0,0,150,0])
+            print(self.kernels[0,0,0,0,150])
             print('different view')
             print(self.kernels[0,1,0,0,0])
-            '''
+            
 
 
         self.bias = torch.zeros(self.ang_y*self.ang_x, output_size[0], output_size[1])
