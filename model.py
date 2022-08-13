@@ -195,7 +195,6 @@ class LinearFilterKernel(nn.Module):
     def linear_filter(self,lf):
         #print("lf.device() = ",lf.get_device())
         b, st, c, h, w = lf.size()
-        print(lf.size())
 
         pad_x = (self.output_size[1]-1) * self.ang_x + (self.kernel_size-w)
         pad_right = int(pad_x/2)
@@ -207,9 +206,6 @@ class LinearFilterKernel(nn.Module):
         # test
         padding = (0,pad_x,0,pad_y)
         lf = F.pad(lf, padding, "constant", 0)
-        print(f'padding = {padding}')
-        print('lf[0] top left first row')
-        print(lf[0,0,:,0])
 
         kh, kw = self.kernel_size, self.kernel_size
         dh, dw = self.stride
@@ -229,10 +225,6 @@ class LinearFilterKernel(nn.Module):
         down_lf = torch.clamp(down_lf,min=0,max=1)
         # down_lf = torch.Size([b, st, 3, 170, 170])
         #print("down_lf.device = ",down_lf.get_device())
-        '''
-        print('top-left view first row')
-        print(down_lf[0,0,:,0])
-        '''
         
         return down_lf
 
