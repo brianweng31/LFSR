@@ -23,9 +23,9 @@ def testing(dataloader, device, model, epoch=0, estimate_clear_region=False):
         
         hr_refocused = remove_img_margin(hr_refocused)
         
-        print(sampled_batched_reshaped.size())
+        print(sample_batched_reshaped.size())
         print('lf[0] top left first row')
-        print(sampled_batched_reshaped[0,0,:,0])
+        print(sample_batched_reshaped[0,0,:,0])
         
         lr = model.downsampling(sample_batched_reshaped)
         sr = model.enhance_LR_lightfield(lr)
