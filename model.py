@@ -96,6 +96,7 @@ class FilterBankKernel(nn.Module):
                     #self.conv1.weight.data[i*n+j, i*n+j,:,padding[1]+(i-m_2),padding[2]+(j-n_2)] = 1.0
                     self.conv1.weight.data[i*n+j, i*n+j,:,floor(kernel_size[1]/2), floor(kernel_size[2]/2)] = 1.0
             #self.conv1.bias.data = torch.zeros(self.conv1.bias.data.shape)
+            print(self.conv1.weight.data[0,0,0])
         
     def forward(self, x):
         # implement the forward pass
