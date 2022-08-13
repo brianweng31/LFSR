@@ -34,7 +34,7 @@ def testing(dataloader, device, model, epoch=0, estimate_clear_region=False):
         print(lr[0])
 
         #torch.save(lr, 'tensor/FilterBank_down.pt')
-        fb_down = torch.load('tensors.pt')
+        fb_down = torch.load('tensor/FilterBank_down.pt')
         print('lr == fb_down:')
         print(lr == fb_down)
         '''
