@@ -25,7 +25,7 @@ def testing(dataloader, device, model, epoch=0, estimate_clear_region=False):
         
         print(sample_batched_reshaped.size())
         print('lf[0] top left third row')
-        print(sample_batched_reshaped[0,0,:,3,3:10])
+        print(sample_batched_reshaped[0,0,:,2:5,3:10])
         
         lr = model.downsampling(sample_batched_reshaped)
 
