@@ -35,7 +35,7 @@ def testing(dataloader, device, model, epoch=0, estimate_clear_region=False):
         print(lr[0,0,:,0])
 
         print('correct answer = ')
-        correct_answer = sample_batched_reshaped[:, :, :, 3::3,3::3]
+        correct_answer = sample_batched_reshaped[:, :, :, 2::3,2::3]
         print(correct_answer.size())
         print(correct_answer[0,0,:,0])
 
