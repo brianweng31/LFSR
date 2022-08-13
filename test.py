@@ -22,20 +22,20 @@ def testing(dataloader, device, model, epoch=0, estimate_clear_region=False):
             hr_refocused = refocus_pixel_focal_stack_batch(sample_batched_reshaped, dataloader.dataset.disparity_range, s, t)
         
         hr_refocused = remove_img_margin(hr_refocused)
-        '''
+        
         print(sample_batched_reshaped.size())
-        print('lf[0] top left first row')
-        print(sample_batched_reshaped[0,0,:,0])
-        '''
+        print('lf[0] top left third row')
+        print(sample_batched_reshaped[0,0,:,3:100])
+        
         lr = model.downsampling(sample_batched_reshaped)
 
         # b, st, c, h, w = lf.size()
         print(lr.size())
-        print('lf[0] top left first row')
+        print('down_lf[0] top left first row')
         print(lr[0,0,:,0])
 
         print('correct answer = ')
-        correct_answer = sample_batched_reshaped[:, :, :, 2::3,2::3]
+        correct_answer = sample_batched_reshaped[:, :, :, 3::3,3::3]
         print(correct_answer.size())
         print(correct_answer[0,0,:,0])
 
