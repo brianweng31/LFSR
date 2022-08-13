@@ -22,13 +22,13 @@ def testing(dataloader, device, model, epoch=0, estimate_clear_region=False):
             hr_refocused = refocus_pixel_focal_stack_batch(sample_batched_reshaped, dataloader.dataset.disparity_range, s, t)
         
         hr_refocused = remove_img_margin(hr_refocused)
-        
+        '''
         print(sample_batched_reshaped.size())
         print('lf[0] top left third row')
         print(sample_batched_reshaped[0,0,:,:7,:7])
-        
+        '''
         lr = model.downsampling(sample_batched_reshaped)
-
+        '''
         # b, st, c, h, w = lf.size()
         print(lr.size())
         print('down_lf[0] top left first row')
@@ -38,7 +38,7 @@ def testing(dataloader, device, model, epoch=0, estimate_clear_region=False):
         correct_answer = sample_batched_reshaped[:, :, :, 3::3,3::3]
         print(correct_answer.size())
         print(correct_answer[0,0,:,0])
-
+        '''
         sr = model.enhance_LR_lightfield(lr)
         sr_refocused = refocus_pixel_focal_stack_batch(sr, dataloader.dataset.disparity_range, s, t)
         sr_refocused = remove_img_margin(sr_refocused)
