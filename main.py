@@ -83,7 +83,7 @@ if __name__=="__main__":
 
     if TRAIN:
         training_time = []
-        '''
+        
         try:
             for method_idx in range(len(methods)):
                 #methods[method_idx].load_model(os.path.join('model',methods[method_idx].name,'best_model'))
@@ -91,7 +91,7 @@ if __name__=="__main__":
                 methods[method_idx].load_model(os.path.join('model','FilterBankMethod_F1','best_model'))
         except:
             pass
-        '''
+        
         
         
         
