@@ -206,7 +206,7 @@ class LinearFilterKernel(nn.Module):
         #padding = (pad_left,pad_right,pad_top,pad_bottom)
         # test
         #padding = (0,pad_x,0,pad_y)
-        padding = (3,1,3,1)
+        padding = (floor(self.kernel_size/2),pad_x-floor(self.kernel_size/2),floor(self.kernel_size/2),pad_y-floor(self.kernel_size/2))
         lf = F.pad(lf, padding, "constant", 0)
 
         kh, kw = self.kernel_size, self.kernel_size
