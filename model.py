@@ -206,7 +206,7 @@ class LinearFilterKernel(nn.Module):
         # test
         padding = (0,pad_x,0,pad_y)
         lf = F.pad(lf, padding, "constant", 0)
-
+        print(f'padding = {padding}')
         print('lf[0] top left first row')
         print(lf[0,0,:,0])
 
