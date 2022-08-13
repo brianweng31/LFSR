@@ -112,6 +112,11 @@ class FilterBankMethod(Method):
     def downsampling(self, hr_lf):
         return self.net(hr_lf)
     def enhance_LR_lightfield(self, lr_lf):
+        # test
+        print(f'down_lf.shape = {lr_lf.shape}')
+        print('top-left view first row')
+        print(lr_lf[0,0,:,0])
+        #
         modified_lf = torch.repeat_interleave(torch.repeat_interleave(lr_lf, self.s, dim=-2), self.s, dim=-1)
         #modified_lf = torch.repeat_interleave(torch.repeat_interleave(lr_lf, 3, dim=-2), 3, dim=-1)
         for i in range(self.s):
@@ -169,13 +174,14 @@ class LinearFilterKernel(nn.Module):
             FB_kernels = torch.repeat_interleave(torch.repeat_interleave(FB_kernels,output_size[0],dim=3), output_size[1], dim=4)
             # FB [9,9,1,170,170,49]
             self.kernels = FB_kernels
-            
+            '''
             print('same view')
             print(self.kernels[0,0,0,0,0])
             print(self.kernels[0,0,0,150,0])
             print(self.kernels[0,0,0,0,150])
             print('different view')
             print(self.kernels[0,1,0,0,0])
+            '''
             
 
 
@@ -215,7 +221,10 @@ class LinearFilterKernel(nn.Module):
 
         down_lf += self.biases.unsqueeze(0).unsqueeze(2)
         down_lf = torch.clamp(down_lf,min=0,max=1)
+        # down_lf = torch.Size([b, st, 3, 170, 170])
         #print("down_lf.device = ",down_lf.get_device())
+        print('top-left view first row')
+        print(down_lf[0,0,:,0])
         
         return down_lf
 
