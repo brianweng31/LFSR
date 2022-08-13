@@ -28,6 +28,7 @@ def testing(dataloader, device, model, epoch=0, estimate_clear_region=False):
         print(sample_batched_reshaped[0,0,:,:7,:7])
         '''
         lr = model.downsampling(sample_batched_reshaped)
+        '''
         # b, st, c, h, w = lf.size()
         print(lr.size())
         print('down_lf[0] top left first row')
@@ -37,6 +38,7 @@ def testing(dataloader, device, model, epoch=0, estimate_clear_region=False):
         fb_down = torch.load('tensor/FilterBank_down.pt')
         print('lr - fb_down:')
         print(lr - fb_down)
+        '''
         '''
         print('correct answer = ')
         correct_answer = sample_batched_reshaped[:, :, :, 3::3,3::3]
