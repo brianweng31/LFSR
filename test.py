@@ -32,7 +32,7 @@ def testing(dataloader, device, model, epoch=0, estimate_clear_region=False):
         # b, st, c, h, w = lf.size()
         print(lr.size())
         print('down_lf[0] top left first row')
-        print(lr[0,0,:,0])
+        print(lr[0,0])
         '''
         print('correct answer = ')
         correct_answer = sample_batched_reshaped[:, :, :, 3::3,3::3]
