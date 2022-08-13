@@ -116,7 +116,7 @@ if __name__=="__main__":
                     if early_stopped == [True for _ in range(len(methods))]:
                         break
                         
-                    #training(train_dataloader,device,methods,optimizers,optimized_losses,estimate_clear_region,early_stopped)
+                    training(train_dataloader,device,methods,optimizers,optimized_losses,estimate_clear_region,early_stopped)
 
                     if epoch%10==0:
                         with torch.no_grad():
@@ -147,7 +147,7 @@ if __name__=="__main__":
 
                                     print(log_str)
                                     
-                                    if epoch >= 100:
+                                    if epoch >= 200:
                                         test_loss = losses[0]
                                         early_stopping(test_loss)
                                         print(f"Last_loss:{early_stopping.last_loss}, Counter:{early_stopping.counter}")
