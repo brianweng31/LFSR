@@ -28,12 +28,12 @@ def testing(dataloader, device, model, epoch=0, estimate_clear_region=False):
         print(sample_batched_reshaped[0,0,:,:7,:7])
         '''
         lr = model.downsampling(sample_batched_reshaped)
-        '''
+        
         # b, st, c, h, w = lf.size()
         print(lr.size())
         print('down_lf[0] top left first row')
         print(lr[0,0,:,0])
-
+        '''
         print('correct answer = ')
         correct_answer = sample_batched_reshaped[:, :, :, 3::3,3::3]
         print(correct_answer.size())
