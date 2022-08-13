@@ -195,6 +195,7 @@ class LinearFilterKernel(nn.Module):
     def linear_filter(self,lf):
         #print("lf.device() = ",lf.get_device())
         b, st, c, h, w = lf.size()
+        print(lf.size())
 
         pad_x = (self.output_size[1]-1) * self.ang_x + (self.kernel_size-w)
         pad_right = int(pad_x/2)
