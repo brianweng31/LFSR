@@ -12,8 +12,8 @@ from test import testing
 
 ######
 model_name = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "F0"
-dataset_name = "RandomTraining" #HCI, RandomTraining
+model_idx = "F1_G1"
+dataset_name = "HCI" #HCI, RandomTraining
 batch_size = 4
 
 optimized_losses = [nn.L1Loss()]
