@@ -4,8 +4,8 @@ import piq
 
 ### hyperparameters
 optimizer = torch.optim.Adam
-lr = 0.0001
-#lr = 0.00001
+#lr = 0.0001
+lr = 0.00001
 
 ### model selection
 model = "LinearFilter" #FilterBankMethod, LinearFilter, BaselineMethod
