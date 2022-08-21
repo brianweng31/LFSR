@@ -78,10 +78,10 @@ class BaselineMethod(Method):
 ############################
 ######## FilterBank ########
 class FilterBankKernel(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, stride):
+    def __init__(self, in_channels, out_channels, kernel_size, stride, layer_num=1):
         super().__init__()
 
-        
+    '''
         padding = (0, floor(kernel_size[1]/2), floor(kernel_size[2]/2))
         #padding = (0, floor(kernel_size[1]/2)-1, floor(kernel_size[2]/2)-1)
         m, n = stride[1], stride[2]
@@ -94,15 +94,15 @@ class FilterBankKernel(nn.Module):
             self.conv1.weight.data = torch.zeros(self.conv1.weight.data.shape)
 
             
-            '''
+            
             # delta
-            for i in range(m):
-                for j in range(n):
+            #for i in range(m):
+                #for j in range(n):
                     #self.conv1.weight.data[i*n+j, i*n+j,:,padding[1]+(i-m_2),padding[2]+(j-n_2)] = 1.0
-                    self.conv1.weight.data[i*n+j, i*n+j,:,floor(kernel_size[1]/2), floor(kernel_size[2]/2)] = 1.0
+                    #self.conv1.weight.data[i*n+j, i*n+j,:,floor(kernel_size[1]/2), floor(kernel_size[2]/2)] = 1.0
             #self.conv1.bias.data = torch.zeros(self.conv1.bias.data.shape)
             #print(self.conv1.weight.data[0,0,0])
-            '''
+            
             
 
             # Gaussian
@@ -157,7 +157,7 @@ class FilterBankKernel(nn.Module):
 
         out = torch.cat(outputs, axis=1)
         return out
-    '''
+    
 
 class FilterBankMethod(Method):
     def __init__(self, device, s=3, t=3, in_channels=9, out_channels=9, kernel_size=(1, 7, 7), stride=(1, 3, 3), model_idx=0):
