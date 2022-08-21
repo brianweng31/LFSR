@@ -80,8 +80,7 @@ class BaselineMethod(Method):
 class FilterBankKernel(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, stride, layer_num=1):
         super().__init__()
-
-'''
+        '''
         padding = (0, floor(kernel_size[1]/2), floor(kernel_size[2]/2))
         #padding = (0, floor(kernel_size[1]/2)-1, floor(kernel_size[2]/2)-1)
         m, n = stride[1], stride[2]
@@ -117,12 +116,7 @@ class FilterBankKernel(nn.Module):
                 for j in range(n):
                     self.conv1.weight.data[i*n+j, i*n+j,:] = gaussian_kernel
             print(self.conv1.weight.data[0,0,0])
-        
-    def forward(self, x):
-        # implement the forward pass
-        return self.conv1(x)
-    
-'''
+        '''
         self.in_channels = in_channels
         self.layer_num = layer_num
         self.convs = nn.ModuleList()
@@ -145,8 +139,11 @@ class FilterBankKernel(nn.Module):
                 for i in range(m):
                     for j in range(n):
                         self.convs[k].weight.data[0,0,:] = gaussian_kernel
-                
-        
+    '''  
+    def forward(self, x):
+        # implement the forward pass
+        return self.conv1(x)   
+    ''' 
     def forward(self, x):
         outputs = []
         for k in range(self.in_channels):
