@@ -124,21 +124,20 @@ class FilterBankKernel(nn.Module):
             self.convs.append(nn.Conv3d(in_channels=1, out_channels=1, kernel_size = kernel_size, stride = stride, padding = padding, bias=False))
                 
         with torch.no_grad():
+            assert kernel_size[1] == kernel_size[2]
+            sigma = (kernel_size[1]-1)/6
+
+            axis = torch.arange(-floor(kernel_size[1]/2),floor(kernel_size[1]/2)+1)
+            x, y = torch.meshgrid(axis,axis)
+            gaussian_kernel = torch.exp(-(x**2+y**2)/(2*sigma**2))
+            gaussian_kernel = gaussian_kernel / gaussian_kernel.sum()
+
             for k in range(in_channels*layer_num):
                 
                 #self.convs[k].weight.data = torch.zeros(self.convs[k].weight.data.shape, requires_grad=True)
                 #self.convs[k].weight.data[0, 0, :, 1, 1] = 1.0
-                
-                assert kernel_size[1] == kernel_size[2]
-                sigma = (kernel_size[1]-1)/6
-
-                axis = torch.arange(-floor(kernel_size[1]/2),floor(kernel_size[1]/2)+1)
-                x, y = torch.meshgrid(axis,axis)
-                gaussian_kernel = torch.exp(-(x**2+y**2)/(2*sigma**2))
-                gaussian_kernel = gaussian_kernel / gaussian_kernel.sum()
-                for i in range(m):
-                    for j in range(n):
-                        self.convs[k].weight.data[0,0,:] = gaussian_kernel
+            
+                self.convs[k].weight.data[0,0,:] = gaussian_kernel
     '''  
     def forward(self, x):
         # implement the forward pass
