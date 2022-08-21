@@ -81,7 +81,7 @@ class FilterBankKernel(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, stride, layer_num=1):
         super().__init__()
 
-    '''
+'''
         padding = (0, floor(kernel_size[1]/2), floor(kernel_size[2]/2))
         #padding = (0, floor(kernel_size[1]/2)-1, floor(kernel_size[2]/2)-1)
         m, n = stride[1], stride[2]
@@ -122,7 +122,7 @@ class FilterBankKernel(nn.Module):
         # implement the forward pass
         return self.conv1(x)
     
-    '''
+'''
         self.in_channels = in_channels
         self.layer_num = layer_num
         self.convs = nn.ModuleList()
