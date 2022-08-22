@@ -168,6 +168,7 @@ class FilterBankMethod(Method):
         self.name = self.__class__.__name__ + f"_{model_idx}"
     def downsampling(self, hr_lf):
         
+        device = "cuda:0"
         b,st,c,h,w = hr_lf.shape
         ds_lf = hr_lf[:, :, :, 0::self.s,0::self.t]
         ds_lf = shift_images(ds_lf.reshape(b*st, c, h//3, w//3), 0.75*torch.ones(b*st).to(device), 0.75*torch.ones(b*st).to(device)).reshape(b, st, c, h//3, w//3)
