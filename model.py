@@ -85,7 +85,7 @@ class FilterBankKernel(nn.Module):
         
         padding = (0, floor(kernel_size[1]/2), floor(kernel_size[2]/2))
         #padding = (0, floor(kernel_size[1]/2)-1, floor(kernel_size[2]/2)-1)
-        
+        '''
         m, n = stride[1], stride[2]
         m_2, n_2 = floor(stride[1]/2), floor(stride[2]/2)
         self.conv1 = nn.Conv3d(in_channels=in_channels, out_channels=out_channels, kernel_size = kernel_size, stride = stride, padding = padding, bias=False)
@@ -140,8 +140,8 @@ class FilterBankKernel(nn.Module):
                 #self.convs[k].weight.data[0, 0, :, 1, 1] = 1.0
             
                 self.convs[k].weight.data[0,0,:] = gaussian_kernel
-        '''
-    
+        
+    '''
     def forward(self, x):
         # implement the forward pass
         return self.conv1(x)   
@@ -156,7 +156,7 @@ class FilterBankKernel(nn.Module):
 
         out = torch.cat(outputs, axis=1)
         return out
-    '''
+    
 
 class FilterBankMethod(Method):
     def __init__(self, device, s=3, t=3, in_channels=9, out_channels=9, kernel_size=(1, 7, 7), stride=(1, 3, 3), model_idx=0):
