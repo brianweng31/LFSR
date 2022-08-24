@@ -12,7 +12,7 @@ from test import testing
 
 ######
 model_name = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "test_3"
+model_idx = "test_23"
 dataset_name = "HCI" #HCI, RandomTraining
 batch_size = 4
 
