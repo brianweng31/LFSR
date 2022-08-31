@@ -9,7 +9,7 @@ lr = 0.0001
 
 ### model selection
 model = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "test_23"
+model_idx = "test_1d"
 post_fix = ""
 pre_fix = ""
 

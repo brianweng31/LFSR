@@ -85,9 +85,10 @@ class FilterBankKernel(nn.Module):
         
         padding = (0, floor(kernel_size[1]/2), floor(kernel_size[2]/2))
         #padding = (0, floor(kernel_size[1]/2)-1, floor(kernel_size[2]/2)-1)
-        '''
         m, n = stride[1], stride[2]
         m_2, n_2 = floor(stride[1]/2), floor(stride[2]/2)
+
+        '''
         self.conv1 = nn.Conv3d(in_channels=in_channels, out_channels=out_channels, kernel_size = kernel_size, stride = stride, padding = padding, bias=False)
                 
         with torch.no_grad():
@@ -119,6 +120,7 @@ class FilterBankKernel(nn.Module):
                     self.conv1.weight.data[i*n+j, i*n+j,:] = gaussian_kernel
             print(self.conv1.weight.data[0,0,0])
         '''
+        '''
         self.in_channels = in_channels
         self.layer_num = layer_num
         self.convs = nn.ModuleList()
@@ -140,12 +142,37 @@ class FilterBankKernel(nn.Module):
                 #self.convs[k].weight.data[0, 0, :, 1, 1] = 1.0
             
                 self.convs[k].weight.data[0,0,:] = gaussian_kernel
+        '''
+        self.in_channels = in_channels
+        self.convs_vertical = nn.ModuleList()
+        self.convs_horizontal = nn.ModuleList()
+        
+        vertical_kernel_size = (1, kernel_size[1], 1)
+        horizontal_kernel_size = (1, 1,  kernel_size[2])
+        vertical_stride = (1, stride[1], 1)
+        horizontal_stride = (1,  1,  stride[2])
+        vertical_padding = (0, padding[1], 0)
+        horizontal_padding = (0,  0,  padding[2])
+        
+        for _ in range(in_channels):
+            self.convs_vertical.append(nn.Conv3d(in_channels=1, out_channels=1, kernel_size = vertical_kernel_size, stride = vertical_stride, padding = vertical_padding, bias=False))
+            self.convs_horizontal.append(nn.Conv3d(in_channels=1, out_channels=1, kernel_size = horizontal_kernel_size, stride = horizontal_stride, padding = horizontal_padding, bias=False))
+
+        with torch.no_grad():
+            for k in range(self.in_channels):
+                self.convs_vertical[k].weight.data = torch.zeros(self.convs_vertical[k].weight.data.shape, requires_grad=True)
+                self.convs_horizontal[k].weight.data = torch.zeros(self.convs_horizontal[k].weight.data.shape, requires_grad=True)
+            for i in range(m):
+                for j in range(n):
+                    self.convs_vertical[i*n+j].weight.data[0, 0,:,padding[1]+i,0] = 1.0
+                    self.convs_horizontal[i*n+j].weight.data[0, 0,:,0,padding[2]+j] = 1.0
         
     '''
     def forward(self, x):
         # implement the forward pass
         return self.conv1(x)   
     ''' 
+    '''
     def forward(self, x):
         outputs = []
         for k in range(self.in_channels):
@@ -156,6 +183,16 @@ class FilterBankKernel(nn.Module):
 
         out = torch.cat(outputs, axis=1)
         return out
+    '''
+    def forward(self, x):
+        outputs = []
+        for k in range(self.in_channels):
+            o1 = self.convs_vertical[k](x[:,[k],:,:,:])
+            o2 = self.convs_horizontal[k](o1)
+            outputs.append(o2)
+
+        out = torch.cat(outputs, axis=1)
+    return out
     
 
 class FilterBankMethod(Method):
@@ -167,14 +204,15 @@ class FilterBankMethod(Method):
         assert self.s == self.t
         self.name = self.__class__.__name__ + f"_{model_idx}"
     def downsampling(self, hr_lf):
-        
+        '''
         device = "cuda:0"
         b,st,c,h,w = hr_lf.shape
         ds_lf = hr_lf[:, :, :, 1::self.s,1::self.t]
         #ds_lf = shift_images(ds_lf.reshape(b*st, c, h//3, w//3), 0.75*torch.ones(b*st).to(device), 0.75*torch.ones(b*st).to(device)).reshape(b, st, c, h//3, w//3)
         
-        #return self.net(hr_lf)
-        return self.net(ds_lf)
+        #return self.net(ds_lf)
+        '''
+        return self.net(hr_lf)
     def enhance_LR_lightfield(self, lr_lf):
         '''
         # test
