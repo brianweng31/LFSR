@@ -192,7 +192,7 @@ class FilterBankKernel(nn.Module):
             outputs.append(o2)
 
         out = torch.cat(outputs, axis=1)
-    return out
+        return out
     
 
 class FilterBankMethod(Method):
