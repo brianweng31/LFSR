@@ -9,8 +9,13 @@ import torch.nn.functional as F
 
 from helper import shift_images
 
+uid = os.environ.get("SUDO_UID")
+gid = os.environ.get("SUDO_GID")
+if uid: os.chown(path, uid, gid)
+
 class Record:
     def __init__(self, name = None, event_idx=0) -> None:
+        if 
         self.tb_writer = SummaryWriter(os.path.join('model',name,f"{event_idx}"))
         self.loss_history = []
         self.metric_history = []
