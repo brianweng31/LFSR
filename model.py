@@ -9,6 +9,9 @@ import torch.nn.functional as F
 
 from helper import shift_images
 
+filter_a = [0.08433, 0.1705, 0.1576, 0.1174, 0.06184, 0.01709]
+filter_omega = 3.442
+
 
 class Record:
     def __init__(self, name = None, event_idx=0) -> None:
@@ -144,6 +147,7 @@ class FilterBankKernel(nn.Module):
             
                 self.convs[k].weight.data[0,0,:] = gaussian_kernel
         '''
+        '''
         self.in_channels = in_channels
         self.convs_vertical = nn.ModuleList()
         self.convs_horizontal = nn.ModuleList()
@@ -167,7 +171,44 @@ class FilterBankKernel(nn.Module):
                 for j in range(n):
                     self.convs_vertical[i*n+j].weight.data[0, 0,:,padding[1]+i,0] = 1.0
                     self.convs_horizontal[i*n+j].weight.data[0, 0,:,0,padding[2]+j] = 1.0
+        '''
+
+        self.s = s
+        self.t = t
+        self.filter_weight = torch.nn.parameter.Parameter(data=torch.tensor(filter_a), requires_grad=True)
+        self.filter_omega = torch.nn.parameter.Parameter(data=torch.tensor(filter_omega), requires_grad=True) 
+        self.kernel_size = kernel_size
+        self.a_subscript = torch.nn.parameter.Parameter(data=torch.arange(0, self.filter_weight.shape[0]), requires_grad=False) 
         
+    
+    def lowpass(self):
+        normalized_ratio = self.kernel_size/14.0
+        x = torch.linspace(-normalized_ratio, normalized_ratio, self.kernel_size).to(self.filter_omega.device)
+        inner_cosine = self.filter_omega * torch.outer(x, self.a_subscript)
+        cos_terms = torch.cos(inner_cosine)
+        filter_ = torch.matmul(cos_terms, self.filter_weight)
+        return filter_
+    
+    
+    def forward(self, x):
+        #b, st, c, h, w = x.size()
+        original_shape = x[:,[0],:,:,:].shape
+        filter_ = self.lowpass()
+        
+        outputs = []
+        for i in range(self.s):
+            for j in range(self.t):
+                x1 = x[:,[i*self.t+j],:,:,:].reshape(-1, 1, x.shape[-1])
+                x1_out = F.conv1d(x1, filter_.view(1,1,self.kernel_size), padding='same')
+                x2 = x1_out.reshape(original_shape).permute(0,1,2,4,3).reshape(-1, 1, x.shape[-1])
+                x2_out = F.conv1d(x2, filter_.reshape(1,1,self.kernel_size), padding='same')
+                output = x2_out.reshape(original_shape).permute(0,1,2,4,3)
+                outputs.append(output[:,:,:,i::s,j::t])
+                               
+        out = torch.cat(outputs, axis=1)
+        return out
+
+
     '''
     def forward(self, x):
         # implement the forward pass
@@ -185,6 +226,7 @@ class FilterBankKernel(nn.Module):
         out = torch.cat(outputs, axis=1)
         return out
     '''
+    '''
     def forward(self, x):
         outputs = []
         for k in range(self.in_channels):
@@ -194,6 +236,7 @@ class FilterBankKernel(nn.Module):
 
         out = torch.cat(outputs, axis=1)
         return out
+    '''
     
 
 class FilterBankMethod(Method):
