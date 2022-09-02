@@ -38,8 +38,8 @@ if __name__=="__main__":
         methods_name = ['Filterbank']
 
         for params in methods[0].net.parameters():
-            #print(params.size())
-            print(params)
+            print(params.size())
+            #print(params)
 
     elif model == "LinearFilter":
         if dataset_name == "HCI":

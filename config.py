@@ -29,8 +29,8 @@ assert len(refocused_img_metrics) == len(refocused_img_metrics_name)
 dataset_name = "HCI" # RandomTraining, HCI, INRIA_Lytro 
 training_light_field_downsample_rate = [4,2,1]
 #training_light_field_downsample_rate = [1]
-#training_light_field_epoch = [40000,20000,20000]
-training_light_field_epoch = [10,10,10]
+training_light_field_epoch = [40000,20000,20000]
+#training_light_field_epoch = [10,10,10]
 #training_light_field_epoch = [30000]
 batch_size = 4
 assert len(training_light_field_downsample_rate)==len(training_light_field_epoch)
