@@ -164,13 +164,26 @@ class FilterBankKernel(nn.Module):
             self.convs_horizontal.append(nn.Conv3d(in_channels=1, out_channels=1, kernel_size = horizontal_kernel_size, stride = horizontal_stride, padding = horizontal_padding, bias=False))
 
         with torch.no_grad():
+            # modified
+            assert kernel_size[1] == kernel_size[2]
+            sigma = (kernel_size[1]-1)/6
+
+            x = torch.arange(-floor(kernel_size[1]/2),floor(kernel_size[1]/2)+1)
+            gaussian_kernel = torch.exp(-(x**2)/(2*sigma**2))
+            gaussian_kernel = gaussian_kernel / gaussian_kernel.sum()
+            print(gaussian_kernel)
+            #
             for k in range(self.in_channels):
                 self.convs_vertical[k].weight.data = torch.zeros(self.convs_vertical[k].weight.data.shape, requires_grad=True)
                 self.convs_horizontal[k].weight.data = torch.zeros(self.convs_horizontal[k].weight.data.shape, requires_grad=True)
             for i in range(m):
                 for j in range(n):
+                    '''
                     self.convs_vertical[i*n+j].weight.data[0, 0,:,padding[1]+i-1,0] = 1.0
                     self.convs_horizontal[i*n+j].weight.data[0, 0,:,0,padding[2]+j-1] = 1.0
+                    '''
+                    self.convs_vertical[i*n+j].weight.data[0,0,0,:,0] = gaussian_kernel
+                    self.convs_horizontal[i*n+j].weight.data[0,0,0,0,:] = gaussian_kernel
         
         '''
         self.s = s
