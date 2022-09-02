@@ -169,8 +169,8 @@ class FilterBankKernel(nn.Module):
                 self.convs_horizontal[k].weight.data = torch.zeros(self.convs_horizontal[k].weight.data.shape, requires_grad=True)
             for i in range(m):
                 for j in range(n):
-                    self.convs_vertical[i*n+j].weight.data[0, 0,:,padding[1]+i,0] = 1.0
-                    self.convs_horizontal[i*n+j].weight.data[0, 0,:,0,padding[2]+j] = 1.0
+                    self.convs_vertical[i*n+j].weight.data[0, 0,:,padding[1]+i-1,0] = 1.0
+                    self.convs_horizontal[i*n+j].weight.data[0, 0,:,0,padding[2]+j-1] = 1.0
         
         '''
         self.s = s
