@@ -197,9 +197,12 @@ class FilterBankKernel(nn.Module):
         # gaussian
         device = "cuda:0"
         self.kernel_size = kernel_size
-        filter_sigma = (kernel_size-1)/6
+        if self.kernel_size % 2 == 0:
+            filter_sigma = kernel_size/6
+        else:
+            filter_sigma = (kernel_size-1)/6
         self.filter_sigma = torch.nn.parameter.Parameter(data=torch.tensor(filter_sigma), requires_grad=True)   
-        x = torch.arange(-floor(kernel_size/2),floor(kernel_size/2)+1)
+        x = torch.linspace(-floor(kernel_size/2), floor(kernel_size/2), kernel_size).to(device)
         gaussian_kernel = torch.exp(-(x**2)/(2*filter_sigma**2)).to(device)
         self.filter_weight = torch.nn.parameter.Parameter(data=torch.tensor(1/gaussian_kernel.sum()), requires_grad=True)
         
@@ -217,7 +220,7 @@ class FilterBankKernel(nn.Module):
         '''
         # gaussian
         device = "cuda:0"
-        x = torch.arange(-floor(self.kernel_size/2),floor(self.kernel_size/2)+1).to(device)
+        x = torch.linspace(-floor(kernel_size/2), floor(kernel_size/2), kernel_size).to(device)
         gaussian_kernel = torch.exp(-(x**2)/(2*self.filter_sigma**2)).to(device)
         filter_  = self.filter_weight * gaussian_kernel
 
