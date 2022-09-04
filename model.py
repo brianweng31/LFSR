@@ -203,7 +203,7 @@ class FilterBankKernel(nn.Module):
             filter_sigma = (kernel_size-1)/6
         self.filter_sigma = torch.nn.parameter.Parameter(data=torch.tensor(filter_sigma), requires_grad=True)   
         self.x = torch.linspace(-floor(kernel_size/2), floor(kernel_size/2), kernel_size).to(device)
-        gaussian_kernel = torch.exp(-(x**2)/(2*filter_sigma**2)).to(device)
+        gaussian_kernel = torch.exp(-(self.x**2)/(2*filter_sigma**2)).to(device)
         self.filter_weight = torch.nn.parameter.Parameter(data=torch.tensor(1/gaussian_kernel.sum()), requires_grad=True)
         
         
