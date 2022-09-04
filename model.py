@@ -217,7 +217,7 @@ class FilterBankKernel(nn.Module):
         '''
         # gaussian
         device = "cuda:0"
-        x = torch.arange(-floor(self.kernel_size/2),floor(self.kernel_size/2)+1)
+        x = torch.arange(-floor(self.kernel_size/2),floor(self.kernel_size/2)+1).to(device)
         gaussian_kernel = torch.exp(-(x**2)/(2*self.filter_sigma**2)).to(device)
         filter_  = self.filter_weight * gaussian_kernel
 
