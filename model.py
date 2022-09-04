@@ -195,11 +195,12 @@ class FilterBankKernel(nn.Module):
         #self.filter_omega = torch.nn.parameter.Parameter(data=torch.tensor(filter_omega), requires_grad=True)   
         ##self.a_subscript = torch.nn.parameter.Parameter(data=torch.arange(0, self.filter_weight.shape[0]), requires_grad=False) 
         # gaussian
+        device = "cuda:0"
         self.kernel_size = kernel_size
         filter_sigma = (kernel_size-1)/6
         self.filter_sigma = torch.nn.parameter.Parameter(data=torch.tensor(filter_sigma), requires_grad=True)   
         x = torch.arange(-floor(kernel_size/2),floor(kernel_size/2)+1)
-        gaussian_kernel = torch.exp(-(x**2)/(2*filter_sigma**2))
+        gaussian_kernel = torch.exp(-(x**2)/(2*filter_sigma**2)).to(device)
         self.filter_weight = torch.nn.parameter.Parameter(data=torch.tensor(1/gaussian_kernel.sum()), requires_grad=True)
         
         
@@ -215,8 +216,9 @@ class FilterBankKernel(nn.Module):
         filter_ = torch.matmul(cos_terms, self.filter_weight)
         '''
         # gaussian
+        device = "cuda:0"
         x = torch.arange(-floor(self.kernel_size/2),floor(self.kernel_size/2)+1)
-        gaussian_kernel = torch.exp(-(x**2)/(2*self.filter_sigma**2))
+        gaussian_kernel = torch.exp(-(x**2)/(2*self.filter_sigma**2)).to(device)
         filter_  = self.filter_weight * gaussian_kernel
 
         return filter_
@@ -284,6 +286,7 @@ class FilterBankMethod(Method):
         assert self.s == self.t
         self.name = self.__class__.__name__ + f"_{model_idx}"
     def downsampling(self, hr_lf):
+        '''
         device = "cuda:0"
         b,st,c,h,w = hr_lf.shape
         # shift sub-view images
@@ -295,8 +298,8 @@ class FilterBankMethod(Method):
         #ds_lf = shift_images(ds_lf.reshape(b*st, c, h//3, w//3), 0.75*torch.ones(b*st).to(device), 0.75*torch.ones(b*st).to(device)).reshape(b, st, c, h//3, w//3)
         
         return self.net(ds_lf)
-        
-        #return self.net(hr_lf)
+        '''
+        return self.net(hr_lf)
     def enhance_LR_lightfield(self, lr_lf):
         '''
         # test
