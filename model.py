@@ -85,14 +85,15 @@ class BaselineMethod(Method):
 ############################
 ######## FilterBank ########
 class FilterBankKernel(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, stride, layer_num=1):
+    #def __init__(self, in_channels, out_channels, kernel_size, stride, layer_num=1):
+    def __init__(self, s, t, kernel_size):
         super().__init__()
-        
+        '''
         #padding = (0, floor(kernel_size[1]/2), floor(kernel_size[2]/2))
         padding = (0, floor(kernel_size[1]/2)-1, floor(kernel_size[2]/2)-1)
         m, n = stride[1], stride[2]
         m_2, n_2 = floor(stride[1]/2), floor(stride[2]/2)
-
+        '''
         '''
         self.conv1 = nn.Conv3d(in_channels=in_channels, out_channels=out_channels, kernel_size = kernel_size, stride = stride, padding = padding, bias=False)
                 
@@ -275,7 +276,9 @@ class FilterBankKernel(nn.Module):
 class FilterBankMethod(Method):
     def __init__(self, device, s=3, t=3, in_channels=9, out_channels=9, kernel_size=(1, 7, 7), stride=(1, 3, 3), model_idx=0):
         super().__init__(self.__class__.__name__+f"_{model_idx}")
-        self.net = FilterBankKernel(in_channels=in_channels, out_channels=out_channels, kernel_size=kernel_size, stride=stride).to(device)  
+        #self.net = FilterBankKernel(in_channels=in_channels, out_channels=out_channels, kernel_size=kernel_size, stride=stride).to(device)  
+        # id kernel
+        self.net = FilterBankKernel(s=s, t=t, kernel_size=kernel_size).to(device)  
         self.s = s
         self.t = t
         assert self.s == self.t
