@@ -242,6 +242,8 @@ class FilterBankKernel(nn.Module):
                 outputs.append(output[:,:,:,i::self.s,j::self.t])
                                
         out = torch.cat(outputs, axis=1)
+        # modeified
+        out = torch.clamp(out,min=0,max=1)
         return out
     
 
