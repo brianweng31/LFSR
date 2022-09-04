@@ -233,7 +233,7 @@ class FilterBankKernel(nn.Module):
         for i in range(self.s):
             for j in range(self.t):
                 x1 = x[:,[i*self.t+j],:,:,:].reshape(-1, 1, x.shape[-1])
-                print(f'x1.shape = {x1_shape}')
+                print(f'x1.shape = {x1.shape}')
                 x1_out = F.conv1d(x1, filter_.view(1,1,self.kernel_size), padding='same')
                 x2 = x1_out.reshape(original_shape).permute(0,1,2,4,3).reshape(-1, 1, x.shape[-1])
                 x2_out = F.conv1d(x2, filter_.reshape(1,1,self.kernel_size), padding='same')
