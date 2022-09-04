@@ -226,6 +226,7 @@ class FilterBankKernel(nn.Module):
     
     def forward(self, x):
         #b, st, c, h, w = x.size()
+        print(f'x.size() = {x.size()}')
         original_shape = x[:,[0],:,:,:].shape
         filter_ = self.lowpass()
         
