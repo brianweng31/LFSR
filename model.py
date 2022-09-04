@@ -9,9 +9,10 @@ import torch.nn.functional as F
 
 from helper import shift_images
 
-filter_a = [0.08433, 0.1705, 0.1576, 0.1174, 0.06184, 0.01709]
-filter_omega = 3.442
-
+#filter_a = [0.08433, 0.1705, 0.1576, 0.1174, 0.06184, 0.01709]
+#filter_omega = 3.442
+filter_a = [1, 0, 0, 0, 0, 0]
+filter_omega = 1
 
 class Record:
     def __init__(self, name = None, event_idx=0) -> None:
@@ -147,7 +148,8 @@ class FilterBankKernel(nn.Module):
             
                 self.convs[k].weight.data[0,0,:] = gaussian_kernel
         '''
-        
+        '''
+        # two id kernels, sub-view to sub-view
         self.in_channels = in_channels
         self.convs_vertical = nn.ModuleList()
         self.convs_horizontal = nn.ModuleList()
@@ -178,31 +180,47 @@ class FilterBankKernel(nn.Module):
                 self.convs_horizontal[k].weight.data = torch.zeros(self.convs_horizontal[k].weight.data.shape, requires_grad=True)
             for i in range(m):
                 for j in range(n):
-                    '''
-                    self.convs_vertical[i*n+j].weight.data[0, 0,:,padding[1]+i-1,0] = 1.0
-                    self.convs_horizontal[i*n+j].weight.data[0, 0,:,0,padding[2]+j-1] = 1.0
-                    '''
+                    
+                    #self.convs_vertical[i*n+j].weight.data[0, 0,:,padding[1]+i-1,0] = 1.0
+                    #self.convs_horizontal[i*n+j].weight.data[0, 0,:,0,padding[2]+j-1] = 1.0
                     self.convs_vertical[i*n+j].weight.data[0,0,0,:,0] = gaussian_kernel
                     self.convs_horizontal[i*n+j].weight.data[0,0,0,0,:] = gaussian_kernel
-        
         '''
+        
         self.s = s
         self.t = t
-        self.filter_weight = torch.nn.parameter.Parameter(data=torch.tensor(filter_a), requires_grad=True)
-        self.filter_omega = torch.nn.parameter.Parameter(data=torch.tensor(filter_omega), requires_grad=True) 
+        # cosine
+        #self.filter_weight = torch.nn.parameter.Parameter(data=torch.tensor(filter_a), requires_grad=True)
+        #self.filter_omega = torch.nn.parameter.Parameter(data=torch.tensor(filter_omega), requires_grad=True)   
+        ##self.a_subscript = torch.nn.parameter.Parameter(data=torch.arange(0, self.filter_weight.shape[0]), requires_grad=False) 
+        # gaussian
         self.kernel_size = kernel_size
-        self.a_subscript = torch.nn.parameter.Parameter(data=torch.arange(0, self.filter_weight.shape[0]), requires_grad=False) 
-        '''
-    '''
+        filter_sigma = (kernel_size-1)/6
+        self.filter_sigma = torch.nn.parameter.Parameter(data=torch.tensor(filter_sigma), requires_grad=True)   
+        x = torch.arange(-floor(kernel_size/2),floor(kernel_size/2)+1)
+        gaussian_kernel = torch.exp(-(x**2)/(2*filter_sigma**2))
+        self.filter_weight = torch.nn.parameter.Parameter(data=torch.tensor(1/gaussian_kernel.sum()), requires_grad=True)
+        
+        
+        
+    
     def lowpass(self):
+        # cosine
+        '''
         normalized_ratio = self.kernel_size/14.0
         x = torch.linspace(-normalized_ratio, normalized_ratio, self.kernel_size).to(self.filter_omega.device)
         inner_cosine = self.filter_omega * torch.outer(x, self.a_subscript)
         cos_terms = torch.cos(inner_cosine)
         filter_ = torch.matmul(cos_terms, self.filter_weight)
+        '''
+        # gaussian
+        x = torch.arange(-floor(self.kernel_size/2),floor(self.kernel_size/2)+1)
+        gaussian_kernel = torch.exp(-(x**2)/(2*self.filter_sigma**2))
+        filter_  = self.filter_weight * gaussian_kernel
+
         return filter_
-    '''
-    '''
+    
+    
     def forward(self, x):
         #b, st, c, h, w = x.size()
         original_shape = x[:,[0],:,:,:].shape
@@ -220,7 +238,7 @@ class FilterBankKernel(nn.Module):
                                
         out = torch.cat(outputs, axis=1)
         return out
-    '''
+    
 
 
     '''
@@ -240,7 +258,8 @@ class FilterBankKernel(nn.Module):
         out = torch.cat(outputs, axis=1)
         return out
     '''
-    
+    '''
+    # two 1d kernels, sub-view to sub-view
     def forward(self, x):
         outputs = []
         for k in range(self.in_channels):
@@ -250,7 +269,7 @@ class FilterBankKernel(nn.Module):
 
         out = torch.cat(outputs, axis=1)
         return out
-    
+    '''
     
 
 class FilterBankMethod(Method):
@@ -262,15 +281,19 @@ class FilterBankMethod(Method):
         assert self.s == self.t
         self.name = self.__class__.__name__ + f"_{model_idx}"
     def downsampling(self, hr_lf):
-        '''
         device = "cuda:0"
         b,st,c,h,w = hr_lf.shape
+        # shift sub-view images
+        for i in range(self.s):
+            for j in range(self.t):
+                hr_lf[:,i*self.t+j, :, :, :] = torch.roll(hr_lf[:,i*self.t+j, :, :, :], shifts=(-(i-1), -(j-1), dims=(-2,-1)))
+    
         ds_lf = hr_lf[:, :, :, 1::self.s,1::self.t]
         #ds_lf = shift_images(ds_lf.reshape(b*st, c, h//3, w//3), 0.75*torch.ones(b*st).to(device), 0.75*torch.ones(b*st).to(device)).reshape(b, st, c, h//3, w//3)
         
-        #return self.net(ds_lf)
-        '''
-        return self.net(hr_lf)
+        return self.net(ds_lf)
+        
+        #return self.net(hr_lf)
     def enhance_LR_lightfield(self, lr_lf):
         '''
         # test
