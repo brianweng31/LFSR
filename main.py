@@ -39,10 +39,12 @@ if __name__=="__main__":
         methods = [FilterBankMethod(device, 3, 3, in_channels=9, out_channels=9, kernel_size=14, stride=(1, 3, 3), model_idx=model_idx)]
         
         methods_name = ['Filterbank']
-
+        i = 0
         for params in methods[0].net.parameters():
             #print(params.size())
             print(params)
+            i += 1
+        print(i)
 
     elif model == "LinearFilter":
         if dataset_name == "HCI":

@@ -227,10 +227,10 @@ class FilterBankKernel(nn.Module):
         # gaussian
         device = "cuda:0"
         if axis == 'ver':
-            gaussian_kernel = torch.exp(-((self.x-self.filter_mean_ver[s*self.t+t])**2)/(2*self.filter_sigma**2)).to(device)
+            gaussian_kernel = torch.exp(-((self.x-self.filter_mean_ver[s*self.t+t])**2)/(2*self.filter_sigma_ver[s*self.t+t]**2)).to(device)
             filter_  = self.filter_weight_ver * gaussian_kernel
         else: # axis == 'hor'
-            gaussian_kernel = torch.exp(-((self.x-self.filter_mean_hor[s*self.t+t])**2)/(2*self.filter_sigma**2)).to(device)
+            gaussian_kernel = torch.exp(-((self.x-self.filter_mean_hor[s*self.t+t])**2)/(2*self.filter_sigma_hor[s*self.t+t]**2)).to(device)
             filter_  = self.filter_weight_hor * gaussian_kernel
 
         return filter_
