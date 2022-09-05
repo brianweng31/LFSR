@@ -210,8 +210,8 @@ class FilterBankKernel(nn.Module):
         self.filter_weight_ver = nn.ParameterList([nn.Parameter(data=torch.tensor(1/gaussian_kernel.sum()), requires_grad=True) for i in range(9)])
         self.filter_weight_hor = nn.ParameterList([nn.Parameter(data=torch.tensor(1/gaussian_kernel.sum()), requires_grad=True) for i in range(9)])
         
-        self.filter_mean_ver = nn.ParameterList([nn.Parameter(data=torch.tensor(0), requires_grad=True) for i in range(9)])
-        self.filter_mean_hor = nn.ParameterList([nn.Parameter(data=torch.tensor(0), requires_grad=True) for i in range(9)])
+        self.filter_mean_ver = nn.ParameterList([nn.Parameter(data=torch.zeros(1), requires_grad=True) for i in range(9)])
+        self.filter_mean_hor = nn.ParameterList([nn.Parameter(data=torch.zeros(1), requires_grad=True) for i in range(9)])
         
         
     
