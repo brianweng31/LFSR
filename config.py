@@ -9,7 +9,7 @@ lr = 0.0001
 
 ### model selection
 model = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "test_gaussian"
+model_idx = "test_gaussian_18"
 post_fix = ""
 pre_fix = ""
 
