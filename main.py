@@ -42,9 +42,9 @@ if __name__=="__main__":
         i = 0
         for params in methods[0].net.parameters():
             #print(params.size())
-            print(params)
+            #print(params)
             i += 1
-        print(i)
+        print(f'num of params = {i}')
 
     elif model == "LinearFilter":
         if dataset_name == "HCI":
