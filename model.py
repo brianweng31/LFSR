@@ -11,8 +11,8 @@ from helper import shift_images
 
 #filter_a = [0.08433, 0.1705, 0.1576, 0.1174, 0.06184, 0.01709]
 #filter_omega = 3.442
-filter_a = [1, 0, 0, 0, 0, 0]
-filter_omega = 1
+filter_a = [1., 0., 0., 0., 0., 0.]
+filter_omega = 1.
 
 class Record:
     def __init__(self, name = None, event_idx=0) -> None:
