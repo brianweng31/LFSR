@@ -191,6 +191,7 @@ class FilterBankKernel(nn.Module):
         self.s = s
         self.t = t
         # cosine
+        self.kernel_size = kernel_size
         self.filter_weight = torch.nn.parameter.Parameter(data=torch.tensor(filter_a), requires_grad=True)
         self.filter_omega = torch.nn.parameter.Parameter(data=torch.tensor(filter_omega), requires_grad=True)   
         self.a_subscript = torch.nn.parameter.Parameter(data=torch.arange(0, self.filter_weight.shape[0]), requires_grad=False) 
