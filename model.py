@@ -191,25 +191,26 @@ class FilterBankKernel(nn.Module):
         self.s = s
         self.t = t
         # cosine
-        #self.filter_weight = torch.nn.parameter.Parameter(data=torch.tensor(filter_a), requires_grad=True)
-        #self.filter_omega = torch.nn.parameter.Parameter(data=torch.tensor(filter_omega), requires_grad=True)   
-        ##self.a_subscript = torch.nn.parameter.Parameter(data=torch.arange(0, self.filter_weight.shape[0]), requires_grad=False) 
+        self.filter_weight = torch.nn.parameter.Parameter(data=torch.tensor(filter_a), requires_grad=True)
+        self.filter_omega = torch.nn.parameter.Parameter(data=torch.tensor(filter_omega), requires_grad=True)   
+        self.a_subscript = torch.nn.parameter.Parameter(data=torch.arange(0, self.filter_weight.shape[0]), requires_grad=False) 
         # gaussian
+        '''
         device = "cuda:0"
         self.kernel_size = kernel_size
         if self.kernel_size % 2 == 0:
             filter_sigma = kernel_size/6
         else:
             filter_sigma = (kernel_size-1)/6
-        self.filter_sigma = torch.nn.parameter.Parameter(data=torch.tensor(filter_sigma), requires_grad=True)   
-        '''
+        #self.filter_sigma = torch.nn.parameter.Parameter(data=torch.tensor(filter_sigma), requires_grad=True)   
+        
         self.filter_sigma_ver = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_sigma), requires_grad=True) for i in range(9)])
         self.filter_sigma_hor = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_sigma), requires_grad=True) for i in range(9)])
-        '''
+        
         self.x = torch.linspace(-floor(kernel_size/2), floor(kernel_size/2), kernel_size).to(device)
         gaussian_kernel = torch.exp(-(self.x**2)/(2*filter_sigma**2)).to(device)
-        self.filter_weight = torch.nn.parameter.Parameter(data=torch.tensor(1/gaussian_kernel.sum()), requires_grad=True)
-        '''
+        #self.filter_weight = torch.nn.parameter.Parameter(data=torch.tensor(1/gaussian_kernel.sum()), requires_grad=True)
+        
         self.filter_weight_ver = nn.ParameterList([nn.Parameter(data=torch.tensor(1/gaussian_kernel.sum()), requires_grad=True) for i in range(9)])
         self.filter_weight_hor = nn.ParameterList([nn.Parameter(data=torch.tensor(1/gaussian_kernel.sum()), requires_grad=True) for i in range(9)])
         
@@ -221,7 +222,7 @@ class FilterBankKernel(nn.Module):
     #def lowpass(self,s,t,axis):
     def lowpass(self):
         # cosine
-        '''
+        
         normalized_ratio = self.kernel_size/14.0
         x = torch.linspace(-normalized_ratio, normalized_ratio, self.kernel_size).to(self.filter_omega.device)
         inner_cosine = self.filter_omega * torch.outer(x, self.a_subscript)
@@ -230,7 +231,6 @@ class FilterBankKernel(nn.Module):
         '''
         # gaussian
         device = "cuda:0"
-        '''
         if axis == 'ver':
             gaussian_kernel = torch.exp(-((self.x-self.filter_mean_ver[s*self.t+t])**2)/(2*self.filter_sigma_ver[s*self.t+t]**2)).to(device)
             filter_  = self.filter_weight_ver[s*self.t+t] * gaussian_kernel
@@ -238,9 +238,6 @@ class FilterBankKernel(nn.Module):
             gaussian_kernel = torch.exp(-((self.x-self.filter_mean_hor[s*self.t+t])**2)/(2*self.filter_sigma_hor[s*self.t+t]**2)).to(device)
             filter_  = self.filter_weight_hor[s*self.t+t] * gaussian_kernel
         '''
-        gaussian_kernel = torch.exp(-((self.x**2)/(2*self.filter_sigma**2)).to(device))
-        filter_  = self.filter_weight * gaussian_kernel
-
         return filter_
     
     
