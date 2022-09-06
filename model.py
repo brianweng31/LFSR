@@ -201,21 +201,25 @@ class FilterBankKernel(nn.Module):
             filter_sigma = kernel_size/6
         else:
             filter_sigma = (kernel_size-1)/6
-        #self.filter_sigma = torch.nn.parameter.Parameter(data=torch.tensor(filter_sigma), requires_grad=True)   
+        self.filter_sigma = torch.nn.parameter.Parameter(data=torch.tensor(filter_sigma), requires_grad=True)   
+        '''
         self.filter_sigma_ver = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_sigma), requires_grad=True) for i in range(9)])
         self.filter_sigma_hor = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_sigma), requires_grad=True) for i in range(9)])
         self.x = torch.linspace(-floor(kernel_size/2), floor(kernel_size/2), kernel_size).to(device)
+        '''
         gaussian_kernel = torch.exp(-(self.x**2)/(2*filter_sigma**2)).to(device)
-        #self.filter_weight = torch.nn.parameter.Parameter(data=torch.tensor(1/gaussian_kernel.sum()), requires_grad=True)
+        self.filter_weight = torch.nn.parameter.Parameter(data=torch.tensor(1/gaussian_kernel.sum()), requires_grad=True)
+        '''
         self.filter_weight_ver = nn.ParameterList([nn.Parameter(data=torch.tensor(1/gaussian_kernel.sum()), requires_grad=True) for i in range(9)])
         self.filter_weight_hor = nn.ParameterList([nn.Parameter(data=torch.tensor(1/gaussian_kernel.sum()), requires_grad=True) for i in range(9)])
         
         self.filter_mean_ver = nn.ParameterList([nn.Parameter(data=torch.zeros(1), requires_grad=True) for i in range(9)])
         self.filter_mean_hor = nn.ParameterList([nn.Parameter(data=torch.zeros(1), requires_grad=True) for i in range(9)])
-        
+        '''
         
     
-    def lowpass(self,s,t,axis):
+    #def lowpass(self,s,t,axis):
+    def lowpass(self):
         # cosine
         '''
         normalized_ratio = self.kernel_size/14.0
@@ -226,12 +230,16 @@ class FilterBankKernel(nn.Module):
         '''
         # gaussian
         device = "cuda:0"
+        '''
         if axis == 'ver':
             gaussian_kernel = torch.exp(-((self.x-self.filter_mean_ver[s*self.t+t])**2)/(2*self.filter_sigma_ver[s*self.t+t]**2)).to(device)
             filter_  = self.filter_weight_ver[s*self.t+t] * gaussian_kernel
         else: # axis == 'hor'
             gaussian_kernel = torch.exp(-((self.x-self.filter_mean_hor[s*self.t+t])**2)/(2*self.filter_sigma_hor[s*self.t+t]**2)).to(device)
             filter_  = self.filter_weight_hor[s*self.t+t] * gaussian_kernel
+        '''
+        gaussian_kernel = torch.exp(-((self.x**2)/(2*self.filter_sigma**2)).to(device))
+        filter_  = self.filter_weight * gaussian_kernel
 
         return filter_
     
@@ -239,17 +247,19 @@ class FilterBankKernel(nn.Module):
     def forward(self, x):
         #b, st, c, h, w = x.size()
         original_shape = x[:,[0],:,:,:].shape
-        #filter_ = self.lowpass()
+        filter_ = self.lowpass()
         
         outputs = []
         for i in range(self.s):
             for j in range(self.t):
                 x1 = x[:,[i*self.t+j],:,:,:].reshape(-1, 1, x.shape[-1])
-                filter_hor = self.lowpass(i,j,'hor')
-                x1_out = F.conv1d(x1, filter_hor.view(1,1,self.kernel_size), padding='same')
+                #filter_hor = self.lowpass(i,j,'hor')
+                #x1_out = F.conv1d(x1, filter_hor.view(1,1,self.kernel_size), padding='same')
+                x1_out = F.conv1d(x1, filter_.view(1,1,self.kernel_size), padding='same')
                 x2 = x1_out.reshape(original_shape).permute(0,1,2,4,3).reshape(-1, 1, x.shape[-1])
-                filter_ver = self.lowpass(i,j,'ver')
-                x2_out = F.conv1d(x2, filter_ver.reshape(1,1,self.kernel_size), padding='same')
+                #filter_ver = self.lowpass(i,j,'ver')
+                #x2_out = F.conv1d(x2, filter_ver.reshape(1,1,self.kernel_size), padding='same')
+                x2_out = F.conv1d(x2, filter_.reshape(1,1,self.kernel_size), padding='same')
                 output = x2_out.reshape(original_shape).permute(0,1,2,4,3)
                 outputs.append(output[:,:,:,i::self.s,j::self.t])
                                
