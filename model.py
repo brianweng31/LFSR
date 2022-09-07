@@ -234,12 +234,12 @@ class FilterBankKernel(nn.Module):
             x = torch.linspace(-normalized_ratio, normalized_ratio, self.kernel_size).to(self.filter_omega_ver[s*self.t+t].device)
             inner_cosine = self.filter_omega_ver[s*self.t+t] * torch.outer(x, self.a_subscript)
             cos_terms = torch.cos(inner_cosine)
-            filter_ = torch.matmul(cos_terms, self.filter_weight_ver[[s*self.t+t]])
+            filter_ = torch.matmul(cos_terms, self.filter_weight_ver[s*self.t+t])
         else: # axis == 'hor'
             x = torch.linspace(-normalized_ratio, normalized_ratio, self.kernel_size).to(self.filter_omega_hor[s*self.t+t].device)
             inner_cosine = self.filter_omega_hor[s*self.t+t] * torch.outer(x, self.a_subscript)
             cos_terms = torch.cos(inner_cosine)
-            filter_ = torch.matmul(cos_terms, self.filter_weight_hor[[s*self.t+t]])
+            filter_ = torch.matmul(cos_terms, self.filter_weight_hor[s*self.t+t])
         '''
         # gaussian
         device = "cuda:0"
