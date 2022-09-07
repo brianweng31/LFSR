@@ -36,7 +36,7 @@ if __name__=="__main__":
         #methods = [FilterBankMethod(device, 3, 3, in_channels=9, out_channels=9, kernel_size=(1, 3, 3), stride=(1, 3, 3), model_idx=model_idx)]
         #methods = [FilterBankMethod(device, 2, 2, in_channels=4, out_channels=4, kernel_size=(1, 8, 8), stride=(1, 2, 2), model_idx=model_idx)]
         # 1d kernel
-        methods = [FilterBankMethod(device, 3, 3, in_channels=9, out_channels=9, kernel_size=14, stride=(1, 3, 3), model_idx=model_idx)]
+        methods = [FilterBankMethod(device, 3, 3, in_channels=9, out_channels=9, kernel_size=13, stride=(1, 3, 3), model_idx=model_idx)]
         
         methods_name = ['Filterbank']
         i = 0
