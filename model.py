@@ -193,13 +193,13 @@ class FilterBankKernel(nn.Module):
         self.t = t
         # cosine
         self.kernel_size = kernel_size
-        #self.filter_weight = torch.nn.parameter.Parameter(data=torch.tensor(filter_a), requires_grad=True)
-        self.filter_weight_ver = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_a), requires_grad=True) for i in range(9)])
-        self.filter_weight_hor = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_a), requires_grad=True) for i in range(9)])
-        #self.filter_omega = torch.nn.parameter.Parameter(data=torch.tensor(filter_omega), requires_grad=True)   
-        self.filter_omega_ver = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_omega), requires_grad=True) for i in range(9)])
-        self.filter_omega_hor = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_omega), requires_grad=True) for i in range(9)])
-        self.a_subscript = torch.nn.parameter.Parameter(data=torch.arange(0, self.filter_weight_ver[0].shape[0]), requires_grad=False) 
+        self.filter_weight = torch.nn.parameter.Parameter(data=torch.tensor(filter_a), requires_grad=True)
+        #self.filter_weight_ver = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_a), requires_grad=True) for i in range(9)])
+        #self.filter_weight_hor = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_a), requires_grad=True) for i in range(9)])
+        self.filter_omega = torch.nn.parameter.Parameter(data=torch.tensor(filter_omega), requires_grad=True)   
+        #self.filter_omega_ver = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_omega), requires_grad=True) for i in range(9)])
+        #self.filter_omega_hor = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_omega), requires_grad=True) for i in range(9)])
+        self.a_subscript = torch.nn.parameter.Parameter(data=torch.arange(0, self.filter_weight[0].shape[0]), requires_grad=False) 
         # gaussian
         '''
         device = "cuda:0"
@@ -225,11 +225,16 @@ class FilterBankKernel(nn.Module):
         '''
         
     
-    def lowpass(self,s,t,axis):
-    #def lowpass(self):
+    #def lowpass(self,s,t,axis):
+    def lowpass(self):
         # cosine
     
         normalized_ratio = self.kernel_size/13.0
+        x = torch.linspace(-normalized_ratio, normalized_ratio, self.kernel_size).to(self.filter_omega.device)
+        inner_cosine = self.filter_omega * torch.outer(x, self.a_subscript)
+        cos_terms = torch.cos(inner_cosine)
+        filter_ = torch.matmul(cos_terms, self.filter_weight)
+        '''
         if axis == 'ver':
             x = torch.linspace(-normalized_ratio, normalized_ratio, self.kernel_size).to(self.filter_omega_ver[s*self.t+t].device)
             inner_cosine = self.filter_omega_ver[s*self.t+t] * torch.outer(x, self.a_subscript)
@@ -240,6 +245,7 @@ class FilterBankKernel(nn.Module):
             inner_cosine = self.filter_omega_hor[s*self.t+t] * torch.outer(x, self.a_subscript)
             cos_terms = torch.cos(inner_cosine)
             filter_ = torch.matmul(cos_terms, self.filter_weight_hor[s*self.t+t])
+        '''
         '''
         # gaussian
         device = "cuda:0"
@@ -256,19 +262,19 @@ class FilterBankKernel(nn.Module):
     def forward(self, x):
         #b, st, c, h, w = x.size()
         original_shape = x[:,[0],:,:,:].shape
-        #filter_ = self.lowpass()
+        filter_ = self.lowpass()
         
         outputs = []
         for i in range(self.s):
             for j in range(self.t):
                 x1 = x[:,[i*self.t+j],:,:,:].reshape(-1, 1, x.shape[-1])
-                filter_hor = self.lowpass(i,j,'hor')
-                x1_out = F.conv1d(x1, filter_hor.view(1,1,self.kernel_size), padding='same')
-                #x1_out = F.conv1d(x1, filter_.view(1,1,self.kernel_size), padding='same')
+                #filter_hor = self.lowpass(i,j,'hor')
+                #x1_out = F.conv1d(x1, filter_hor.view(1,1,self.kernel_size), padding='same')
+                x1_out = F.conv1d(x1, filter_.view(1,1,self.kernel_size), padding='same')
                 x2 = x1_out.reshape(original_shape).permute(0,1,2,4,3).reshape(-1, 1, x.shape[-1])
-                filter_ver = self.lowpass(i,j,'ver')
-                x2_out = F.conv1d(x2, filter_ver.reshape(1,1,self.kernel_size), padding='same')
-                #x2_out = F.conv1d(x2, filter_.reshape(1,1,self.kernel_size), padding='same')
+                #filter_ver = self.lowpass(i,j,'ver')
+                #x2_out = F.conv1d(x2, filter_ver.reshape(1,1,self.kernel_size), padding='same')
+                x2_out = F.conv1d(x2, filter_.reshape(1,1,self.kernel_size), padding='same')
                 output = x2_out.reshape(original_shape).permute(0,1,2,4,3)
                 outputs.append(output[:,:,:,i::self.s,j::self.t])
                                
