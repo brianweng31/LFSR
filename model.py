@@ -199,7 +199,7 @@ class FilterBankKernel(nn.Module):
         self.filter_omega = torch.nn.parameter.Parameter(data=torch.tensor(filter_omega), requires_grad=True)   
         #self.filter_omega_ver = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_omega), requires_grad=True) for i in range(9)])
         #self.filter_omega_hor = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_omega), requires_grad=True) for i in range(9)])
-        self.a_subscript = torch.nn.parameter.Parameter(data=torch.arange(0, self.filter_weight[0].shape[0]), requires_grad=False) 
+        self.a_subscript = torch.nn.parameter.Parameter(data=torch.arange(0, self.filter_weight.shape[0]), requires_grad=False) 
         # gaussian
         '''
         device = "cuda:0"
