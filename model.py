@@ -86,15 +86,15 @@ class BaselineMethod(Method):
 ############################
 ######## FilterBank ########
 class FilterBankKernel(nn.Module):
-    #def __init__(self, in_channels, out_channels, kernel_size, stride, layer_num=1):
-    def __init__(self, s, t, kernel_size):
+    def __init__(self, in_channels, out_channels, kernel_size, stride, layer_num=1):
+    #def __init__(self, s, t, kernel_size):
         super().__init__()
-        '''
+        
         #padding = (0, floor(kernel_size[1]/2), floor(kernel_size[2]/2))
         padding = (0, floor(kernel_size[1]/2)-1, floor(kernel_size[2]/2)-1)
         m, n = stride[1], stride[2]
         m_2, n_2 = floor(stride[1]/2), floor(stride[2]/2)
-        '''
+        
         '''
         self.conv1 = nn.Conv3d(in_channels=in_channels, out_channels=out_channels, kernel_size = kernel_size, stride = stride, padding = padding, bias=False)
                 
@@ -150,7 +150,7 @@ class FilterBankKernel(nn.Module):
             
                 self.convs[k].weight.data[0,0,:] = gaussian_kernel
         '''
-        '''
+        
         # two id kernels, sub-view to sub-view
         self.in_channels = in_channels
         self.convs_vertical = nn.ModuleList()
@@ -183,12 +183,12 @@ class FilterBankKernel(nn.Module):
             for i in range(m):
                 for j in range(n):
                     
-                    #self.convs_vertical[i*n+j].weight.data[0, 0,:,padding[1]+i-1,0] = 1.0
-                    #self.convs_horizontal[i*n+j].weight.data[0, 0,:,0,padding[2]+j-1] = 1.0
-                    self.convs_vertical[i*n+j].weight.data[0,0,0,:,0] = gaussian_kernel
-                    self.convs_horizontal[i*n+j].weight.data[0,0,0,0,:] = gaussian_kernel
-        '''
+                    self.convs_vertical[i*n+j].weight.data[0, 0,:,padding[1]+i-1,0] = 1.0
+                    self.convs_horizontal[i*n+j].weight.data[0, 0,:,0,padding[2]+j-1] = 1.0
+                    #self.convs_vertical[i*n+j].weight.data[0,0,0,:,0] = gaussian_kernel
+                    #self.convs_horizontal[i*n+j].weight.data[0,0,0,0,:] = gaussian_kernel
         
+        '''
         self.s = s
         self.t = t
         # cosine
@@ -201,6 +201,7 @@ class FilterBankKernel(nn.Module):
         #self.filter_omega_hor = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_omega), requires_grad=True) for i in range(9)])
         self.a_subscript = torch.nn.parameter.Parameter(data=torch.arange(0, self.filter_weight.shape[0]), requires_grad=False) 
         # gaussian
+        '''
         '''
         device = "cuda:0"
         self.kernel_size = kernel_size
@@ -258,7 +259,7 @@ class FilterBankKernel(nn.Module):
         '''
         return filter_
     
-    
+    '''
     def forward(self, x):
         #b, st, c, h, w = x.size()
         original_shape = x[:,[0],:,:,:].shape
@@ -282,7 +283,7 @@ class FilterBankKernel(nn.Module):
         # modeified
         out = torch.clamp(out,min=0,max=1)
         return out
-    
+    '''
 
 
     '''
@@ -302,7 +303,7 @@ class FilterBankKernel(nn.Module):
         out = torch.cat(outputs, axis=1)
         return out
     '''
-    '''
+    
     # two 1d kernels, sub-view to sub-view
     def forward(self, x):
         outputs = []
@@ -313,15 +314,15 @@ class FilterBankKernel(nn.Module):
 
         out = torch.cat(outputs, axis=1)
         return out
-    '''
+    
     
 
 class FilterBankMethod(Method):
     def __init__(self, device, s=3, t=3, in_channels=9, out_channels=9, kernel_size=(1, 7, 7), stride=(1, 3, 3), model_idx=0):
         super().__init__(self.__class__.__name__+f"_{model_idx}")
-        #self.net = FilterBankKernel(in_channels=in_channels, out_channels=out_channels, kernel_size=kernel_size, stride=stride).to(device)  
+        self.net = FilterBankKernel(in_channels=in_channels, out_channels=out_channels, kernel_size=kernel_size, stride=stride).to(device)  
         # id kernel
-        self.net = FilterBankKernel(s=s, t=t, kernel_size=kernel_size).to(device)  
+        #self.net = FilterBankKernel(s=s, t=t, kernel_size=kernel_size).to(device)  
         self.s = s
         self.t = t
         assert self.s == self.t
