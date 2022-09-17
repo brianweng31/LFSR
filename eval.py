@@ -78,7 +78,7 @@ with torch.no_grad():
             light_field = np.concatenate((light_field, sr_refocused.detach().cpu()), 0)
 
     ## print metrics
-    losses, metrics = testing(test_dataloader, device, model, 0, estimate_clear_region)
+    losses, metrics, sr_refocused_reshaped, hr_refocused_reshaped = testing(test_dataloader, device, model, 0, estimate_clear_region)
     '''                         
     model.record.loss_history.append([])
     model.record.metric_history.append([])
