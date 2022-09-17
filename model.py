@@ -346,8 +346,8 @@ class FilterBankMethod(Method):
         ds_lf = hr_lf[:, :, :, 0::self.s,0::self.t]
         print(ds_lf.shape)
         for i in range(self.s):
-        for j in range(self.t):
-            ds_lf[:,i*self.t+j,:,:,:] = hr_lf[:, i*self.t+j, :, i::self.s,j::self.t]
+            for j in range(self.t):
+                ds_lf[:,i*self.t+j,:,:,:] = hr_lf[:, i*self.t+j, :, i::self.s,j::self.t]
         #ds_lf = shift_images(ds_lf.reshape(b*st, c, h//2, w//2), 0.75*torch.ones(b*st).to(device), 0.75*torch.ones(b*st).to(device)).reshape(b, st, c, h//2, w//2)
         return ds_lf
         #return self.net(hr_lf)
