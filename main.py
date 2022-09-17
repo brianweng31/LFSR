@@ -134,7 +134,7 @@ if __name__=="__main__":
                                 continue
                             else:
                                 methods[method_idx].eval_mode()
-                                losses, metrics = testing(test_dataloader, device, methods[method_idx], epoch, estimate_clear_region)
+                                losses, metrics, sr_refocused_reshaped, hr_refocused_reshaped = testing(test_dataloader, device, methods[method_idx], epoch, estimate_clear_region)
                             
                                 methods[method_idx].record.loss_history.append([])
                                 methods[method_idx].record.metric_history.append([])
@@ -153,6 +153,9 @@ if __name__=="__main__":
                                     methods[method_idx].record.best_loss = np.sum(methods[method_idx].record.loss_history[-1])
                                     methods[method_idx].save_model(os.path.join('model',methods[method_idx].name,'best_model'))
 
+                                np.save('npy/sr_refocused_reshaped',sr_refocused_reshaped.detach().numpy())
+                                np.save('npy/hr_refocused_reshaped',hr_refocused_reshaped.detach().numpy())
+                                #sr_refocused_reshaped, hr_refocused_reshaped
                                 print(log_str)
                                 
                                 if epoch >= 200:
