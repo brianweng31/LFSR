@@ -150,7 +150,7 @@ class FilterBankKernel(nn.Module):
             
                 self.convs[k].weight.data[0,0,:] = gaussian_kernel
         '''
-        
+        '''
         # two id kernels, sub-view to sub-view
         self.in_channels = in_channels
         self.convs_vertical = nn.ModuleList()
@@ -187,8 +187,8 @@ class FilterBankKernel(nn.Module):
                     self.convs_horizontal[i*n+j].weight.data[0, 0,:,0,padding[2]+j-1] = 1.0
                     #self.convs_vertical[i*n+j].weight.data[0,0,0,:,0] = gaussian_kernel
                     #self.convs_horizontal[i*n+j].weight.data[0,0,0,0,:] = gaussian_kernel
-        
         '''
+        
         self.s = s
         self.t = t
         # cosine
@@ -201,7 +201,7 @@ class FilterBankKernel(nn.Module):
         #self.filter_omega_hor = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_omega), requires_grad=True) for i in range(9)])
         self.a_subscript = torch.nn.parameter.Parameter(data=torch.arange(0, self.filter_weight.shape[0]), requires_grad=False) 
         # gaussian
-        '''
+        
         '''
         device = "cuda:0"
         self.kernel_size = kernel_size
@@ -341,6 +341,7 @@ class FilterBankMethod(Method):
         
         return self.net(ds_lf)
         '''
+        '''
         b,st,c,h,w = hr_lf.shape
         print(hr_lf.shape)
         ds_lf = hr_lf[:, :, :, 0::self.s,0::self.t]
@@ -350,7 +351,8 @@ class FilterBankMethod(Method):
                 ds_lf[:,i*self.t+j,:,:,:] = hr_lf[:, i*self.t+j, :, i::self.s,j::self.t]
         #ds_lf = shift_images(ds_lf.reshape(b*st, c, h//2, w//2), 0.75*torch.ones(b*st).to(device), 0.75*torch.ones(b*st).to(device)).reshape(b, st, c, h//2, w//2)
         return ds_lf
-        #return self.net(hr_lf)
+        '''
+        return self.net(hr_lf)
     def enhance_LR_lightfield(self, lr_lf):
         '''
         # test
