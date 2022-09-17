@@ -259,7 +259,7 @@ class FilterBankKernel(nn.Module):
         '''
         return filter_
     
-    '''
+    
     def forward(self, x):
         #b, st, c, h, w = x.size()
         original_shape = x[:,[0],:,:,:].shape
@@ -283,7 +283,7 @@ class FilterBankKernel(nn.Module):
         # modeified
         out = torch.clamp(out,min=0,max=1)
         return out
-    '''
+        
 
 
     '''
@@ -303,7 +303,7 @@ class FilterBankKernel(nn.Module):
         out = torch.cat(outputs, axis=1)
         return out
     '''
-    
+    '''
     # two 1d kernels, sub-view to sub-view
     def forward(self, x):
         outputs = []
@@ -314,6 +314,7 @@ class FilterBankKernel(nn.Module):
 
         out = torch.cat(outputs, axis=1)
         return out
+    '''
     
     
 
