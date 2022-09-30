@@ -362,7 +362,7 @@ class FilterBankKernel(nn.Module):
         
         outputs = []
         for i in range(self.s):
-            for j in range(self.t):s
+            for j in range(self.t):
                 x1 = x[:,[i*self.t+j],:,:,:]
                 x1 = torch.roll(x1, shifts=(-(i-1), -(j-1)), dims=(-2,-1))
                 x1_out = F.conv2d(x1, filter_, stride=3, padding='same')
