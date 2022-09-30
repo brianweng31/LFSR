@@ -201,8 +201,14 @@ class FilterBankKernel(nn.Module):
         #self.filter_omega_ver = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_omega), requires_grad=True) for i in range(9)])
         #self.filter_omega_hor = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_omega), requires_grad=True) for i in range(9)])
         self.a_subscript = torch.nn.parameter.Parameter(data=torch.arange(0, self.filter_weight.shape[0]), requires_grad=False) 
-        # gaussian
         
+        # 2d sinc
+        x, y = np.linspace(-10,10,21), np.linspace(-10,10,21)
+        X, Y = np.meshgrid(x, y)
+
+        f = np.sinc(np.hypot(X, Y))
+        
+        # gaussian
         '''
         device = "cuda:0"
         self.kernel_size = kernel_size
@@ -287,7 +293,8 @@ class FilterBankKernel(nn.Module):
         '''
         return filter_
     
-    
+    '''
+    # 1d cosine
     def forward(self, x):
         #b, st, c, h, w = x.size()
         original_shape = x[:,[0],:,:,:].shape
@@ -311,8 +318,7 @@ class FilterBankKernel(nn.Module):
         # modeified
         out = torch.clamp(out,min=0,max=1)
         return out
-        
-
+    '''
 
     '''
     def forward(self, x):
@@ -343,6 +349,29 @@ class FilterBankKernel(nn.Module):
         out = torch.cat(outputs, axis=1)
         return out
     '''
+    # 2d sinc
+    def forward(self, x):
+        #b, st, c, h, w = x.size()
+        original_shape = x[:,[0],:,:,:].shape
+        x, y = np.linspace(-10,10,21), np.linspace(-10,10,21)
+        X, Y = np.meshgrid(x, y)
+
+        f = np.sinc(np.hypot(X, Y))
+        filter_ = torch.tensor(f/f.sum(), dtype=torch.float).to(self.filter_omega.device)
+        
+        
+        outputs = []
+        for i in range(self.s):
+            for j in range(self.t):s
+                x1 = x[:,[i*self.t+j],:,:,:]
+                x1 = torch.roll(x1, shifts=(-(i-1), -(j-1)), dims=(-2,-1))
+                x1_out = F.conv2d(x1, filter_, stride=3, padding='same')
+                outputs.append(x1_out)
+                               
+        out = torch.cat(outputs, axis=1)
+        # modeified
+        out = torch.clamp(out,min=0,max=1)
+        return out
     
     
 
