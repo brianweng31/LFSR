@@ -364,13 +364,12 @@ class FilterBankKernel(nn.Module):
         filter_ = torch.repeat_interleave(filter_,3,dim=0)
         print(f"filter_.size() = {filter_.size()}")
 
-        
         outputs = []
         for i in range(self.s):
             for j in range(self.t):
                 x1 = x_[:,i*self.t+j,:,:,:]
                 x1 = torch.roll(x1, shifts=(-(i-1), -(j-1)), dims=(-2,-1))
-                x1_out = F.conv2d(x1, filter_, stride=3, padding='same')
+                x1_out = F.conv2d(x1, filter_, stride=3, padding=(9,9)
                 outputs.append(x1_out)
                                
         out = torch.cat(outputs, axis=1)
