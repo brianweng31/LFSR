@@ -350,7 +350,7 @@ class FilterBankKernel(nn.Module):
         return out
     '''
     # 2d sinc
-    def forward(self, x):
+    def forward(self, x_):
         #b, st, c, h, w = x.size()
         original_shape = x[:,[0],:,:,:].shape
         x, y = np.linspace(-10,10,21), np.linspace(-10,10,21)
@@ -363,7 +363,7 @@ class FilterBankKernel(nn.Module):
         outputs = []
         for i in range(self.s):
             for j in range(self.t):
-                x1 = x[:,[i*self.t+j],:,:,:]
+                x1 = x_[:,[i*self.t+j],:,:,:]
                 x1 = torch.roll(x1, shifts=(-(i-1), -(j-1)), dims=(-2,-1))
                 x1_out = F.conv2d(x1, filter_, stride=3, padding='same')
                 outputs.append(x1_out)
