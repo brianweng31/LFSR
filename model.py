@@ -242,7 +242,7 @@ class FilterBankKernel(nn.Module):
         #print(first_filter)
         #print(sinc_filter)
         y = np.convolve(first_filter,sinc_filter)
-        y2 = y[190:211]
+        y2 = y[190:211]/y[190:211].sum()
 
         filter_ = torch.tensor(y2, dtype=torch.float).to(self.filter_omega.device)
         '''
