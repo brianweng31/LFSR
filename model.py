@@ -241,7 +241,7 @@ class FilterBankKernel(nn.Module):
         #print(f'sinc_filter.sum() = {sinc_filter.sum()}')
         #print(first_filter)
         #print(sinc_filter)
-        filter_ = torch.tensor(sinc_filter)
+        filter_ = torch.tensor(sinc_filter, dtype=torch.float)
         '''
         y = np.convolve(first_filter,sinc_filter)
         print(f'y.sum() = {y.sum()}')
