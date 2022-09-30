@@ -231,17 +231,20 @@ class FilterBankKernel(nn.Module):
     def lowpass(self):
         # sinc
         fc = 1/6
-        #x = np.linspace(-100,100,201)
-        x = np.linspace(-10,10,21)
+        x = np.linspace(-100,100,201)
+        #x = np.linspace(-10,10,21)
         #print(x)
-        #first_filter = (10*np.pi*x*np.sin(np.pi*x)+6*np.cos(np.pi*x)-6) / (12*np.pi**2*x**2)
-        #first_filter[100] = 5/6-1/4
+        first_filter = (10*np.pi*x*np.sin(np.pi*x)+6*np.cos(np.pi*x)-6) / (12*np.pi**2*x**2)
+        first_filter[100] = 5/6-1/4
 
         sinc_filter = 2*fc*np.sinc(2*fc*x)
         #print(f'sinc_filter.sum() = {sinc_filter.sum()}')
         #print(first_filter)
         #print(sinc_filter)
-        filter_ = torch.tensor(sinc_filter, dtype=torch.float).to(self.filter_omega.device)
+        y = np.convolve(first_filter,sinc_filter)
+        y2 = y[190:211]
+
+        filter_ = torch.tensor(y2, dtype=torch.float).to(self.filter_omega.device)
         '''
         y = np.convolve(first_filter,sinc_filter)
         print(f'y.sum() = {y.sum()}')
