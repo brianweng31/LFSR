@@ -12,7 +12,7 @@ from test import testing
 
 ######
 model_name = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "cosine_1"
+model_idx = "sinc_test"
 dataset_name = "HCI" #HCI, RandomTraining
 batch_size = 16
 
@@ -50,9 +50,12 @@ elif model_name == "LinearFilter":
 elif model_name == "BaselineMethod":
     model = BaselineMethod(3,3)
 
-if model != "BaselineMethod":
-    model.load_model(os.path.join('model',model.name,'best_model'))
-    model.eval_mode()
+try:
+    if model != "BaselineMethod":
+        model.load_model(os.path.join('model',model.name,'best_model'))
+        model.eval_mode()
+except:
+    pass
 
 
 with torch.no_grad():

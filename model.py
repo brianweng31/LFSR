@@ -228,13 +228,37 @@ class FilterBankKernel(nn.Module):
     
     #def lowpass(self,s,t,axis):
     def lowpass(self):
+        # sinc
+        fc = 1/6
+        #x = np.linspace(-100,100,201)
+        x = np.linspace(-10,10,21)
+        #print(x)
+        #first_filter = (10*np.pi*x*np.sin(np.pi*x)+6*np.cos(np.pi*x)-6) / (12*np.pi**2*x**2)
+        #first_filter[100] = 5/6-1/4
+
+        sinc_filter = 2*fc*np.sinc(2*fc*x)
+        #print(f'sinc_filter.sum() = {sinc_filter.sum()}')
+        #print(first_filter)
+        #print(sinc_filter)
+        filter_ = torch.tensor(sinc_filter)
+        '''
+        y = np.convolve(first_filter,sinc_filter)
+        print(f'y.sum() = {y.sum()}')
+        #print(y)
+        x1 = np.linspace(0,len(y)-1,len(y))
+
+        y2 = y[190:211]
+        x2 = np.linspace(-10,10,21)
+        '''
+
+        '''
         # cosine
-    
         normalized_ratio = self.kernel_size/13.0
         x = torch.linspace(-normalized_ratio, normalized_ratio, self.kernel_size).to(self.filter_omega.device)
         inner_cosine = self.filter_omega * torch.outer(x, self.a_subscript)
         cos_terms = torch.cos(inner_cosine)
         filter_ = torch.matmul(cos_terms, self.filter_weight)
+        '''
         '''
         if axis == 'ver':
             x = torch.linspace(-normalized_ratio, normalized_ratio, self.kernel_size).to(self.filter_omega_ver[s*self.t+t].device)
