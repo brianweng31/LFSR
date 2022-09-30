@@ -352,7 +352,7 @@ class FilterBankKernel(nn.Module):
     # 2d sinc
     def forward(self, x_):
         #b, st, c, h, w = x.size()
-        original_shape = x[:,[0],:,:,:].shape
+        original_shape = x_[:,[0],:,:,:].shape
         x, y = np.linspace(-10,10,21), np.linspace(-10,10,21)
         X, Y = np.meshgrid(x, y)
 
