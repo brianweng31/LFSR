@@ -204,6 +204,9 @@ class FilterBankKernel(nn.Module):
         self.a_subscript = torch.nn.parameter.Parameter(data=torch.arange(0, self.filter_weight.shape[0]), requires_grad=False) 
         '''
         # 2d sinc
+        self.s = s
+        self.t = t
+        
         x, y = np.linspace(-10,10,21), np.linspace(-10,10,21)
         X, Y = np.meshgrid(x, y)
 
