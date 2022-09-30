@@ -369,7 +369,7 @@ class FilterBankKernel(nn.Module):
             for j in range(self.t):
                 x1 = x_[:,i*self.t+j,:,:,:]
                 x1 = torch.roll(x1, shifts=(-(i-1), -(j-1)), dims=(-2,-1))
-                x1_out = F.conv2d(x1, filter_, stride=3, padding=(9,9)
+                x1_out = F.conv2d(x1, filter_, stride=3, padding=(9,9))
                 outputs.append(x1_out)
                                
         out = torch.cat(outputs, axis=1)
