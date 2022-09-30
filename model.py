@@ -221,7 +221,7 @@ class FilterBankKernel(nn.Module):
         for i in range(3):
             self.filter[i,i] = filter_
 
-        print(f"filter_.size() = {self.filter_.size()}")
+        print(f"filter_.size() = {self.filter.size()}")
         
         # gaussian
         '''
@@ -374,7 +374,7 @@ class FilterBankKernel(nn.Module):
             for j in range(self.t):
                 x1 = x_[:,i*self.t+j,:,:,:]
                 x1 = torch.roll(x1, shifts=(-(i-1), -(j-1)), dims=(-2,-1))
-                x1_out = F.conv2d(x1, self.filter_, stride=3, padding=(9,9))
+                x1_out = F.conv2d(x1, self.filter, stride=3, padding=(9,9))
                 print(x1_out.shape)
                 x1_out = x1_out.unsqueeze(1)
                 outputs.append(x1_out)
