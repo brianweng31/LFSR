@@ -189,7 +189,8 @@ class FilterBankKernel(nn.Module):
                     #self.convs_vertical[i*n+j].weight.data[0,0,0,:,0] = gaussian_kernel
                     #self.convs_horizontal[i*n+j].weight.data[0,0,0,0,:] = gaussian_kernel
         '''
-        
+        '''
+        # 1d cosine
         self.s = s
         self.t = t
         # cosine
@@ -201,12 +202,26 @@ class FilterBankKernel(nn.Module):
         #self.filter_omega_ver = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_omega), requires_grad=True) for i in range(9)])
         #self.filter_omega_hor = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_omega), requires_grad=True) for i in range(9)])
         self.a_subscript = torch.nn.parameter.Parameter(data=torch.arange(0, self.filter_weight.shape[0]), requires_grad=False) 
-        
+        '''
         # 2d sinc
         x, y = np.linspace(-10,10,21), np.linspace(-10,10,21)
         X, Y = np.meshgrid(x, y)
 
         f = np.sinc(np.hypot(X, Y))
+        filter_ = torch.tensor(f/f.sum(), dtype=torch.float)
+        dh, dw = filter_.shape
+
+        '''
+        filter_ = filter_.unsqueeze(0).unsqueeze(0)
+        filter_ = torch.repeat_interleave(filter_,3,dim=1)
+        self.filter_ = torch.repeat_interleave(filter_,3,dim=0)
+        '''
+
+        self.filter = torch.zeros((3,3,dh,dw), dtype=torch.float).to("cuda:0")
+        for i in range(3):
+            self.filter[i,i] = filter_
+
+        print(f"filter_.size() = {self.filter_.size()}")
         
         # gaussian
         '''
@@ -353,23 +368,13 @@ class FilterBankKernel(nn.Module):
     def forward(self, x_):
         #b, st, c, h, w = x.size()
         original_shape = x_[:,[0],:,:,:].shape
-        x, y = np.linspace(-10,10,21), np.linspace(-10,10,21)
-        X, Y = np.meshgrid(x, y)
-
-        f = np.sinc(np.hypot(X, Y))
-        filter_ = torch.tensor(f/f.sum(), dtype=torch.float).to(self.filter_omega.device)
-
-        filter_ = filter_.unsqueeze(0).unsqueeze(0)
-        filter_ = torch.repeat_interleave(filter_,3,dim=1)
-        filter_ = torch.repeat_interleave(filter_,3,dim=0)
-        print(f"filter_.size() = {filter_.size()}")
 
         outputs = []
         for i in range(self.s):
             for j in range(self.t):
                 x1 = x_[:,i*self.t+j,:,:,:]
                 x1 = torch.roll(x1, shifts=(-(i-1), -(j-1)), dims=(-2,-1))
-                x1_out = F.conv2d(x1, filter_, stride=3, padding=(9,9))
+                x1_out = F.conv2d(x1, self.filter_, stride=3, padding=(9,9))
                 print(x1_out.shape)
                 x1_out = x1_out.unsqueeze(1)
                 outputs.append(x1_out)
