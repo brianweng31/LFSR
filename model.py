@@ -358,8 +358,12 @@ class FilterBankKernel(nn.Module):
 
         f = np.sinc(np.hypot(X, Y))
         filter_ = torch.tensor(f/f.sum(), dtype=torch.float).to(self.filter_omega.device)
-        filter_ = filter_.unsqueeze(0)
-        
+
+        filter_ = filter_.unsqueeze(0).unsqueeze(0)
+        filter_ = torch.repeat_interleave(filter_,3,dim=1)
+        filter_ = torch.repeat_interleave(filter_,3,dim=0)
+        print(f"filter_.size() = {filter_.size()}")
+
         
         outputs = []
         for i in range(self.s):
