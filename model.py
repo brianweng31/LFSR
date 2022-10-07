@@ -406,7 +406,7 @@ class FilterBankMethod(Method):
         assert self.s == self.t
         self.name = self.__class__.__name__ + f"_{model_idx}"
     def downsampling(self, hr_lf):
-        '''
+        
         device = "cuda:0"
         b,st,c,h,w = hr_lf.shape
         # shift sub-view images
@@ -416,9 +416,8 @@ class FilterBankMethod(Method):
     
         ds_lf = hr_lf[:, :, :, 1::self.s,1::self.t]
         #ds_lf = shift_images(ds_lf.reshape(b*st, c, h//3, w//3), 0.75*torch.ones(b*st).to(device), 0.75*torch.ones(b*st).to(device)).reshape(b, st, c, h//3, w//3)
+        return ds_lf
         
-        return self.net(ds_lf)
-        '''
         '''
         b,st,c,h,w = hr_lf.shape
         print(hr_lf.shape)
@@ -430,7 +429,7 @@ class FilterBankMethod(Method):
         #ds_lf = shift_images(ds_lf.reshape(b*st, c, h//2, w//2), 0.75*torch.ones(b*st).to(device), 0.75*torch.ones(b*st).to(device)).reshape(b, st, c, h//2, w//2)
         return ds_lf
         '''
-        return self.net(hr_lf)
+        #return self.net(hr_lf)
     def enhance_LR_lightfield(self, lr_lf):
         '''
         # test

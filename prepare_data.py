@@ -243,7 +243,7 @@ def get_dataloaders(dataset_name, batch_size=4, shuffle=True, num_workers=4, dow
             light_field_size = light_field_size,
             disparity_range = disparity_range)
 
-        train_dataloader = DataLoader(train_lfdataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
+        train_dataloader = DataLoader(train_lfdataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
         test_dataloader = DataLoader(test_lfdataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 
 
