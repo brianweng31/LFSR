@@ -102,12 +102,12 @@ class SR_test_Dataset(Dataset):
         print(self.light_field_size)
         for i in range(self.s):
             for j in range(self.t):
-            #print(self.lfdata_file_path[idx])
-            subview = Image.open(os.path.join(self.light_field_dataset_path, self.lfdata_file_path[idx])).convert('RGB')
-            #print(subview.size)
-            if self.use_transform:
-                #print(self.transform(subview).size)
-                light_field[i,j,:,:,:] = self.transform(subview)
+                #print(self.lfdata_file_path[idx])
+                subview = Image.open(os.path.join(self.light_field_dataset_path, self.lfdata_file_path[idx])).convert('RGB')
+                #print(subview.size)
+                if self.use_transform:
+                    #print(self.transform(subview).size)
+                    light_field[i,j,:,:,:] = self.transform(subview)
 
         return (torch.tensor(light_field)/255).type(torch.float32)
 
