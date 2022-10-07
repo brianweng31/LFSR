@@ -12,9 +12,9 @@ from test import testing
 
 ######
 model_name = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "sinc_test"
-dataset_name = "HCI" #HCI, RandomTraining
-batch_size = 16
+model_idx = "cosine_1"
+dataset_name = "SR_test_dataset" #HCI, RandomTraining, SR_test_dataset
+batch_size = 2
 
 #optimized_losses = [nn.L1Loss()]
 optimized_losses = [nn.MSELoss()]
@@ -117,15 +117,15 @@ with torch.no_grad():
     print(log_str)
 
 #print(light_field.shape)
-print(down_lf.shape)
+#print(f'down_lf.shape = {down_lf.shape}')
 light_field = np.moveaxis(light_field, 2, -1)
 down_lf = np.moveaxis(down_lf, 2, -1)
 if not os.path.isdir('npy'):
     os.mkdir('npy')
-np.save(f'npy/down_{model_name}_{model_idx}',down_lf)
-np.save(f'npy/{model_name}_{model_idx}',light_field)
-#print(light_field.shape)
-print(down_lf.shape)
+np.save(f'npy/down_{model_name}_{model_idx}_test',down_lf)
+np.save(f'npy/{model_name}_{model_idx}_test',light_field)
+print(f'light_field.shape = {light_field.shape}')
+print(f'down_lf.shape = {down_lf.shape}')
 '''
 for i in range(light_field.shape[0]):
     print(light_field[i,5].shape)

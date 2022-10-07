@@ -189,7 +189,7 @@ class FilterBankKernel(nn.Module):
                     #self.convs_vertical[i*n+j].weight.data[0,0,0,:,0] = gaussian_kernel
                     #self.convs_horizontal[i*n+j].weight.data[0,0,0,0,:] = gaussian_kernel
         '''
-        '''
+        
         # 1d cosine
         self.s = s
         self.t = t
@@ -202,6 +202,7 @@ class FilterBankKernel(nn.Module):
         #self.filter_omega_ver = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_omega), requires_grad=True) for i in range(9)])
         #self.filter_omega_hor = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_omega), requires_grad=True) for i in range(9)])
         self.a_subscript = torch.nn.parameter.Parameter(data=torch.arange(0, self.filter_weight.shape[0]), requires_grad=False) 
+        
         '''
         # 2d sinc
         self.s = s
@@ -213,7 +214,7 @@ class FilterBankKernel(nn.Module):
         f = np.sinc(np.hypot(X, Y))
         filter_ = torch.tensor(f/f.sum(), dtype=torch.float)
         dh, dw = filter_.shape
-
+        '''
         '''
         filter_ = filter_.unsqueeze(0).unsqueeze(0)
         filter_ = torch.repeat_interleave(filter_,3,dim=1)
@@ -253,6 +254,7 @@ class FilterBankKernel(nn.Module):
     
     #def lowpass(self,s,t,axis):
     def lowpass(self):
+        '''
         # sinc
         fc = 1/6
         #x = np.linspace(-100,100,201)
@@ -270,6 +272,7 @@ class FilterBankKernel(nn.Module):
 
         filter_ = torch.tensor(sinc_filter/sinc_filter.sum(), dtype=torch.float).to(self.filter_omega.device)
         '''
+        '''
         y = np.convolve(first_filter,sinc_filter)
         print(f'y.sum() = {y.sum()}')
         #print(y)
@@ -278,15 +281,15 @@ class FilterBankKernel(nn.Module):
         y2 = y[190:211]
         x2 = np.linspace(-10,10,21)
         '''
-
-        '''
+        
+        
         # cosine
         normalized_ratio = self.kernel_size/13.0
         x = torch.linspace(-normalized_ratio, normalized_ratio, self.kernel_size).to(self.filter_omega.device)
         inner_cosine = self.filter_omega * torch.outer(x, self.a_subscript)
         cos_terms = torch.cos(inner_cosine)
         filter_ = torch.matmul(cos_terms, self.filter_weight)
-        '''
+        
         '''
         if axis == 'ver':
             x = torch.linspace(-normalized_ratio, normalized_ratio, self.kernel_size).to(self.filter_omega_ver[s*self.t+t].device)
@@ -311,7 +314,7 @@ class FilterBankKernel(nn.Module):
         '''
         return filter_
     
-    '''
+    
     # 1d cosine
     def forward(self, x):
         #b, st, c, h, w = x.size()
@@ -336,7 +339,7 @@ class FilterBankKernel(nn.Module):
         # modeified
         out = torch.clamp(out,min=0,max=1)
         return out
-    '''
+    
 
     '''
     def forward(self, x):
@@ -367,6 +370,7 @@ class FilterBankKernel(nn.Module):
         out = torch.cat(outputs, axis=1)
         return out
     '''
+    '''
     # 2d sinc
     def forward(self, x_):
         #b, st, c, h, w = x.size()
@@ -386,6 +390,7 @@ class FilterBankKernel(nn.Module):
         # modeified
         out = torch.clamp(out,min=0,max=1)
         return out
+    '''
     
     
 
