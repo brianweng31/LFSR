@@ -29,6 +29,7 @@ if torch.cuda.is_available():
 else:  
     device = "cpu"
 
+print(device)
 ## prepare dataloader
 train_dataloader, test_dataloader = get_dataloaders(dataset_name, batch_size=batch_size)
 
