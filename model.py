@@ -214,19 +214,18 @@ class FilterBankKernel(nn.Module):
         f = np.sinc(np.hypot(X, Y))
         filter_ = torch.tensor(f/f.sum(), dtype=torch.float)
         dh, dw = filter_.shape
-        '''
-        '''
-        filter_ = filter_.unsqueeze(0).unsqueeze(0)
-        filter_ = torch.repeat_interleave(filter_,3,dim=1)
-        self.filter_ = torch.repeat_interleave(filter_,3,dim=0)
-        '''
+        
+        #filter_ = filter_.unsqueeze(0).unsqueeze(0)
+        #filter_ = torch.repeat_interleave(filter_,3,dim=1)
+        #self.filter_ = torch.repeat_interleave(filter_,3,dim=0)
 
         self.filter = torch.zeros((3,3,dh,dw), dtype=torch.float).to("cuda:0")
         for i in range(3):
             self.filter[i,i] = filter_
 
         print(f"filter_.size() = {self.filter.size()}")
-        
+        '''
+
         # gaussian
         '''
         device = "cuda:0"
