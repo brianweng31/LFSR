@@ -53,6 +53,7 @@ elif model_name == "BaselineMethod":
 try:
     if model != "BaselineMethod":
         print('here')
+        print(model.name)
         model.load_model(os.path.join('model',model.name,'best_model'))
         print('here1')
         model.eval_mode()
