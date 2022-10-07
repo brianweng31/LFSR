@@ -52,7 +52,8 @@ elif model_name == "BaselineMethod":
 
 try:
     if model != "BaselineMethod":
-        model.load_model(os.path.join('model',f'{model.name}_{model_idx}','best_model'))
+        print('here')
+        model.load_model(os.path.join('model',model.name,'best_model'))
         model.eval_mode()
         for params in model.net.parameters():
             print(params.size())
