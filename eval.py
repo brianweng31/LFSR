@@ -14,7 +14,7 @@ from test import testing
 model_name = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
 model_idx = "cosine_1"
 dataset_name = "SR_test_dataset" #HCI, RandomTraining, SR_test_dataset
-batch_size = 2
+batch_size = 3
 
 #optimized_losses = [nn.L1Loss()]
 optimized_losses = [nn.MSELoss()]
