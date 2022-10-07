@@ -54,8 +54,11 @@ try:
     if model != "BaselineMethod":
         print('here')
         model.load_model(os.path.join('model',model.name,'best_model'))
+        print('here1')
         model.eval_mode()
+        print('here2')
         for params in model.net.parameters():
+            print('here3')
             print(params.size())
             print(f'params.sum() = {params.sum()}')
 except:
