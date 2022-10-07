@@ -316,7 +316,7 @@ class FilterBankKernel(nn.Module):
     
     # 1d cosine
     def forward(self, x):
-        #b, st, c, h, w = x.size()
+        b, st, c, h, w = x.size()
         original_shape = x[:,[0],:,:,:].shape
         filter_ = self.lowpass()
         
