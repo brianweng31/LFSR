@@ -124,7 +124,7 @@ if __name__=="__main__":
                 if early_stopped == [True for _ in range(len(methods))]:
                     break
                     
-                #training(train_dataloader,device,methods,optimizers,optimized_losses,estimate_clear_region,early_stopped)
+                training(train_dataloader,device,methods,optimizers,optimized_losses,estimate_clear_region,early_stopped)
 
                 if epoch%10==0:
                     with torch.no_grad():
