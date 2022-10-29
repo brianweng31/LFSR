@@ -336,7 +336,7 @@ class FilterBankKernel(nn.Module):
                 x1_out = F.conv1d(x1, filter_.reshape(1,1,self.kernel_size), stride=3, padding=padding)
                 #print(f'x1_out.shape = {x1_out.shape}')
                 # x1_out.shape = (b*1*c*h, 1, w/3)
-                x2 = x1_out.reshape(b,1,c,h,w/3).permute(0,1,2,4,3).reshape(-1, 1, x.shape[-2])
+                x2 = x1_out.reshape(b,1,c,h,int(w/3)).permute(0,1,2,4,3).reshape(-1, 1, x.shape[-2])
                 #print(f'x2.shape = {x2.shape}')
                 #filter_ver = self.lowpass(i,j,'ver')
                 #x2_out = F.conv1d(x2, filter_ver.reshape(1,1,self.kernel_size), padding='same')
@@ -344,7 +344,7 @@ class FilterBankKernel(nn.Module):
                 x2_out = F.conv1d(x2, filter_.reshape(1,1,self.kernel_size), stride=3, padding=padding)
                 #print(f'x2_out.shape = {x2_out.shape}')
                 #output = x2_out.reshape(b,1,c,w,h).permute(0,1,2,4,3)
-                output = x2_out.reshape(b,1,c,w/3,h/3).permute(0,1,2,4,3)
+                output = x2_out.reshape(b,1,c,int(w/3),int(h/3)).permute(0,1,2,4,3)
                 #outputs.append(output[:,:,:,i::self.s,j::self.t])
                 outputs.append(output)
                                
