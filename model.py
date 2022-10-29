@@ -320,7 +320,7 @@ class FilterBankKernel(nn.Module):
         b, st, c, h, w = x.size()
         original_shape = x[:,[0],:,:,:].shape
         filter_ = self.lowpass()
-        padding = (self.kernel_size-3)/2
+        padding = int((self.kernel_size-3)/2)
         
         outputs = []
         for i in range(self.s):
