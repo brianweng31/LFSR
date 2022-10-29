@@ -195,6 +195,7 @@ class FilterBankKernel(nn.Module):
         self.t = t
         # cosine
         self.kernel_size = kernel_size
+        assert self.kernel_size % 2 == 1
         self.filter_weight = torch.nn.parameter.Parameter(data=torch.tensor(filter_a), requires_grad=True)
         #self.filter_weight_ver = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_a), requires_grad=True) for i in range(9)])
         #self.filter_weight_hor = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_a), requires_grad=True) for i in range(9)])
@@ -319,6 +320,7 @@ class FilterBankKernel(nn.Module):
         b, st, c, h, w = x.size()
         original_shape = x[:,[0],:,:,:].shape
         filter_ = self.lowpass()
+        padding = (self.kernel_size-3)/2
         
         outputs = []
         for i in range(self.s):
@@ -326,15 +328,18 @@ class FilterBankKernel(nn.Module):
                 x1 = x[:,[i*self.t+j],:,:,:].reshape(-1, 1, x.shape[-1])
                 #filter_hor = self.lowpass(i,j,'hor')
                 #x1_out = F.conv1d(x1, filter_hor.view(1,1,self.kernel_size), padding='same')
-                x1_out = F.conv1d(x1, filter_.view(1,1,self.kernel_size), padding='same')
+                #x1_out = F.conv1d(x1, filter_.view(1,1,self.kernel_size), padding='same')
+                x1_out = F.conv1d(x1, filter_.reshape(1,1,self.kernel_size), stride=3, padding=padding)
                 x2 = x1_out.reshape(original_shape).permute(0,1,2,4,3).reshape(-1, 1, x.shape[-2])
-                print(f'x2.shape = {x2.shape}')
+                #print(f'x2.shape = {x2.shape}')
                 #filter_ver = self.lowpass(i,j,'ver')
                 #x2_out = F.conv1d(x2, filter_ver.reshape(1,1,self.kernel_size), padding='same')
-                x2_out = F.conv1d(x2, filter_.reshape(1,1,self.kernel_size), padding='same')
-                print(f'x2_out.shape = {x2_out.shape}')
+                #x2_out = F.conv1d(x2, filter_.reshape(1,1,self.kernel_size), padding='same')
+                x2_out = F.conv1d(x2, filter_.reshape(1,1,self.kernel_size), stride=3, padding=padding)
+                #print(f'x2_out.shape = {x2_out.shape}')
                 output = x2_out.reshape(b,1,c,w,h).permute(0,1,2,4,3)
-                outputs.append(output[:,:,:,i::self.s,j::self.t])
+                #outputs.append(output[:,:,:,i::self.s,j::self.t])
+                outputs.append(output)
                                
         out = torch.cat(outputs, axis=1)
         # modeified
