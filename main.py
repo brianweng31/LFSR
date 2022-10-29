@@ -153,8 +153,8 @@ if __name__=="__main__":
                                     methods[method_idx].record.best_loss = np.sum(methods[method_idx].record.loss_history[-1])
                                     methods[method_idx].save_model(os.path.join('model',methods[method_idx].name,'best_model'))
 
-                                np.save('npy/sr_refocused_reshaped',sr_refocused_reshaped.detach().numpy())
-                                np.save('npy/hr_refocused_reshaped',hr_refocused_reshaped.detach().numpy())
+                                #np.save('npy/sr_refocused_reshaped',sr_refocused_reshaped.detach().numpy())
+                                #np.save('npy/hr_refocused_reshaped',hr_refocused_reshaped.detach().numpy())
                                 #sr_refocused_reshaped, hr_refocused_reshaped
                                 print(log_str)
                                 
