@@ -318,7 +318,9 @@ class FilterBankKernel(nn.Module):
     # 1d cosine
     def forward(self, x):
         b, st, c, h, w = x.size()
+        print(f'x.size() = {x.size()}')
         original_shape = x[:,[0],:,:,:].shape
+        print(f'original_shape = {original_shape}')
         filter_ = self.lowpass()
         padding = int((self.kernel_size-3)/2)
         
@@ -330,6 +332,7 @@ class FilterBankKernel(nn.Module):
                 #x1_out = F.conv1d(x1, filter_hor.view(1,1,self.kernel_size), padding='same')
                 #x1_out = F.conv1d(x1, filter_.view(1,1,self.kernel_size), padding='same')
                 x1_out = F.conv1d(x1, filter_.reshape(1,1,self.kernel_size), stride=3, padding=padding)
+                print(f'x1_out.shape = {x1_out.shape}')
                 x2 = x1_out.reshape(original_shape).permute(0,1,2,4,3).reshape(-1, 1, x.shape[-2])
                 #print(f'x2.shape = {x2.shape}')
                 #filter_ver = self.lowpass(i,j,'ver')
