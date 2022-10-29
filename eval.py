@@ -12,9 +12,9 @@ from test import testing
 
 ######
 model_name = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "cosine_1"
-dataset_name = "SR_test_dataset" #HCI, RandomTraining, SR_test_dataset
-batch_size = 3
+model_idx = "dis_0"
+dataset_name = "HCI" #HCI, RandomTraining, SR_test_dataset
+batch_size = 8
 
 #optimized_losses = [nn.L1Loss()]
 optimized_losses = [nn.MSELoss()]
@@ -39,7 +39,7 @@ if model_name == "FilterBankMethod":
     #model = FilterBankMethod(device, 3, 3, in_channels=9, out_channels=9, kernel_size=(1, 7, 7), stride=(1, 1, 1), model_idx=model_idx)
     #model = FilterBankMethod(device, 3, 3, in_channels=9, out_channels=9, kernel_size=(1, 3, 3), stride=(1, 3, 3), model_idx=model_idx)
     # 1d kernels
-    model = FilterBankMethod(device, 3, 3, in_channels=9, out_channels=9, kernel_size=21, stride=(1, 3, 3), model_idx=model_idx)
+    model = FilterBankMethod(device, 3, 3, in_channels=9, out_channels=9, kernel_size=13, stride=(1, 3, 3), model_idx=model_idx)
         
 
 elif model_name == "LinearFilter":
