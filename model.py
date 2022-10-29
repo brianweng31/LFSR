@@ -318,9 +318,9 @@ class FilterBankKernel(nn.Module):
     # 1d cosine
     def forward(self, x):
         b, st, c, h, w = x.size()
-        print(f'x.size() = {x.size()}')
+        #print(f'x.size() = {x.size()}')
         original_shape = x[:,[0],:,:,:].shape
-        print(f'original_shape = {original_shape}')
+        #print(f'original_shape = {original_shape}')
         # original_shape = (b, 1, c, h, w)
         filter_ = self.lowpass()
         padding = int((self.kernel_size-3)/2)
@@ -418,6 +418,10 @@ class FilterBankMethod(Method):
         assert self.s == self.t
         self.name = self.__class__.__name__ + f"_{model_idx}"
     def downsampling(self, hr_lf):
+         for i in range(self.s):
+            for j in range(self.t):
+                hr_lf[:,i*self.t+j, :, :, :] = torch.roll(hr_lf[:,i*self.t+j, :, :, :], shifts=(-(i-1), -(j-1)), dims=(-2,-1))
+    
         '''
         device = "cuda:0"
         b,st,c,h,w = hr_lf.shape
