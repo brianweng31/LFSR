@@ -144,8 +144,8 @@ class CustomConcatDataset(ConcatDataset):
 def get_dataloaders(dataset_name, batch_size=4, shuffle=True, num_workers=4, downsample_rate=1):
     if dataset_name == "HCI":
         light_field_size = [3, 3, floor(512/downsample_rate)//3*3, floor(512/downsample_rate)//3*3, 3]
-        #disparity_range = np.arange(-5,6)/downsample_rate
-        disparity_range = np.arange(0,1)/downsample_rate
+        disparity_range = np.arange(-5,6)/downsample_rate
+        #disparity_range = np.arange(0,1)/downsample_rate
 
         train_lfdataset_1 = LFDataset(
             "../Datasets/4D_Light_Field_Benchmark/additional", 
