@@ -79,7 +79,7 @@ class LFDataset(Dataset):
         return (torch.tensor(light_field)/255).type(torch.float32)
 
 class LFDataset_single(Dataset):
-    def __init__(self, light_field_dataset_path, used_index, light_field_size = [3,3,510,510,3], disparity_range=range(-5,6,1)):
+    def __init__(self, light_field_dataset_path, used_index, light_field_size = [3,3,510,510,3], disparity_range=range(-5,6,1), focus_plane=0):
         self.s = light_field_size[0]
         self.t = light_field_size[1]
         assert self.s == self.t
@@ -87,6 +87,7 @@ class LFDataset_single(Dataset):
         self.lfdata_folder_path = light_field_dataset_path
         self.light_field_size = light_field_size
         self.disparity_range = disparity_range
+        self.pixel_shift = focus_plane
         self.transform = transforms.Compose([
                 transforms.Resize(size=(light_field_size[2], light_field_size[3]))
             ])
@@ -100,6 +101,9 @@ class LFDataset_single(Dataset):
         for i in range(self.s):
             for j in range(self.t):
                 subview = Image.open(os.path.join(self.lfdata_folder_path, "input_Cam%03d.png" % self.using_index[i][j]))
+                x_shift = (-self.pixel_shift) * (j - int(self.t/2))
+                y_shift = (-self.pixel_shift) * (i - int(self.s/2))
+                subview = Image.shift(subview,(y_shift,x_shift,0), order=0, cval=0)
                 light_field[i,j,:,:,:] = self.transform(subview)
         return (torch.tensor(light_field)/255).type(torch.float32)
 
@@ -196,17 +200,20 @@ def get_dataloaders(dataset_name, batch_size=4, shuffle=True, num_workers=4, dow
         light_field_size = [3, 3, floor(512/downsample_rate)//3*3, floor(512/downsample_rate)//3*3, 3]
         #disparity_range = np.arange(-5,6)/downsample_rate
         disparity_range = np.arange(0,1)/downsample_rate
+        focus_plane = -2
 
         train_lfdataset = LFDataset_single(
-            "../Datasets/4D_Light_Field_Benchmark/test/origami", 
+            "../Datasets/4D_Light_Field_Benchmark/additional/medieval2", 
             [[0,4,8],[36,40,44],[72,76,80]],
             light_field_size = light_field_size,
-            disparity_range = disparity_range)
+            disparity_range = disparity_range,
+            focus_plane = focus_plane)
         test_lfdataset = LFDataset_single(
-            "../Datasets/4D_Light_Field_Benchmark/test/origami", 
+            "../Datasets/4D_Light_Field_Benchmark/additional/medieval2", 
             [[0,4,8],[36,40,44],[72,76,80]],
             light_field_size = light_field_size,
-            disparity_range = disparity_range)
+            disparity_range = disparity_range,
+            focus_plane = focus_plane)
 
         train_dataloader = DataLoader(train_lfdataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
         test_dataloader = DataLoader(test_lfdataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
