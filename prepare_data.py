@@ -6,6 +6,7 @@ from torch.utils.data import Dataset, DataLoader
 from torch.utils.data import ConcatDataset as ConcatDataset
 from torchvision import transforms
 from skimage import transform
+from scipy.ndimage.interpolation import shift
 from math import floor
 
 torch.manual_seed(0)
@@ -103,7 +104,7 @@ class LFDataset_single(Dataset):
                 subview = Image.open(os.path.join(self.lfdata_folder_path, "input_Cam%03d.png" % self.using_index[i][j]))
                 x_shift = (-self.pixel_shift) * (j - int(self.t/2))
                 y_shift = (-self.pixel_shift) * (i - int(self.s/2))
-                subview = Image.shift(subview,(y_shift,x_shift,0), order=0, cval=0)
+                subview = shift(subview,(y_shift,x_shift,0), order=0, cval=0)
                 light_field[i,j,:,:,:] = self.transform(subview)
         return (torch.tensor(light_field)/255).type(torch.float32)
 
