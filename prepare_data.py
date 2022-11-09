@@ -102,10 +102,11 @@ class LFDataset_single(Dataset):
         for i in range(self.s):
             for j in range(self.t):
                 subview = Image.open(os.path.join(self.lfdata_folder_path, "input_Cam%03d.png" % self.using_index[i][j]))
+                subview_np = np.array(subview)
                 x_shift = (-self.pixel_shift) * (j - int(self.t/2))
                 y_shift = (-self.pixel_shift) * (i - int(self.s/2))
-                subview = shift(subview,(y_shift,x_shift,0), order=0, cval=0)
-                light_field[i,j,:,:,:] = self.transform(subview)
+                subview_sft = shift(subview_np,(y_shift,x_shift,0), order=0, cval=0)
+                light_field[i,j,:,:,:] = self.transform(Image.fromarray(subview_sft))
         return (torch.tensor(light_field)/255).type(torch.float32)
 
 class SR_test_Dataset(Dataset):
