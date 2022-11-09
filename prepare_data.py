@@ -78,6 +78,31 @@ class LFDataset(Dataset):
                 light_field[i,j,:,:,:] = self.transform(subview)
         return (torch.tensor(light_field)/255).type(torch.float32)
 
+class LFDataset_single(Dataset):
+    def __init__(self, light_field_dataset_path, used_index, light_field_size = [3,3,510,510,3], disparity_range=range(-5,6,1)):
+        self.s = light_field_size[0]
+        self.t = light_field_size[1]
+        assert self.s == self.t
+        self.using_index = used_index
+        self.lfdata_folder_path = light_field_dataset_path
+        self.light_field_size = light_field_size
+        self.disparity_range = disparity_range
+        self.transform = transforms.Compose([
+                transforms.Resize(size=(light_field_size[2], light_field_size[3]))
+            ])
+
+
+    def __len__(self):
+        return len(self.lfdata_folder_path)
+
+    def __getitem__(self, idx):
+        light_field = np.zeros(self.light_field_size)
+        for i in range(self.s):
+            for j in range(self.t):
+                subview = Image.open(os.path.join(self.lfdata_folder_path, "input_Cam%03d.png" % self.using_index[i][j]))
+                light_field[i,j,:,:,:] = self.transform(subview)
+        return (torch.tensor(light_field)/255).type(torch.float32)
+
 class SR_test_Dataset(Dataset):
     def __init__(self, light_field_dataset_path, light_field_size = [3,3,1080,1920,3], disparity_range=range(0,1,1), use_transform=True):
         self.s = light_field_size[0]
@@ -99,7 +124,6 @@ class SR_test_Dataset(Dataset):
 
     def __getitem__(self, idx):
         light_field = np.zeros(self.light_field_size)
-        print(self.light_field_size)
         for i in range(self.s):
             for j in range(self.t):
                 #print(self.lfdata_file_path[idx])
@@ -164,6 +188,25 @@ def get_dataloaders(dataset_name, batch_size=4, shuffle=True, num_workers=4, dow
             disparity_range = disparity_range)
 
         train_lfdataset = CustomConcatDataset([train_lfdataset_1, train_lfdataset_2])
+
+        train_dataloader = DataLoader(train_lfdataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
+        test_dataloader = DataLoader(test_lfdataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
+
+    if dataset_name == "HCI_single":
+        light_field_size = [3, 3, floor(512/downsample_rate)//3*3, floor(512/downsample_rate)//3*3, 3]
+        #disparity_range = np.arange(-5,6)/downsample_rate
+        disparity_range = np.arange(0,1)/downsample_rate
+
+        train_lfdataset = LFDataset_single(
+            "../Datasets/4D_Light_Field_Benchmark/test/origami", 
+            [[0,4,8],[36,40,44],[72,76,80]],
+            light_field_size = light_field_size,
+            disparity_range = disparity_range)
+        test_lfdataset = LFDataset_single(
+            "../Datasets/4D_Light_Field_Benchmark/test/origami", 
+            [[0,4,8],[36,40,44],[72,76,80]],
+            light_field_size = light_field_size,
+            disparity_range = disparity_range)
 
         train_dataloader = DataLoader(train_lfdataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
         test_dataloader = DataLoader(test_lfdataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)

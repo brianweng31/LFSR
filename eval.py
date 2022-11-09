@@ -129,7 +129,7 @@ with torch.no_grad():
 #print(f'down_lf.shape = {down_lf.shape}')
 light_field = np.moveaxis(light_field, 2, -1)
 down_lf = np.moveaxis(down_lf, 2, -1)
-
+'''
 if not os.path.isdir('npy'):
     os.mkdir('npy')
 np.save(f'npy/down_{model_name}_{model_idx}',down_lf)
@@ -137,6 +137,7 @@ np.save(f'npy/{model_name}_{model_idx}',light_field)
 
 print(f'light_field.shape = {light_field.shape}')
 print(f'down_lf.shape = {down_lf.shape}')
+'''
 '''
 for i in range(light_field.shape[0]):
     print(light_field[i,5].shape)
