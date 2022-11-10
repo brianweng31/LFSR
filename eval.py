@@ -12,7 +12,7 @@ from test import testing
 
 ######
 model_name = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "med_2_ecr"
+model_idx = "med_-2_ecr"
 dataset_name = "HCI_single" #HCI, HCI_single, RandomTraining, SR_test_dataset
 batch_size = 8
 
