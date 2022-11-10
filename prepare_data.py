@@ -95,7 +95,7 @@ class LFDataset_single(Dataset):
 
 
     def __len__(self):
-        return len(self.lfdata_folder_path)
+        return 1
 
     def __getitem__(self, idx):
         light_field = np.zeros(self.light_field_size)
