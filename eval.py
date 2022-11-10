@@ -53,16 +53,16 @@ elif model_name == "BaselineMethod":
 
 #try:
 if model != "BaselineMethod":
-    print('here')
-    print(model.name)
+    #print('here')
+    #print(model.name)
     model.load_model(os.path.join('model',model.name,'best_model'))
-    print('here1')
+    #print('here1')
     model.eval_mode()
-    print('here2')
+    #print('here2')
     for params in model.net.parameters():
-        print('here3')
+        #print('here3')
         print(params.size())
-        print(f'params.sum() = {params.sum()}')
+        #print(f'params.sum() = {params.sum()}')
 #except:
     #pass
 
@@ -133,7 +133,7 @@ down_lf = np.moveaxis(down_lf, 2, -1)
 if not os.path.isdir('npy'):
     os.mkdir('npy')
 #np.save(f'npy/down_{model_name}_{model_idx}',down_lf)
-np.save(f'npy/{model_idx}_sr_nofilter',light_field)
+#np.save(f'npy/{model_idx}_sr_nofilter',light_field)
 #np.save(f'npy/hr_{model_idx}',hr_refocused_reshaped)
 
 print(f'light_field.shape = {light_field.shape}')
