@@ -12,13 +12,13 @@ from test import testing
 
 ######
 model_name = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "dis_0"
-dataset_name = "HCI" #HCI, RandomTraining, SR_test_dataset
+model_idx = "med_2_ecr"
+dataset_name = "HCI_single" #HCI, HCI_single, RandomTraining, SR_test_dataset
 batch_size = 8
 
-#optimized_losses = [nn.L1Loss()]
-optimized_losses = [nn.MSELoss()]
-estimate_clear_region = False
+optimized_losses = [nn.L1Loss()]
+#optimized_losses = [nn.MSELoss()]
+estimate_clear_region = True
 
 refocused_img_metrics = [piq.psnr, piq.ssim, piq.gmsd, ""]
 refocused_img_metrics_name = ["PSNR", "SSIM", "GMSD", "LPIPS"]
@@ -129,15 +129,17 @@ with torch.no_grad():
 #print(f'down_lf.shape = {down_lf.shape}')
 light_field = np.moveaxis(light_field, 2, -1)
 down_lf = np.moveaxis(down_lf, 2, -1)
-'''
+
 if not os.path.isdir('npy'):
     os.mkdir('npy')
 np.save(f'npy/down_{model_name}_{model_idx}',down_lf)
 np.save(f'npy/{model_name}_{model_idx}',light_field)
+np.save(f'npy/hr_{model_idx}',hr_refocused_reshaped)
 
 print(f'light_field.shape = {light_field.shape}')
 print(f'down_lf.shape = {down_lf.shape}')
-'''
+print(f'hr_refocused_reshaped.shape = {hr_refocused_reshaped.shape}')
+
 '''
 for i in range(light_field.shape[0]):
     print(light_field[i,5].shape)
