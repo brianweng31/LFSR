@@ -9,15 +9,15 @@ lr = 0.0001
 
 ### model selection
 model = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "medieval_-2"
+model_idx = "med_-2_ecr"
 post_fix = ""
 pre_fix = ""
 
 ## loss
-#optimized_losses = [nn.L1Loss()]
-optimized_losses = [nn.MSELoss()]
+optimized_losses = [nn.L1Loss()]
+#optimized_losses = [nn.MSELoss()]
 loss_weights = [1.0]
-estimate_clear_region = False
+estimate_clear_region = True
 assert len(optimized_losses) == len(loss_weights)
 
 ## loss_metrics
