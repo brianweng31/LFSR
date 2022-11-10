@@ -132,9 +132,9 @@ down_lf = np.moveaxis(down_lf, 2, -1)
 
 if not os.path.isdir('npy'):
     os.mkdir('npy')
-np.save(f'npy/down_{model_name}_{model_idx}',down_lf)
-np.save(f'npy/{model_name}_{model_idx}',light_field)
-np.save(f'npy/hr_{model_idx}',hr_refocused_reshaped)
+#np.save(f'npy/down_{model_name}_{model_idx}',down_lf)
+np.save(f'npy/{model_idx}_sr_nofilter',light_field)
+#np.save(f'npy/hr_{model_idx}',hr_refocused_reshaped)
 
 print(f'light_field.shape = {light_field.shape}')
 print(f'down_lf.shape = {down_lf.shape}')

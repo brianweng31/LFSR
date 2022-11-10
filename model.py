@@ -422,18 +422,11 @@ class FilterBankMethod(Method):
             for j in range(self.t):
                 hr_lf[:,i*self.t+j, :, :, :] = torch.roll(hr_lf[:,i*self.t+j, :, :, :], shifts=(-(i-1), -(j-1)), dims=(-2,-1))
 
-        '''
-        device = "cuda:0"
-        b,st,c,h,w = hr_lf.shape
-        # shift sub-view images
-        for i in range(self.s):
-            for j in range(self.t):
-                hr_lf[:,i*self.t+j, :, :, :] = torch.roll(hr_lf[:,i*self.t+j, :, :, :], shifts=(-(i-1), -(j-1)), dims=(-2,-1))
-    
+        
         ds_lf = hr_lf[:, :, :, 1::self.s,1::self.t]
         #ds_lf = shift_images(ds_lf.reshape(b*st, c, h//3, w//3), 0.75*torch.ones(b*st).to(device), 0.75*torch.ones(b*st).to(device)).reshape(b, st, c, h//3, w//3)
         return ds_lf
-        '''
+        
         '''
         b,st,c,h,w = hr_lf.shape
         print(hr_lf.shape)
@@ -445,7 +438,7 @@ class FilterBankMethod(Method):
         #ds_lf = shift_images(ds_lf.reshape(b*st, c, h//2, w//2), 0.75*torch.ones(b*st).to(device), 0.75*torch.ones(b*st).to(device)).reshape(b, st, c, h//2, w//2)
         return ds_lf
         '''
-        return self.net(hr_lf)
+        #return self.net(hr_lf)
     def enhance_LR_lightfield(self, lr_lf):
         '''
         # test
