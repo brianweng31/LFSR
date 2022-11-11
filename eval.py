@@ -11,14 +11,14 @@ from model import BaselineMethod, FilterBankMethod, LinearFilter
 from test import testing
 
 ######
-model_name = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "med_-2_ecr"
+model_name = "BaselineMethod" #FilterBankMethod, LinearFilter, BaselineMethod
+model_idx = "-2"
 dataset_name = "HCI_single" #HCI, HCI_single, RandomTraining, SR_test_dataset
 batch_size = 8
 
-optimized_losses = [nn.L1Loss()]
-#optimized_losses = [nn.MSELoss()]
-estimate_clear_region = True
+#optimized_losses = [nn.L1Loss()]
+optimized_losses = [nn.MSELoss()]
+estimate_clear_region = False
 
 refocused_img_metrics = [piq.psnr, piq.ssim, piq.gmsd, ""]
 refocused_img_metrics_name = ["PSNR", "SSIM", "GMSD", "LPIPS"]
@@ -133,7 +133,7 @@ down_lf = np.moveaxis(down_lf, 2, -1)
 if not os.path.isdir('npy'):
     os.mkdir('npy')
 #np.save(f'npy/down_{model_name}_{model_idx}',down_lf)
-#np.save(f'npy/{model_idx}_sr_nofilter',light_field)
+np.save(f'npy/{model_name}_{model_idx}',light_field)
 #np.save(f'npy/hr_{model_idx}',hr_refocused_reshaped)
 
 print(f'light_field.shape = {light_field.shape}')
