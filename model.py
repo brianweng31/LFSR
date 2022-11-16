@@ -87,15 +87,15 @@ class BaselineMethod(Method):
 ############################
 ######## FilterBank ########
 class FilterBankKernel(nn.Module):
-    #def __init__(self, in_channels, out_channels, kernel_size, stride, layer_num=1):
-    def __init__(self, s, t, kernel_size):
+    def __init__(self, in_channels, out_channels, kernel_size, stride, layer_num=1):
+    #def __init__(self, s, t, kernel_size):
         super().__init__()
-        '''
+        
         #padding = (0, floor(kernel_size[1]/2), floor(kernel_size[2]/2))
         padding = (0, floor(kernel_size[1]/2)-1, floor(kernel_size[2]/2)-1)
         m, n = stride[1], stride[2]
         m_2, n_2 = floor(stride[1]/2), floor(stride[2]/2)
-        '''
+        
         '''
         self.conv1 = nn.Conv3d(in_channels=in_channels, out_channels=out_channels, kernel_size = kernel_size, stride = stride, padding = padding, bias=False)
                 
@@ -112,8 +112,6 @@ class FilterBankKernel(nn.Module):
                     #self.conv1.weight.data[i*n+j, i*n+j,:,floor(kernel_size[1]/2), floor(kernel_size[2]/2)] = 1.0
             #self.conv1.bias.data = torch.zeros(self.conv1.bias.data.shape)
             #print(self.conv1.weight.data[0,0,0])
-            
-            
 
             # Gaussian
             assert kernel_size[1] == kernel_size[2]
@@ -128,9 +126,10 @@ class FilterBankKernel(nn.Module):
                     self.conv1.weight.data[i*n+j, i*n+j,:] = gaussian_kernel
             print(self.conv1.weight.data[0,0,0])
         '''
-        '''
+
+        ## gaussian sub-view to sub-view
         self.in_channels = in_channels
-        self.layer_num = layer_num
+        #self.layer_num = layer_num
         self.convs = nn.ModuleList()
         for _ in range(in_channels*layer_num):
             self.convs.append(nn.Conv3d(in_channels=1, out_channels=1, kernel_size = kernel_size, stride = stride, padding = padding, bias=False))
@@ -144,13 +143,11 @@ class FilterBankKernel(nn.Module):
             gaussian_kernel = torch.exp(-(x**2+y**2)/(2*sigma**2))
             gaussian_kernel = gaussian_kernel / gaussian_kernel.sum()
 
-            for k in range(in_channels*layer_num):
-                
+            for k in range(in_channels*layer_num):   
                 #self.convs[k].weight.data = torch.zeros(self.convs[k].weight.data.shape, requires_grad=True)
                 #self.convs[k].weight.data[0, 0, :, 1, 1] = 1.0
-            
                 self.convs[k].weight.data[0,0,:] = gaussian_kernel
-        '''
+        
         '''
         # two id kernels, sub-view to sub-view
         self.in_channels = in_channels
@@ -189,7 +186,7 @@ class FilterBankKernel(nn.Module):
                     #self.convs_vertical[i*n+j].weight.data[0,0,0,:,0] = gaussian_kernel
                     #self.convs_horizontal[i*n+j].weight.data[0,0,0,0,:] = gaussian_kernel
         '''
-        
+        '''
         # 1d cosine
         self.s = s
         self.t = t
@@ -203,7 +200,7 @@ class FilterBankKernel(nn.Module):
         #self.filter_omega_ver = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_omega), requires_grad=True) for i in range(9)])
         #self.filter_omega_hor = nn.ParameterList([nn.Parameter(data=torch.tensor(filter_omega), requires_grad=True) for i in range(9)])
         self.a_subscript = torch.nn.parameter.Parameter(data=torch.arange(0, self.filter_weight.shape[0]), requires_grad=False) 
-        
+        '''
         '''
         # 2d sinc
         self.s = s
@@ -314,7 +311,7 @@ class FilterBankKernel(nn.Module):
         '''
         return filter_
     
-    
+    '''
     # 1d cosine
     def forward(self, x):
         b, st, c, h, w = x.size()
@@ -352,6 +349,7 @@ class FilterBankKernel(nn.Module):
         # modeified
         out = torch.clamp(out,min=0,max=1)
         return out
+    '''
     
 
     '''
@@ -359,18 +357,20 @@ class FilterBankKernel(nn.Module):
         # implement the forward pass
         return self.conv1(x)   
     ''' 
-    '''
+    
     def forward(self, x):
         outputs = []
         for k in range(self.in_channels):
             out = self.convs[k*self.layer_num](x[:,[k],:,:,:])
+            '''
             for l in range(1, self.layer_num):
                 out = self.convs[k*self.layer_num + l](out)
+            '''
             outputs.append(out)
 
         out = torch.cat(outputs, axis=1)
         return out
-    '''
+    
     '''
     # two 1d kernels, sub-view to sub-view
     def forward(self, x):
@@ -410,9 +410,9 @@ class FilterBankKernel(nn.Module):
 class FilterBankMethod(Method):
     def __init__(self, device, s=3, t=3, in_channels=9, out_channels=9, kernel_size=(1, 7, 7), stride=(1, 3, 3), model_idx=0):
         super().__init__(self.__class__.__name__+f"_{model_idx}")
-        #self.net = FilterBankKernel(in_channels=in_channels, out_channels=out_channels, kernel_size=kernel_size, stride=stride).to(device)  
-        # id kernel
-        self.net = FilterBankKernel(s=s, t=t, kernel_size=kernel_size).to(device)  
+        self.net = FilterBankKernel(in_channels=in_channels, out_channels=out_channels, kernel_size=kernel_size, stride=stride).to(device)  
+        # 1d kernel
+        #self.net = FilterBankKernel(s=s, t=t, kernel_size=kernel_size).to(device)  
         self.s = s
         self.t = t
         assert self.s == self.t

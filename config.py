@@ -9,7 +9,7 @@ lr = 0.0001
 
 ### model selection
 model = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "med_2_ecr"
+model_idx = "gaussian_ecr_s2s_-2"
 post_fix = ""
 pre_fix = ""
 
