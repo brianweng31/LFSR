@@ -9,7 +9,7 @@ lr = 0.0001
 
 ### model selection
 model = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "gaussian_ecr_s2s_2"
+model_idx = "gaussian_ecr_s2s_2_same"
 post_fix = ""
 pre_fix = ""
 
@@ -27,10 +27,10 @@ assert len(refocused_img_metrics) == len(refocused_img_metrics_name)
 
 ## training
 dataset_name = "HCI_single" # RandomTraining, HCI, HCI_single, INRIA_Lytro 
-training_light_field_downsample_rate = [4,2,1]
-#training_light_field_downsample_rate = [1]
-training_light_field_epoch = [40000,20000,20000]
-#training_light_field_epoch = [100000]
+#training_light_field_downsample_rate = [4,2,1]
+training_light_field_downsample_rate = [1]
+#training_light_field_epoch = [40000,20000,20000]
+training_light_field_epoch = [100000]
 #training_light_field_epoch = [10,10,10]
 #training_light_field_epoch = [1]
 batch_size = 8
