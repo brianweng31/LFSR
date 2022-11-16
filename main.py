@@ -41,7 +41,7 @@ if __name__=="__main__":
         methods_name = ['Filterbank']
         i = 0
         for params in methods[0].net.parameters():
-            #print(params.size())
+            print(params.size())
             #print(params)
             i += 1
         print(f'num of params = {i}')
