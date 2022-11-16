@@ -129,7 +129,7 @@ class FilterBankKernel(nn.Module):
 
         ## gaussian sub-view to sub-view
         self.in_channels = in_channels
-        #self.layer_num = layer_num
+        self.layer_num = layer_num
         self.convs = nn.ModuleList()
         for _ in range(in_channels*layer_num):
             self.convs.append(nn.Conv3d(in_channels=1, out_channels=1, kernel_size = kernel_size, stride = stride, padding = padding, bias=False))
