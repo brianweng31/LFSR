@@ -133,7 +133,7 @@ down_lf = np.moveaxis(down_lf, 2, -1)
 if not os.path.isdir('npy'):
     os.mkdir('npy')
 np.save(f'npy/down_{model_idx}',down_lf)
-np.save(f'npy/gau_med_2_same',light_field)
+np.save(f'npy/gau_med_-2_same',light_field)
 #np.save(f'npy/hr_{model_idx}',hr_refocused_reshaped)
 
 print(f'light_field.shape = {light_field.shape}')
