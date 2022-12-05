@@ -73,7 +73,7 @@ def refocus_pixel(lf, pixels, s, t, estimate_clear_region=False):
         #estimated_clear_region = torch.mean(shifted_imgs_reshaped, dim=1) - shifted_imgs_reshaped[:,s*t//2,:,:,:]
         ## modified v2
         print(f'shifted_imgs_reshaped.shape = {shifted_imgs_reshaped.shape}')
-        print(f'torch.repeat_interleave(shifted_imgs_reshaped[:,s*t//2,:,:,:],s*t,dim=1).shape = {torch.repeat_interleave(shifted_imgs_reshaped[:,s*t//2,:,:,:],s*t,dim=1)}')
+        print(f'torch.repeat_interleave(shifted_imgs_reshaped[:,s*t//2,:,:,:],s*t,dim=1).shape = {torch.repeat_interleave(shifted_imgs_reshaped[:,s*t//2,:,:,:],s*t,dim=1).shape}')
         estimated_clear_region = torch.mean(abs(shifted_imgs_reshaped-torch.repeat_interleave(shifted_imgs_reshaped[:,s*t//2,:,:,:],s*t,dim=1)), dim=1)
         return refocused_img, estimated_clear_region
     else:
