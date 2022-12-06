@@ -90,7 +90,12 @@ with torch.no_grad():
             light_field = np.concatenate((light_field, sr_refocused.detach().cpu()), 0)
 
     ## print metrics
-    losses, metrics, sr_refocused_reshaped, hr_refocused_reshaped = testing(test_dataloader, device, model, 0, estimate_clear_region)
+    #losses, metrics, sr_refocused_reshaped, hr_refocused_reshaped = testing(test_dataloader, device, model, 0, estimate_clear_region)
+    if estimate_clear_region:
+        losses, metrics, sr_refocused_reshaped, hr_refocused_reshaped, estimate_clear_regions = testing(test_dataloader, device, methods[method_idx], epoch, estimate_clear_region)
+    else:
+        losses, metrics, sr_refocused_reshaped, hr_refocused_reshaped = testing(test_dataloader, device, methods[method_idx], epoch, estimate_clear_region)
+                            
     '''                         
     model.record.loss_history.append([])
     model.record.metric_history.append([])
@@ -134,6 +139,10 @@ if not os.path.isdir('npy'):
     os.mkdir('npy')
 np.save(f'npy/down_{model_idx}',down_lf)
 np.save(f'npy/gau_med_ecr2_2',light_field)
+try:
+    np.save(f'npy/estimate_clear_regions_2',estimate_clear_regions)
+except:
+    pass
 #np.save(f'npy/hr_{model_idx}',hr_refocused_reshaped)
 
 print(f'light_field.shape = {light_field.shape}')

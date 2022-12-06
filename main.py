@@ -125,7 +125,7 @@ if __name__=="__main__":
                     break
                     
                 training(train_dataloader,device,methods,optimizers,optimized_losses,estimate_clear_region,early_stopped)
-
+                
                 if epoch%10==0:
                     with torch.no_grad():
                         for method_idx in range(len(methods)):
@@ -134,7 +134,11 @@ if __name__=="__main__":
                                 continue
                             else:
                                 methods[method_idx].eval_mode()
-                                losses, metrics, sr_refocused_reshaped, hr_refocused_reshaped = testing(test_dataloader, device, methods[method_idx], epoch, estimate_clear_region)
+
+                                if estimate_clear_region:
+                                    losses, metrics, sr_refocused_reshaped, hr_refocused_reshaped, estimate_clear_regions = testing(test_dataloader, device, methods[method_idx], epoch, estimate_clear_region)
+                                else:
+                                    losses, metrics, sr_refocused_reshaped, hr_refocused_reshaped = testing(test_dataloader, device, methods[method_idx], epoch, estimate_clear_region)
                             
                                 methods[method_idx].record.loss_history.append([])
                                 methods[method_idx].record.metric_history.append([])

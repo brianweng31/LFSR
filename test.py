@@ -69,4 +69,7 @@ def testing(dataloader, device, model, epoch=0, estimate_clear_region=False):
                 metric_value = refocused_img_metrics[refocused_img_metrics_idx](sr_refocused_reshaped, hr_refocused_reshaped)
                 metrics[refocused_img_metrics_idx].append(metric_value.detach().cpu().numpy())
 
-    return np.mean(np.array(losses), axis=1), np.mean(np.array(metrics), axis=1), sr_refocused_reshaped, hr_refocused_reshaped
+    if estimate_clear_region:
+        return np.mean(np.array(losses), axis=1), np.mean(np.array(metrics), axis=1), sr_refocused_reshaped, hr_refocused_reshaped, estimated_clear_regions
+    else:
+        return np.mean(np.array(losses), axis=1), np.mean(np.array(metrics), axis=1), sr_refocused_reshaped, hr_refocused_reshaped
