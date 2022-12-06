@@ -92,9 +92,9 @@ with torch.no_grad():
     ## print metrics
     #losses, metrics, sr_refocused_reshaped, hr_refocused_reshaped = testing(test_dataloader, device, model, 0, estimate_clear_region)
     if estimate_clear_region:
-        losses, metrics, sr_refocused_reshaped, hr_refocused_reshaped, estimate_clear_regions = testing(test_dataloader, device, methods[method_idx], epoch, estimate_clear_region)
+        losses, metrics, sr_refocused_reshaped, hr_refocused_reshaped, estimate_clear_regions = testing(test_dataloader, device, model, 0, estimate_clear_region)
     else:
-        losses, metrics, sr_refocused_reshaped, hr_refocused_reshaped = testing(test_dataloader, device, methods[method_idx], epoch, estimate_clear_region)
+        losses, metrics, sr_refocused_reshaped, hr_refocused_reshaped = testing(test_dataloader, device, model, 0, estimate_clear_region)
                             
     '''                         
     model.record.loss_history.append([])
