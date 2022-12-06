@@ -140,6 +140,7 @@ if not os.path.isdir('npy'):
 #np.save(f'npy/down_{model_idx}',down_lf)
 #np.save(f'npy/gau_med_ecr2_-2',light_field)
 try:
+    estimate_clear_regions = np.array(estimate_clear_regions.detach().cpu())
     print(type(estimate_clear_regions))
     #np.save(f'npy/estimate_clear_regions_-2',estimate_clear_regions)
 except:
