@@ -202,7 +202,7 @@ def get_dataloaders(dataset_name, batch_size=4, shuffle=True, num_workers=4, dow
         light_field_size = [3, 3, floor(512/downsample_rate)//3*3, floor(512/downsample_rate)//3*3, 3]
         #disparity_range = np.arange(-5,6)/downsample_rate
         disparity_range = np.arange(0,1)/downsample_rate
-        focus_plane = 2
+        focus_plane = -2
 
         train_lfdataset = LFDataset_single(
             "../Datasets/4D_Light_Field_Benchmark/additional/medieval2", 
