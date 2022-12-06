@@ -143,7 +143,7 @@ try:
     estimate_clear_regions = np.array(estimate_clear_regions.detach().cpu())
     print(type(estimate_clear_regions))
     #print(type(np.array(estimate_clear_regions.detach().cpu())))
-    #np.save(f'npy/estimate_clear_regions_-2',estimate_clear_regions)
+    np.save(f'npy/estimate_clear_regions_-2',estimate_clear_regions)
 except:
     pass
 #np.save(f'npy/hr_{model_idx}',hr_refocused_reshaped)
