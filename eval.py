@@ -137,10 +137,11 @@ down_lf = np.moveaxis(down_lf, 2, -1)
 
 if not os.path.isdir('npy'):
     os.mkdir('npy')
-np.save(f'npy/down_{model_idx}',down_lf)
-np.save(f'npy/gau_med_ecr2_-2',light_field)
+#np.save(f'npy/down_{model_idx}',down_lf)
+#np.save(f'npy/gau_med_ecr2_-2',light_field)
 try:
-    np.save(f'npy/estimate_clear_regions_-2',estimate_clear_regions)
+    print(type(estimate_clear_regions))
+    #np.save(f'npy/estimate_clear_regions_-2',estimate_clear_regions)
 except:
     pass
 #np.save(f'npy/hr_{model_idx}',hr_refocused_reshaped)
