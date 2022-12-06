@@ -51,7 +51,9 @@ def testing(dataloader, device, model, epoch=0, estimate_clear_region=False):
 
         for optimized_losses_idx in range(len(optimized_losses)):
             if estimate_clear_region:
-                loss = optimized_losses[optimized_losses_idx]((sr_refocused - hr_refocused)*(torch.exp(-torch.abs(estimated_clear_regions))), torch.zeros(hr_refocused.shape).to(device))
+                #loss = optimized_losses[optimized_losses_idx]((sr_refocused - hr_refocused)*(torch.exp(-torch.abs(estimated_clear_regions))), torch.zeros(hr_refocused.shape).to(device))
+                loss = optimized_losses[optimized_losses_idx]((sr_refocused - hr_refocused)*estimated_clear_regions, torch.zeros(hr_refocused.shape).to(device))
+            
             else:
                 loss = optimized_losses[optimized_losses_idx]((sr_refocused - hr_refocused), torch.zeros(hr_refocused.shape).to(device))
             losses[optimized_losses_idx].append(loss.detach().cpu().numpy())

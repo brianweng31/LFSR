@@ -36,7 +36,9 @@ def training(dataloader,device,methods,optimizers,optimized_losses,estimate_clea
                 losses = []
                 for optimized_losses_idx in range(len(optimized_losses)):
                     if estimate_clear_region:
-                        losses.append(optimized_losses[optimized_losses_idx]((sr_refocused - hr_refocused)*(torch.exp(-torch.abs(estimated_clear_regions))), torch.zeros(hr_refocused.shape).to(device)))
+                        #losses.append(optimized_losses[optimized_losses_idx]((sr_refocused - hr_refocused)*(torch.exp(-torch.abs(estimated_clear_regions))), torch.zeros(hr_refocused.shape).to(device)))
+                        losses.append(optimized_losses[optimized_losses_idx]((sr_refocused - hr_refocused)*estimated_clear_regions, torch.zeros(hr_refocused.shape).to(device)))
+                    
                     else:
                         losses.append(optimized_losses[optimized_losses_idx]((sr_refocused - hr_refocused), torch.zeros(hr_refocused.shape).to(device)))
                     
