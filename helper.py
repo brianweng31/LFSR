@@ -77,7 +77,7 @@ def refocus_pixel(lf, pixels, s, t, estimate_clear_region=False):
         central_repeat = torch.repeat_interleave(shifted_imgs_reshaped[:,[s*t//2],:,:,:],s*t,dim=1)
         estimated_clear_region = torch.mean(abs(shifted_imgs_reshaped-central_repeat), dim=1)
         
-        ecr = tprch.mean(estimated_clear_region, dim=2)
+        ecr = torch.mean(estimated_clear_region, dim=2)
         # [1, 1, 1, 510, 510]
         threshold = 0.005
         ecr = ecr-threshold
