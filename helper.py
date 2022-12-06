@@ -81,7 +81,7 @@ def refocus_pixel(lf, pixels, s, t, estimate_clear_region=False):
         # [1, 1, 1, 510, 510]
         threshold = 0.005
         ecr = ecr-threshold
-        ecr = np.floor(ecr)
+        ecr = torch.floor(ecr)
         ecr = -ecr
 
         ecr = torch.repeat_interleave(ecr,3,dim=2)
