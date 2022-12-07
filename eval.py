@@ -139,6 +139,7 @@ if not os.path.isdir('npy'):
     os.mkdir('npy')
 np.save(f'npy/down_{model_idx}',down_lf)
 np.save(f'npy/gau_med_ecr2_thres_-2',light_field)
+'''
 try:
     #estimate_clear_regions = np.array(estimate_clear_regions.detach().cpu())
     #print(type(estimate_clear_regions))
@@ -146,6 +147,7 @@ try:
     #np.save(f'npy/estimate_clear_regions_2',estimate_clear_regions)
 except:
     pass
+'''
 #np.save(f'npy/hr_{model_idx}',hr_refocused_reshaped)
 
 print(f'light_field.shape = {light_field.shape}')
