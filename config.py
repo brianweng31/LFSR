@@ -9,15 +9,15 @@ lr = 0.0001
 
 ### model selection
 model = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "gaussian_ecr_thres_s2s_-2"
+model_idx = "gaussian_baseline_-2"
 post_fix = ""
 pre_fix = ""
 
 ## loss
-optimized_losses = [nn.L1Loss()]
-#optimized_losses = [nn.MSELoss()]
+#optimized_losses = [nn.L1Loss()]
+optimized_losses = [nn.MSELoss()]
 loss_weights = [1.0]
-estimate_clear_region = True
+estimate_clear_region = False
 assert len(optimized_losses) == len(loss_weights)
 
 ## loss_metrics
