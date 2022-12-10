@@ -12,13 +12,13 @@ from test import testing
 
 ######
 model_name = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "gaussian_ecr_thres_s2s_2"
+model_idx = "gaussian_baseline_2"
 dataset_name = "HCI_single" #HCI, HCI_single, RandomTraining, SR_test_dataset
 batch_size = 8
 
-optimized_losses = [nn.L1Loss()]
-#optimized_losses = [nn.MSELoss()]
-estimate_clear_region = True
+#optimized_losses = [nn.L1Loss()]
+optimized_losses = [nn.MSELoss()]
+estimate_clear_region = False
 
 refocused_img_metrics = [piq.psnr, piq.ssim, piq.gmsd, ""]
 refocused_img_metrics_name = ["PSNR", "SSIM", "GMSD", "LPIPS"]
@@ -138,7 +138,7 @@ down_lf = np.moveaxis(down_lf, 2, -1)
 if not os.path.isdir('npy'):
     os.mkdir('npy')
 np.save(f'npy/down_{model_idx}',down_lf)
-np.save(f'npy/gau_med_ecr2_thres_2',light_field)
+np.save(f'npy/gau_baseline_2',light_field)
 '''
 try:
     #estimate_clear_regions = np.array(estimate_clear_regions.detach().cpu())
