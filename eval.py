@@ -12,8 +12,8 @@ from test import testing
 
 ######
 model_name = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "gaussian_baseline_-2"
-dataset_name = "HCI_single" #HCI, HCI_single, RandomTraining, SR_test_dataset
+model_idx = "gaussian_baseline"
+dataset_name = "HCI" #HCI, HCI_single, RandomTraining, SR_test_dataset
 batch_size = 8
 
 #optimized_losses = [nn.L1Loss()]
