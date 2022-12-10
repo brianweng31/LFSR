@@ -33,7 +33,7 @@ training_light_field_downsample_rate = [1]
 training_light_field_epoch = [100000]
 #training_light_field_epoch = [10,10,10]
 #training_light_field_epoch = [1]
-batch_size = 16
+batch_size = 8
 assert len(training_light_field_downsample_rate)==len(training_light_field_epoch)
 
 ## early stopping
