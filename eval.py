@@ -12,7 +12,7 @@ from test import testing
 
 ######
 model_name = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "gaussian_baseline"
+model_idx = "gaussian_SR"
 dataset_name = "HCI" #HCI, HCI_single, RandomTraining, SR_test_dataset
 batch_size = 8
 
