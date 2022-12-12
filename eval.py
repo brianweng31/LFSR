@@ -13,7 +13,7 @@ from test import testing
 ######
 model_name = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
 model_idx = "gaussian_SR"
-dataset_name = "HCI" #HCI, HCI_single, RandomTraining, SR_test_dataset
+dataset_name = "HCI_single" #HCI, HCI_single, RandomTraining, SR_test_dataset
 batch_size = 8
 
 #optimized_losses = [nn.L1Loss()]
@@ -137,8 +137,8 @@ down_lf = np.moveaxis(down_lf, 2, -1)
 
 if not os.path.isdir('npy'):
     os.mkdir('npy')
-np.save(f'npy/down_{model_idx}',down_lf)
-np.save(f'npy/gau_SR',light_field)
+#np.save(f'npy/down_{model_idx}',down_lf)
+#np.save(f'npy/gau_SR',light_field)
 '''
 try:
     #estimate_clear_regions = np.array(estimate_clear_regions.detach().cpu())
