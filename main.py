@@ -49,6 +49,8 @@ if __name__=="__main__":
     elif model == "LinearFilter":
         if dataset_name == "HCI":
             h, w = 512, 512
+        if dataset_name == "HCI_single":
+            h, w = 512, 512
         if dataset_name == "INRIA_Lytro":
             h, w = 379, 379
         if dataset_name == "RandomTraining":
@@ -65,7 +67,6 @@ if __name__=="__main__":
             methods = [LinearFilter(device, h, w, s=3, t=3, model_idx=model_idx, FB_kernels=None)]
         
         methods_name = ['LinearFilter']
-
 
         for params in methods[0].net.parameters():
             print(params.size())

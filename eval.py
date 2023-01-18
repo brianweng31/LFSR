@@ -45,6 +45,8 @@ if model_name == "FilterBankMethod":
 elif model_name == "LinearFilter":
     if dataset_name == "HCI":
         h, w = 512, 512
+    if dataset_name == "HCI_single":
+            h, w = 512, 512
     if dataset_name == "INRIA_Lytro":
         h, w = 379, 379
     model = LinearFilter(device, h, w, s=3, t=3, model_idx=model_idx)

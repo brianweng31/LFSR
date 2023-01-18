@@ -471,7 +471,7 @@ class FilterBankMethod(Method):
 ##############################
 ######## LinearFilter ########
 class LinearFilterKernel(nn.Module):
-    def __init__(self, channels, kernel_size, stride, output_size, st, FB_kernels):
+    def __init__(self, channels, kernel_size, stride, output_size, st, FB_kernels=None):
         super().__init__()
         # Input: (N, Cin, H, W)
         # Output: (N, Cout, Hout, Wout)
@@ -482,7 +482,9 @@ class LinearFilterKernel(nn.Module):
         self.stride = stride
         self.output_size = output_size
         #self.kernels = torch.zeros((self.ang_y*self.ang_x,out_channels, in_channels, output_size[0], output_size[1], self.kernel_size**2))
-        self.kernels = torch.zeros(self.ang_y*self.ang_x, self.ang_y*self.ang_x, 1, output_size[0], output_size[1], self.kernel_size**2)
+        #self.kernels = torch.zeros(self.ang_y*self.ang_x, self.ang_y*self.ang_x, 1, output_size[0], output_size[1], self.kernel_size**2)
+        self.kernels = torch.zeros(self.ang_y*self.ang_x, 1, output_size[0], output_size[1], self.kernel_size**2)
+        
         if FB_kernels == None:
             '''
             for i in range(st[0]):
@@ -491,7 +493,8 @@ class LinearFilterKernel(nn.Module):
 
             '''
             for i in range(self.ang_y*self.ang_x):
-                self.kernels[i,i,0,:,:,int(self.kernel_size**2/2)] = 1
+                #self.kernels[i,i,0,:,:,int(self.kernel_size**2/2)] = 1
+                self.kernels[i,0,:,:,int(self.kernel_size**2/2)] = 1
             
         else:
             # FB [9,9,1,7,7]
@@ -548,9 +551,15 @@ class LinearFilterKernel(nn.Module):
         lf = lf.contiguous().view(*lf.size()[:-2], -1)
         #print("lf_2.shape = ",lf.shape)
         # torch.Size([b, st, 3, 170, 170, 49])
-        down_lf = (lf.unsqueeze(1) * self.weights.unsqueeze(0)).sum([2,-1])
+
+        ### 9-9
+        #down_lf = (lf.unsqueeze(1) * self.weights.unsqueeze(0)).sum([2,-1])
         #      lf = torch.Size([b, 1, st, 3, 170, 170, 49])
         # weights = torch.Size([1, st, st, 1, 170, 170, 49])
+        ### 1-1
+        down_lf = (lf * self.weights.unsqueeze(0)).sum([-1])
+        #      lf = torch.Size([b, st, 3, 170, 170, 49])
+        # weights = torch.Size([1, st, 1, 170, 170, 49])
         #print("down_lf.shape = ",down_lf.shape)
 
         down_lf += self.biases.unsqueeze(0).unsqueeze(2)

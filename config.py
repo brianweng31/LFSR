@@ -8,8 +8,8 @@ lr = 0.0001
 #lr = 0.00001
 
 ### model selection
-model = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "gaussian_SR"
+model = "LinearFilter" #FilterBankMethod, LinearFilter, BaselineMethod
+model_idx = "delta"
 post_fix = ""
 pre_fix = ""
 
