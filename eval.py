@@ -156,7 +156,7 @@ try:
     print(f'kernels.size() = ',kernels.size())
     kernels = np.array(kernels.detach().cpu())
     print(f'type(kernels) = ',type(kernels))
-    print(f'kernels.size() = ',kernels.size())
+    print(f'kernels.shape() = ',kernels.shape())
 except:
     pass
 
