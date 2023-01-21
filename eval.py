@@ -157,6 +157,7 @@ try:
     kernels = np.array(kernels.detach().cpu())
     print(f'type(kernels) = ',type(kernels))
     print(f'kernels.shape() = ', kernels.shape)
+    np.save(f'npy/kernels_delta_2',kernels)
 except:
     pass
 
