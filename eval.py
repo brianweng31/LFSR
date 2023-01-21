@@ -11,7 +11,7 @@ from model import BaselineMethod, FilterBankMethod, LinearFilter
 from test import testing
 
 ######
-model_name = "FilterBankMethod" #FilterBankMethod, LinearFilter, BaselineMethod
+model_name = "LinearFilter" #FilterBankMethod, LinearFilter, BaselineMethod
 model_idx = "delta_2"
 dataset_name = "HCI_single" #HCI, HCI_single, RandomTraining, SR_test_dataset
 batch_size = 8
