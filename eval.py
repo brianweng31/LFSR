@@ -12,7 +12,7 @@ from test import testing
 
 ######
 model_name = "LinearFilter" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "delta_-2"
+model_idx = "delta_2"
 dataset_name = "HCI_single" #HCI, HCI_single, RandomTraining, SR_test_dataset
 batch_size = 8
 
@@ -61,9 +61,14 @@ if model != "BaselineMethod":
     #print('here1')
     model.eval_mode()
     #print('here2')
+    kernels = 0
+    i = 0
     for params in model.net.parameters():
         #print('here3')
         print(params.size())
+        if i == 0:
+            kernels = params
+            i += 1
         #print(f'params.sum() = {params.sum()}')
 #except:
     #pass
@@ -139,17 +144,22 @@ down_lf = np.moveaxis(down_lf, 2, -1)
 
 if not os.path.isdir('npy'):
     os.mkdir('npy')
-np.save(f'npy/down_{model_idx}',down_lf)
-np.save(f'npy/{model_idx}',light_field)
-'''
+#np.save(f'npy/down_{model_idx}',down_lf)
+#np.save(f'npy/{model_idx}',light_field)
+
 try:
     #estimate_clear_regions = np.array(estimate_clear_regions.detach().cpu())
     #print(type(estimate_clear_regions))
     #print(type(np.array(estimate_clear_regions.detach().cpu())))
     #np.save(f'npy/estimate_clear_regions_2',estimate_clear_regions)
+    print(f'type(kernels) = ',type(kernels))
+    print(f'kernels.size() = ',kernels.size())
+    kernels = np.array(kernels.detach().cpu())
+    print(f'type(kernels) = ',type(kernels))
+    print(f'kernels.size() = ',kernels.size())
 except:
     pass
-'''
+
 #np.save(f'npy/hr_{model_idx}',hr_refocused_reshaped)
 
 print(f'light_field.shape = {light_field.shape}')
