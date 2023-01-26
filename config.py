@@ -9,7 +9,7 @@ lr = 0.0001
 
 ### model selection
 model = "LinearFilter" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "delta_ecr_-2"
+model_idx = "delta_ecr_2"
 post_fix = ""
 pre_fix = ""
 
