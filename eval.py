@@ -12,13 +12,13 @@ from test import testing
 
 ######
 model_name = "LinearFilter" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "delta_2"
+model_idx = "delta_ecr_2"
 dataset_name = "HCI_single" #HCI, HCI_single, RandomTraining, SR_test_dataset
 batch_size = 8
 
-#optimized_losses = [nn.L1Loss()]
-optimized_losses = [nn.MSELoss()]
-estimate_clear_region = False
+optimized_losses = [nn.L1Loss()]
+#optimized_losses = [nn.MSELoss()]
+estimate_clear_region = True
 
 refocused_img_metrics = [piq.psnr, piq.ssim, piq.gmsd, ""]
 refocused_img_metrics_name = ["PSNR", "SSIM", "GMSD", "LPIPS"]
@@ -144,8 +144,8 @@ down_lf = np.moveaxis(down_lf, 2, -1)
 
 if not os.path.isdir('npy'):
     os.mkdir('npy')
-#np.save(f'npy/down_{model_idx}',down_lf)
-#np.save(f'npy/{model_idx}',light_field)
+np.save(f'npy/down_{model_idx}',down_lf)
+np.save(f'npy/{model_idx}',light_field)
 
 try:
     #estimate_clear_regions = np.array(estimate_clear_regions.detach().cpu())
@@ -157,7 +157,7 @@ try:
     kernels = np.array(kernels.detach().cpu())
     print(f'type(kernels) = ',type(kernels))
     print(f'kernels.shape() = ', kernels.shape)
-    np.save(f'npy/kernels_delta_2',kernels)
+    np.save(f'npy/kernels_delta_ecr_2',kernels)
 except:
     pass
 
