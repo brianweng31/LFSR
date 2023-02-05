@@ -12,7 +12,7 @@ from test import testing
 
 ######
 model_name = "LinearFilter" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "delta_ecr_2"
+model_idx = "delta_ecr_-2"
 dataset_name = "HCI_single" #HCI, HCI_single, RandomTraining, SR_test_dataset
 batch_size = 8
 
@@ -157,7 +157,7 @@ try:
     kernels = np.array(kernels.detach().cpu())
     print(f'type(kernels) = ',type(kernels))
     print(f'kernels.shape() = ', kernels.shape)
-    np.save(f'npy/kernels_delta_ecr_2',kernels)
+    np.save(f'npy/kernels_delta_ecr_ker3_2',kernels)
 except:
     pass
 

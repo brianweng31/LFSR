@@ -9,7 +9,7 @@ lr = 0.0001
 
 ### model selection
 model = "LinearFilter" #FilterBankMethod, LinearFilter, BaselineMethod
-model_idx = "delta_ecr_2"
+model_idx = "delta_ecr_ker3_2"
 post_fix = ""
 pre_fix = ""
 
@@ -38,7 +38,7 @@ assert len(training_light_field_downsample_rate)==len(training_light_field_epoch
 
 ## early stopping
 tolerance = 1000
-min_percent = 0.001
+min_percent = 0.01
 
 #tolerance = 20
 #min_percent = 1

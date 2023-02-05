@@ -536,10 +536,10 @@ class LinearFilterKernel(nn.Module):
         pad_y = (self.output_size[0]-1) * self.ang_y + (self.kernel_size-h)
         pad_bottom = int(pad_y/2)
         pad_top = pad_y - pad_bottom
-        #padding = (pad_left,pad_right,pad_top,pad_bottom)
+        padding = (pad_left,pad_right,pad_top,pad_bottom)
         # test
         #padding = (0,pad_x,0,pad_y)
-        padding = (floor(self.kernel_size/2),pad_x-floor(self.kernel_size/2),floor(self.kernel_size/2),pad_y-floor(self.kernel_size/2))
+        #padding = (floor(self.kernel_size/2),pad_x-floor(self.kernel_size/2),floor(self.kernel_size/2),pad_y-floor(self.kernel_size/2))
         lf = F.pad(lf, padding, "constant", 0)
 
         kh, kw = self.kernel_size, self.kernel_size
@@ -594,7 +594,8 @@ class LinearFilter(Method):
         self.device = device
 
         # output_size to be determined
-        self.net = LinearFilterKernel(channels=3, kernel_size=(7, 7), stride=(3, 3), output_size=(int(self.h/self.t),int(self.w/self.s)), st=(self.s,self.t),FB_kernels=FB_kernels).to(device)
+        #self.net = LinearFilterKernel(channels=3, kernel_size=(7, 7), stride=(3, 3), output_size=(int(self.h/self.t),int(self.w/self.s)), st=(self.s,self.t),FB_kernels=FB_kernels).to(device)
+        self.net = LinearFilterKernel(channels=3, kernel_size=(3, 3), stride=(3, 3), output_size=(int(self.h/self.t),int(self.w/self.s)), st=(self.s,self.t),FB_kernels=FB_kernels).to(device)
     
     def downsampling(self, hr_lf):
         #b,st,c,h,w = hr_lf.shape
