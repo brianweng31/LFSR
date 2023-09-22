@@ -1,8 +1,5 @@
 # Light Field Super-Resoultion by Superimposed Projections
 
-add image tutorial:
-https://stackoverflow.com/questions/41604263/how-do-i-display-local-image-in-markdown
-
 ## Introduction
 
 Light Field (LF) Imaging represents an emerging and innovative display system designed to address the issue of Vergence Accommodation Conflict (VAC) often encountered in traditional AR displays. Nonetheless, LF imaging is not without its inherent challenges.
