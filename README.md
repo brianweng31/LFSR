@@ -79,11 +79,15 @@ Light field refousing is based on avaraging all the sub-view images. For the in-
 
 As the result, we then caculate the pixel-wise difference between each sub-view image and the central-view image, denoted $\text{diff}_{i,j}$ for the sub-view image in the angular coordinate $(i,j)$.
 
-$$\text{diff}_{i,j}(x,y) = |\text{sub-view}_{i,j}(x,y)-\text{central-view}_{i,j}(x,y)|$$
+```math
+\text{diff}_{i,j}(x,y) = |\text{sub-view}_{i,j}(x,y)-\text{central-view}_{i,j}(x,y)|
+```
 
 After obtaining the matrices for each sub-view image, we construct the overall "Difference" matrix, denoted $\text{Diff}$, by averaging those matrices.
 
-$$\text{Diff}(x,y) = \frac{1}{\text{ang}_x * \text{ang}_y} \sum_{i,j} \text{diff}_{i,j}(x,y)$$
+```math
+\text{Diff}(x,y) = \frac{1}{\text{ang}_x * \text{ang}_y} \sum_{i,j} \text{diff}_{i,j}(x,y)
+```
 
 Note that the size of $\text{Diff}$ will be equivalent to the spatial resolution of the input light field (510x510 in the above case). Also, it's not hard to guess that the value correspnds to the in-focus regions will be relatively small.
 
