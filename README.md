@@ -185,9 +185,6 @@ The following two sets of images show the comparison of the generated results. N
 
 Questions:
 
-
-### Experiment
-
 ## Reference
 
 [DVC07] Amera-Venkata N., Chang N. L.: Realizing Super-Resolution with Superimposed Projection. In Proc. of IEEE International Workshop on ProjectorCamera Systems (ProCams) (2007)
