@@ -60,9 +60,14 @@ The method we aim to surpass as a baseline downsamples each sub-view image indiv
 
 In the context of this aforementioned approach, we train the downsampling filters using the HCI dataset, which comprises 20 training light fields and 4 testing light fields.
 
-[Image] metric result comparison
+| | Baseline | SR |
+| :-: | :-: | :-: |
+| PSNR | 31.66 | <ins>34.62</ins> |
+| SSIM | 0.978 | <ins>0.982</ins> |
+| GMSD | 0.027 | <ins>0.023</ins> |
+| LPIPS | 0.206 | <ins>0.133</ins> |
 
-- Basleine: Baseline method
+- Baseline: Baseline method
 - SR: Our method (Super-resolution)
 
 ## Further Problems & Current Approach
