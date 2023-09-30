@@ -173,13 +173,13 @@ The following two sets of images show the comparison of the generated results. N
 
 - Far plane
 
-|**Expoenential Weight**|**Threshold**|**No Filter**|**Gorund Truth**|
+|**Expoenential Weight**|**Threshold**|**No Filter**|**Ground Truth**|
 |:-:|:-:|:-:|:-:|
 | <img width="170" alt="far_exponential" src="https://github.com/brianweng31/LFSR/assets/55650127/f32d0c5e-86d6-4ad2-b64d-f784331664a7"> | <img width="170" alt="far_threshold" src="https://github.com/brianweng31/LFSR/assets/55650127/dd1a7b26-40e0-4e61-b131-44ca30409309"> | <img width="170" alt="far_nofilter" src="https://github.com/brianweng31/LFSR/assets/55650127/e678e1af-8be3-4401-b19a-0a7644b4580c"> | <img width="170" alt="far_groundtruth" src="https://github.com/brianweng31/LFSR/assets/55650127/d34b6a15-b8fa-4a22-b8f2-7a49cb855a10"> |
 
 - Close plane
 
-|**Expoenential Weight**|**Threshold**|**No Filter**|**Gorund Truth**|
+|**Expoenential Weight**|**Threshold**|**No Filter**|**Ground Truth**|
 |:-:|:-:|:-:|:-:|
 | <img width="170" alt="close_exponential" src="https://github.com/brianweng31/LFSR/assets/55650127/fdc50234-5f9d-4cde-9052-09b13a1cb96f"> | <img width="170" alt="close_threshold" src="https://github.com/brianweng31/LFSR/assets/55650127/1b53e7cf-ad58-4e13-b722-3006240a273c"> | <img width="170" alt="close_nofilter" src="https://github.com/brianweng31/LFSR/assets/55650127/058972e0-91b1-4adf-82fa-77efba5b16c0"> | <img width="170" alt="close_groundtruth" src="https://github.com/brianweng31/LFSR/assets/55650127/2e2ba014-d8d4-4c82-afbc-687a64b84043"> |
 
