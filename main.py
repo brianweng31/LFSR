@@ -14,9 +14,6 @@ from model import BaselineMethod, FilterBankMethod, LinearFilter
 from train import training
 from test import testing
 
-# for LinearFilter
-#load_FBmodel = True
-
 torch.set_default_dtype(torch.float32)
 gc.collect()
 with torch.no_grad():
@@ -35,14 +32,11 @@ if __name__=="__main__":
         #methods = [FilterBankMethod(device, 3, 3, in_channels=9, out_channels=9, kernel_size=(1, 7, 7), stride=(1, 1, 1), model_idx=model_idx)]
         #methods = [FilterBankMethod(device, 3, 3, in_channels=9, out_channels=9, kernel_size=(1, 3, 3), stride=(1, 3, 3), model_idx=model_idx)]
         #methods = [FilterBankMethod(device, 2, 2, in_channels=4, out_channels=4, kernel_size=(1, 8, 8), stride=(1, 2, 2), model_idx=model_idx)]
-        # 1d kernel
-        #methods = [FilterBankMethod(device, 3, 3, in_channels=9, out_channels=9, kernel_size=13, stride=(1, 3, 3), model_idx=model_idx)]
         
         methods_name = ['Filterbank']
         i = 0
         for params in methods[0].net.parameters():
             print(params.size())
-            #print(params)
             i += 1
         print(f'num of params = {i}')
 
@@ -78,9 +72,7 @@ if __name__=="__main__":
         train_dataloader, test_dataloader = get_dataloaders(dataset_name, batch_size=batch_size, downsample_rate=1)
 
         for method_idx in range(len(methods)):
-            #losses, metrics = testing(test_dataloader, methods[method_idx])
             losses, metrics = testing(test_dataloader, device, methods[method_idx])
-            #plotting_dataloader(test_dataloader, methods[method_idx])
             log_str = methods[method_idx].name + ": "
         for optimized_losses_idx in range(len(optimized_losses)):
             log_str += "Loss %d: %2f " % (optimized_losses_idx, losses[optimized_losses_idx])
@@ -96,8 +88,6 @@ if __name__=="__main__":
         try:
             for method_idx in range(len(methods)):
                 methods[method_idx].load_model(os.path.join('model',methods[method_idx].name,'best_model'))
-                # for FilterBank
-                #methods[method_idx].load_model(os.path.join('model','FilterBankMethod_F1','best_model'))
         except:
             pass
 
@@ -106,14 +96,11 @@ if __name__=="__main__":
             start = time.time()
             epochs = training_light_field_epoch[downsample_rate_idx]
             downsample_rate = training_light_field_downsample_rate[downsample_rate_idx]
-            #try:
-            #train_dataloader, test_dataloader = get_dataloaders('SRFilterTraining', batch_size=batch_size, downsample_rate=downsample_rate)
             train_dataloader, test_dataloader = get_dataloaders(dataset_name, batch_size=batch_size, downsample_rate=downsample_rate)
             
             optimizers = []
             for method_idx in range(len(methods)):
                 optimizers.append(optimizer(methods[method_idx].net.parameters(), lr = lr))
-                #methods[method_idx].clear_history()
                 methods[method_idx].train_mode()
                 if downsample_rate_idx > 0:
                     methods[method_idx].clear_history()
@@ -158,9 +145,6 @@ if __name__=="__main__":
                                     methods[method_idx].record.best_loss = np.sum(methods[method_idx].record.loss_history[-1])
                                     methods[method_idx].save_model(os.path.join('model',methods[method_idx].name,'best_model'))
 
-                                #np.save('npy/sr_refocused_reshaped',sr_refocused_reshaped.detach().numpy())
-                                #np.save('npy/hr_refocused_reshaped',hr_refocused_reshaped.detach().numpy())
-                                #sr_refocused_reshaped, hr_refocused_reshaped
                                 print(log_str)
                                 
                                 if epoch >= 200:
@@ -172,30 +156,12 @@ if __name__=="__main__":
                                         methods[method_idx].record.tb_writer.close()
                                         early_stopped[method_idx] = True
                                         break
-                                
-
-
-    
+            
             downsample_rate_idx += 1
 
             end = time.time()
             time_in_min = (end-start)//60
             training_time.append(int(time_in_min))
-
-            '''
-            except RuntimeError:
-                batch_size //= 2
-                print("Batchsize too large. Use batchsize = %d"% batch_size)
-                gc.collect()
-                with torch.no_grad():
-                    torch.cuda.empty_cache()
-                
-                if batch_size<1:
-                    print("Batchsize is zero!")
-                    break
-            '''
-            
-            
 
         print(training_time)
         for i in range(len(training_time)):

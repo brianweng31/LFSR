@@ -69,11 +69,6 @@ def refocus_pixel(lf, pixels, s, t, estimate_clear_region=False):
     refocused_img = torch.mean(shifted_imgs_reshaped, dim = 1)
 
     if estimate_clear_region:
-        ## original v1
-        #estimated_clear_region = torch.mean(shifted_imgs_reshaped, dim=1) - shifted_imgs_reshaped[:,s*t//2,:,:,:]
-        ## modified v2
-        #print(f'shifted_imgs_reshaped.shape = {shifted_imgs_reshaped.shape}')
-        #print(f'torch.repeat_interleave(shifted_imgs_reshaped[:,[s*t//2],:,:,:],s*t,dim=1).shape = {torch.repeat_interleave(shifted_imgs_reshaped[:,[s*t//2],:,:,:],s*t,dim=1).shape}')
         central_repeat = torch.repeat_interleave(shifted_imgs_reshaped[:,[s*t//2],:,:,:],s*t,dim=1)
         estimated_clear_region = torch.mean(abs(shifted_imgs_reshaped-central_repeat), dim=1)
         
@@ -130,12 +125,10 @@ class EarlyStopping():
         self.last_loss = float('inf')
 
     def __call__(self, test_loss):
-        #print(last_loss,',',test_loss)
         if (self.last_loss-test_loss)/self.last_loss < self.min_percent:
             self.counter +=1
             if self.counter >= self.tolerance:  
                 self.early_stop = True
         else:
             self.counter = 0
-            #self.counter = max(0,self.counter)
             self.last_loss = test_loss

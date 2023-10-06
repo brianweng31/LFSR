@@ -14,8 +14,6 @@ torch.manual_seed(0)
 def generate_lf_from_img(img, disparity, ang_res=[2, 2], shape=None):
     h, w, c = img.shape
     H, W = shape[0], shape[1]
-    #print(f'h,w = {h},{w}')
-    #print(f'H,W = {H},{W}')
     margin = [(h-H)//2, (w-W)//2]
     s, t = ang_res[0], ang_res[1]
     
@@ -175,7 +173,6 @@ def get_dataloaders(dataset_name, batch_size=4, shuffle=True, num_workers=4, dow
     if dataset_name == "HCI":
         light_field_size = [3, 3, floor(512/downsample_rate)//3*3, floor(512/downsample_rate)//3*3, 3]
         disparity_range = np.arange(-5,6)/downsample_rate
-        #disparity_range = np.arange(0,1)/downsample_rate
 
         train_lfdataset_1 = LFDataset(
             "../Datasets/4D_Light_Field_Benchmark/additional", 
@@ -200,7 +197,6 @@ def get_dataloaders(dataset_name, batch_size=4, shuffle=True, num_workers=4, dow
 
     if dataset_name == "HCI_single":
         light_field_size = [3, 3, floor(512/downsample_rate)//3*3, floor(512/downsample_rate)//3*3, 3]
-        #disparity_range = np.arange(-5,6)/downsample_rate
         disparity_range = np.arange(0,1)/downsample_rate
         focus_plane = 2
 

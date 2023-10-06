@@ -27,18 +27,10 @@ def training(dataloader,device,methods,optimizers,optimized_losses,estimate_clea
                 sr_refocused = refocus_pixel_focal_stack_batch(sr, dataloader.dataset.disparity_range, s, t)
                 sr_refocused = remove_img_margin(sr_refocused)
 
-                '''
-                print(f'lr.shape = {lr.shape}')
-                print(f'sr_refocused.shape = {sr_refocused.shape}')
-                print(f'hr_refocused.shape = {hr_refocused.shape}')
-                '''
-
                 losses = []
                 for optimized_losses_idx in range(len(optimized_losses)):
                     if estimate_clear_region:
-                        #losses.append(optimized_losses[optimized_losses_idx]((sr_refocused - hr_refocused)*(torch.exp(-torch.abs(estimated_clear_regions))), torch.zeros(hr_refocused.shape).to(device)))
                         losses.append(optimized_losses[optimized_losses_idx]((sr_refocused - hr_refocused)*estimated_clear_regions, torch.zeros(hr_refocused.shape).to(device)))
-                    
                     else:
                         losses.append(optimized_losses[optimized_losses_idx]((sr_refocused - hr_refocused), torch.zeros(hr_refocused.shape).to(device)))
                     
