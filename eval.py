@@ -37,10 +37,7 @@ train_dataloader, test_dataloader = get_dataloaders(dataset_name, batch_size=bat
 if model_name == "FilterBankMethod":
     model = FilterBankMethod(device, 3, 3, in_channels=9, out_channels=9, kernel_size=(1, 7, 7), stride=(1, 3, 3), model_idx=model_idx)
     #model = FilterBankMethod(device, 3, 3, in_channels=9, out_channels=9, kernel_size=(1, 7, 7), stride=(1, 1, 1), model_idx=model_idx)
-    #model = FilterBankMethod(device, 3, 3, in_channels=9, out_channels=9, kernel_size=(1, 3, 3), stride=(1, 3, 3), model_idx=model_idx)
-    # 1d kernels
-    #model = FilterBankMethod(device, 3, 3, in_channels=9, out_channels=9, kernel_size=13, stride=(1, 3, 3), model_idx=model_idx)
-        
+    #model = FilterBankMethod(device, 3, 3, in_channels=9, out_channels=9, kernel_size=(1, 3, 3), stride=(1, 3, 3), model_idx=model_idx)    
 
 elif model_name == "LinearFilter":
     if dataset_name == "HCI":
@@ -53,26 +50,16 @@ elif model_name == "LinearFilter":
 elif model_name == "BaselineMethod":
     model = BaselineMethod(3,3)
 
-#try:
 if model != "BaselineMethod":
-    #print('here')
-    #print(model.name)
     model.load_model(os.path.join('model',model.name,'best_model'))
-    #print('here1')
     model.eval_mode()
-    #print('here2')
     kernels = 0
     i = 0
     for params in model.net.parameters():
-        #print('here3')
         print(params.size())
         if i == 0:
             kernels = params
             i += 1
-        #print(f'params.sum() = {params.sum()}')
-#except:
-    #pass
-
 
 with torch.no_grad():
     ## generate down_lf and sr
@@ -97,48 +84,23 @@ with torch.no_grad():
             light_field = np.concatenate((light_field, sr_refocused.detach().cpu()), 0)
 
     ## print metrics
-    #losses, metrics, sr_refocused_reshaped, hr_refocused_reshaped = testing(test_dataloader, device, model, 0, estimate_clear_region)
     if estimate_clear_region:
         losses, metrics, sr_refocused_reshaped, hr_refocused_reshaped, estimate_clear_regions = testing(test_dataloader, device, model, 0, estimate_clear_region)
     else:
         losses, metrics, sr_refocused_reshaped, hr_refocused_reshaped = testing(test_dataloader, device, model, 0, estimate_clear_region)
-                            
-    '''                         
-    model.record.loss_history.append([])
-    model.record.metric_history.append([])
-    log_str = "Downsample %d Epoch [%d/%d] %s: " % (downsample_rate, 0, 10, model.name)
-    '''
+
     loss_history = []
     metric_history = []
     log_str = ""
     for optimized_losses_idx in range(len(optimized_losses)):
-        '''
-        model.record.tb_writer.add_scalar("Loss/loss_sum", losses[optimized_losses_idx], epoch)
-        model.record.loss_history[-1].append(losses[optimized_losses_idx])
-        log_str += "Loss %d: %.6f " % (optimized_losses_idx, model.record.loss_history[-1][-1])
-        '''
         loss_history.append(losses[optimized_losses_idx])
         log_str += "Loss %d: %.6f " % (optimized_losses_idx, loss_history[-1])
     for refocused_img_metrics_idx in range(len(refocused_img_metrics)):
-        '''
-        model.record.tb_writer.add_scalar("Metric/%s"%refocused_img_metrics_name[refocused_img_metrics_idx], metrics[refocused_img_metrics_idx], epoch)
-        model.record.metric_history[-1].append(metrics[refocused_img_metrics_idx])
-        log_str += "Metric %s: %.6f " % (refocused_img_metrics_name[refocused_img_metrics_idx], model.record.metric_history[-1][-1])
-        '''
         metric_history.append(metrics[refocused_img_metrics_idx])
         log_str += "Metric %s: %.6f " % (refocused_img_metrics_name[refocused_img_metrics_idx], metric_history[-1])
-        
-    '''
-    if np.sum(model.record.loss_history[-1]) < model.record.best_loss:
-        print("Found better model: %.6f < %.6f" % (np.sum(model.record.loss_history[-1]), model.record.best_loss))
-        model.record.best_loss = np.sum(model.record.loss_history[-1])
-        model.save_model(os.path.join('model',model.name,'best_model'))
-    '''
 
     print(log_str)
 
-#print(light_field.shape)
-#print(f'down_lf.shape = {down_lf.shape}')
 light_field = np.moveaxis(light_field, 2, -1)
 down_lf = np.moveaxis(down_lf, 2, -1)
 
@@ -148,28 +110,6 @@ np.save(f'npy/down_{model_idx}',down_lf)
 np.save(f'npy/{model_idx}',light_field)
 
 try:
-    #estimate_clear_regions = np.array(estimate_clear_regions.detach().cpu())
-    #print(type(estimate_clear_regions))
-    #print(type(np.array(estimate_clear_regions.detach().cpu())))
-    #np.save(f'npy/estimate_clear_regions_2',estimate_clear_regions)
-    print(f'type(kernels) = ',type(kernels))
-    print(f'kernels.size() = ',kernels.size())
     kernels = np.array(kernels.detach().cpu())
-    print(f'type(kernels) = ',type(kernels))
-    print(f'kernels.shape() = ', kernels.shape)
-    np.save(f'npy/kernels_delta_ecr_ker3_2',kernels)
 except:
     pass
-
-#np.save(f'npy/hr_{model_idx}',hr_refocused_reshaped)
-
-print(f'light_field.shape = {light_field.shape}')
-print(f'down_lf.shape = {down_lf.shape}')
-print(f'hr_refocused_reshaped.shape = {hr_refocused_reshaped.shape}')
-
-'''
-for i in range(light_field.shape[0]):
-    print(light_field[i,5].shape)
-    cv2.imshow(f"{i}",light_field[i,5])
-    cv2.waitKey(0)
-'''
